@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard ความคืบหน้างาน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --card: #21262d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .header-sep { color: var(--border); margin: 0 4px; }
+
+  /* ===== UPLOAD SCREEN ===== */
+  #uploadScreen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .upload-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    gap: 40px;
+  }
+  .upload-heading {
+    text-align: center;
+  }
+  .upload-heading h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .upload-heading p {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  .upload-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+  }
+  @media (max-width: 600px) {
+    .upload-grid { grid-template-columns: 1fr; }
+  }
+
+  .upload-card {
+    background: var(--surface);
+    border: 1.5px dashed var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-card:hover, .upload-card.dragover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(88,166,255,0.12);
+  }
+  .upload-card.loaded {
+    border-style: solid;
+    border-color: var(--accent2);
+  }
+  .upload-card.loaded::after {
+    content: '✓';
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    color: var(--accent2);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .card-headers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+  .card-headers span {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-muted);
+  }
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .card-btn:hover { background: var(--surface2); }
+  .card-status {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--accent2);
+    font-weight: 500;
+    min-height: 20px;
+  }
+
+  .upload-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0d1117;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-secondary:hover { background: var(--surface2); color: var(--text); }
+
+  /* hidden file inputs */
+  .file-input { display: none; }
+
+  /* ===== DASHBOARD SCREEN ===== */
+  #dashScreen { display: none; min-height: 100vh; flex-direction: column; }
+
+  .tab-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 24px;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+  .tab-btn .tab-badge {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-muted);
+  }
+  .tab-btn.active .tab-badge { background: rgba(88,166,255,0.15); color: var(--accent); }
+
+  .dash-content { flex: 1; padding: 24px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ===== STATS ROW ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ===== TABLE ===== */
+  .table-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .table-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .table-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .table-search {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .table-search:focus { border-color: var(--accent); }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .data-table th {
+    background: var(--card);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface2); }
+  .table-pager {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pager-info { font-size: 13px; color: var(--text-muted); }
+  .pager-btns { display: flex; gap: 6px; }
+  .pager-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    transition: background 0.12s;
+  }
+  .pager-btn:hover:not(:disabled) { background: var(--surface2); }
+  .pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ===== BADGE ===== */
+  .badge {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-green { background: rgba(63,185,80,0.15); color: var(--accent2); }
+  .badge-red { background: rgba(247,129,102,0.15); color: var(--accent3); }
+  .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .badge-yellow { background: rgba(255,166,87,0.15); color: var(--accent5); }
+  .badge-purple { background: rgba(210,168,255,0.15); color: var(--accent4); }
+
+  /* ===== CHARTS ROW ===== */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) { .charts-row { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .chart-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .bar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .bar-label { width: 130px; color: var(--text); flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; background: var(--card); border-radius: 4px; height: 8px; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s cubic-bezier(.22,1,.36,1); }
+  .bar-count { width: 40px; text-align: right; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+
+  /* ===== UPLOAD AGAIN BTN ===== */
+  .dash-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .dash-topbar h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .btn-back {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-back:hover { background: var(--surface2); color: var(--text); }
+
+  /* ===== EMPTY ===== */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-muted);
+  }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-logo">ITS</span>
+  <span class="header-sep">/</span>
+  <span class="header-title">Dashboard ความคืบหน้างาน</span>
+</div>
+
+<!-- ===== UPLOAD SCREEN ===== -->
+<div id="uploadScreen">
+  <div class="upload-hero">
+    <div class="upload-heading">
+      <h1>📂 อัปโหลด CSV</h1>
+      <p>ลากไฟล์หรือคลิกเลือกไฟล์ CSV ในแต่ละหมวด แล้วกด "ดู Dashboard"</p>
+    </div>
+
+    <div class="upload-grid">
+      <!-- CCTV -->
+      <div class="upload-card" id="card-cctv"
+           ondragover="handleDragOver(event,'cctv')" ondragleave="handleDragLeave('cctv')" ondrop="handleDrop(event,'cctv')">
+        <div class="card-icon">📷</div>
+        <div class="card-title">CCTV & HDD</div>
+        <div class="card-desc">ข้อมูลการซ่อมและตรวจสอบกล้องวงจรปิดและฮาร์ดดิสก์</div>
+        <div class="card-headers">
+          <span>อู่</span><span>CCTV ซ่อรุด</span><span>HDD ซ่อรุด</span><span>ตรวจสอบ</span><span>พบปัญหาซ้ำ</span><span>% เข้ามา</span><span>วันเริ่มงาน</span><span>วันสิ้นสุด</span>
+        </div>
+        <button class="card-btn" onclick="document.getElementById('file-cctv').click()">📁 เลือกไฟล์ CSV</button>
+        <input class="file-input" type="file" id="file-cctv" accept=".csv" onchange="handleFile(event,'cctv')">
+        <div class="card-status" id="status-cctv"></div>
+      </div>
+
+      <!-- ติดตามปัญหา -->
+      <div class="upload-card" id="card-issue"
+           ondragover="handleDragOver(event,'issue')" ondragleave="handleDragLeave('issue')" ondrop="handleDrop(event,'issue')">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">ติดตามปัญหา</div>
+        <div class="card-desc">ข้อมูลการแก้ไขปัญหาและสถานะความคืบหน้า</div>
+        <div class="card-headers">
+          <span>ทะเบียน</span><span>ประเภท</span><span>อู่</span><span>ปัญหา</span><span>สถานะ</span><span>วันที่แก้ไข</span>
+        </div>
+        <button class="card-btn" onclick="document.getElementById('file-issue').click()">📁 เลือกไฟล์ CSV</button>
+        <input class="file-input" type="file" id="file-issue" accept=".csv" onchange="handleFile(event,'issue')">
+        <div class="card-status" id="status-issue"></div>
+      </div>
+
+      <!-- ITS Tickets Issue -->
+      <div class="upload-card" id="card-its"
+           ondragover="handleDragOver(event,'its')" ondragleave="handleDragLeave('its')" ondrop="handleDrop(event,'its')">
+        <div class="card-icon">🎫</div>
+        <div class="card-title">ITS Tickets Issue</div>
+        <div class="card-desc">ข้อมูล Ticket การแจ้งปัญหาและการตรวจสอบแก้ไข</div>
+        <div class="card-headers">
+          <span>Tickets No.</span><span>ปัญหา</span><span>ทะเบียน</span><span>อู่</span><span>สถานะ</span>
+        </div>
+        <button class="card-btn" onclick="document.getElementById('file-its').click()">📁 เลือกไฟล์ CSV</button>
+        <input class="file-input" type="file" id="file-its" accept=".csv" onchange="handleFile(event,'its')">
+        <div class="card-status" id="status-its"></div>
+      </div>
+
+      <!-- การจัดซื้อ -->
+      <div class="upload-card" id="card-purchase"
+           ondragover="handleDragOver(event,'purchase')" ondragleave="handleDragLeave('purchase')" ondrop="handleDrop(event,'purchase')">
+        <div class="card-icon">🛒</div>
+        <div class="card-title">การจัดซื้อ</div>
+        <div class="card-desc">รายการอุปกรณ์และสถานะการจัดซื้อ</div>
+        <div class="card-headers">
+          <span>รายการอุปกรณ์</span><span>รายละเอียด</span><span>จำนวน</span><span>หน่วย</span><span>สถานะ: จัดทำ PR / รออนุมัติ PR / ออก PO / รับสินค้า</span>
+        </div>
+        <button class="card-btn" onclick="document.getElementById('file-purchase').click()">📁 เลือกไฟล์ CSV</button>
+        <input class="file-input" type="file" id="file-purchase" accept=".csv" onchange="handleFile(event,'purchase')">
+        <div class="card-status" id="status-purchase"></div>
+      </div>
+    </div>
+
+    <div class="upload-actions">
+      <button class="btn-primary" id="btnView" onclick="showDashboard()" disabled>📊 ดู Dashboard</button>
+      <button class="btn-secondary" onclick="loadDemo()">🧪 ทดลองด้วยข้อมูลตัวอย่าง</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD SCREEN ===== -->
+<div id="dashScreen">
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="dash-content">
+    <div class="dash-topbar">
+      <h2 id="dashTitle">Dashboard</h2>
+      <button class="btn-back" onclick="backToUpload()">← อัปโหลดใหม่</button>
+    </div>
+    <div id="panelContainer"></div>
+  </div>
+</div>
+
+<script>
+// ===== DATA STORE =====
+const store = { cctv: null, issue: null, its: null, purchase: null };
+
+// ===== CSV PARSER =====
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = splitCSVLine(lines[i]);
+    if (vals.every(v => !v.trim())) continue;
+    const row = {};
+    headers.forEach((h, idx) => row[h] = (vals[idx] || '').trim().replace(/^"|"$/g,''));
+    rows.push(row);
+  }
+  return { headers, rows };
+}
+
+function splitCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+// ===== FILE HANDLERS =====
+function handleFile(event, key) {
+  const file = event.target.files[0];
+  if (!file) return;
+  readFile(file, key);
+}
+function handleDragOver(e, key) {
+  e.preventDefault();
+  document.getElementById('card-' + key).classList.add('dragover');
+}
+function handleDragLeave(key) {
+  document.getElementById('card-' + key).classList.remove('dragover');
+}
+function handleDrop(e, key) {
+  e.preventDefault();
+  document.getElementById('card-' + key).classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) readFile(file, key);
+}
+function readFile(file, key) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = parseCSV(e.target.result);
+    store[key] = data;
+    const card = document.getElementById('card-' + key);
+    const status = document.getElementById('status-' + key);
+    card.classList.add('loaded');
+    status.textContent = `✅ ${file.name} (${data.rows.length} แถว)`;
+    checkEnableBtn();
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+function checkEnableBtn() {
+  const any = Object.values(store).some(v => v !== null);
+  document.getElementById('btnView').disabled = !any;
+}
+
+// ===== DEMO DATA =====
+function loadDemo() {
+  store.cctv = {
+    headers: ['อู่', 'CCTV ซ่อรุด', 'HDD ซ่อรุด', 'ตรวจสอบ', 'พบปัญหาซ้ำ', '% เข้ามา', 'วันเริ่มงาน', 'วันสิ้นสุด'],
+    rows: [
+      {อู่:'แสมดำ',      'CCTV ซ่อรุด':'7','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'บึงกุ่ม',    'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7698:CCTV CH4 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'รังสิต-บางพูน','CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',              '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'ปากเกร็ด',   'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'สายไหม',     'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'4', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7663:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'กัลปพฤกษ์',  'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'ท่าอิฐ',     'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เลี้ยงเมืองนนท์','CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',           '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'ราษฎร์บูรณะ','CCTV ซ่อรุด':'7','HDD ซ่อรุด':'1','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'รามคำแหง2',  'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'คลิ้นชัน',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-6714:CCTV CH2 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'คลอง6',      'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'ปากน้ำ',     'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7447:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'พุทธบูชา',   'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'พรานนก',     'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'รังสิต 200 ปี','CCTV ซ่อรุด':'5','HDD ซ่อรุด':'2','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-8620:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'รามคำแหง74', 'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เกษะโกมล',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เตาปูน',     'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'มีนบุรี',    'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-8427:HDD ผิดปกติ,16-6399:CCTV CH1 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เคหะชนบท',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เคหะบางพลี', 'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+      {อู่:'เอกชัย',     'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
+    ]
+  };
+  store.issue = {
+    headers: ['ทะเบียน','ประเภท','อู่','ปัญหา','วิธีการแก้ไข','สถานะ','ผู้แก้ไข','วันที่แก้ไข','หมายเหตุ'],
+    rows: [
+      {ทะเบียน:'บก-1234','ประเภท':'กล้อง','อู่':'อู่สุขุมวิท','ปัญหา':'กล้องไม่บันทึก','วิธีการแก้ไข':'เปลี่ยน HDD','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'สมชาย','วันที่แก้ไข':'01/05/2568','หมายเหตุ':'-'},
+      {ทะเบียน:'กก-5678','ประเภท':'HDD','อู่':'อู่รังสิต','ปัญหา':'HDD เสีย','วิธีการแก้ไข':'เปลี่ยนใหม่','สถานะ':'กำลังดำเนินการ','ผู้แก้ไข':'สมหญิง','วันที่แก้ไข':'-','หมายเหตุ':'รอชิ้นส่วน'},
+      {ทะเบียน:'ขข-9012','ประเภท':'กล้อง','อู่':'อู่บางนา','ปัญหา':'ภาพขาดหาย','วิธีการแก้ไข':'ตรวจสายสัญญาณ','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'วิชัย','วันที่แก้ไข':'15/05/2568','หมายเหตุ':'-'},
+      {ทะเบียน:'งง-3456','ประเภท':'HDD','อู่':'อู่ลาดพร้าว','ปัญหา':'HDD เต็ม','วิธีการแก้ไข':'ลบข้อมูลเก่า','สถานะ':'รอดำเนินการ','ผู้แก้ไข':'-','วันที่แก้ไข':'-','หมายเหตุ':'ต้องการอนุมัติ'},
+      {ทะเบียน:'จจ-7890','ประเภท':'กล้อง','อู่':'อู่พระราม 9','ปัญหา':'กล้องไม่ออนไลน์','วิธีการแก้ไข':'รีเซ็ตระบบ','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'ประยุทธ','วันที่แก้ไข':'20/05/2568','หมายเหตุ':'-'},
+    ]
+  };
+  store.its = {
+    headers: ['Tickets No.','ปัญหา','ทะเบียน','อู่','ประเภท','ตรวจสอบและแก้ไข','สถานะ','หมายเหตุ'],
+    rows: [
+      {'Tickets No.':'TK-001','ปัญหา':'กล้องดับ','ทะเบียน':'บก-1234','อู่':'อู่สุขุมวิท','ประเภท':'Hardware','ตรวจสอบและแก้ไข':'เปลี่ยนอุปกรณ์','สถานะ':'Solved','หมายเหตุ':'-'},
+      {'Tickets No.':'TK-002','ปัญหา':'Net ขัดข้อง','ทะเบียน':'กก-5678','อู่':'อู่รังสิต','ประเภท':'Network','ตรวจสอบและแก้ไข':'รีเซ็ต Router','สถานะ':'Processing (assigned)','หมายเหตุ':'เร่งด่วน'},
+      {'Tickets No.':'TK-003','ปัญหา':'Software crash','ทะเบียน':'ขข-9012','อู่':'อู่บางนา','ประเภท':'Software','ตรวจสอบและแก้ไข':'ติดตั้งใหม่','สถานะ':'Solved','หมายเหตุ':'-'},
+      {'Tickets No.':'TK-004','ปัญหา':'กล้องภาพมืด','ทะเบียน':'งง-3456','อู่':'อู่ลาดพร้าว','ประเภท':'Hardware','ตรวจสอบและแก้ไข':'ตรวจสอบเลนส์','สถานะ':'Pending','หมายเหตุ':'-'},
+      {'Tickets No.':'TK-005','ปัญหา':'ระบบช้า','ทะเบียน':'จจ-7890','อู่':'อู่พระราม 9','ประเภท':'Software','ตรวจสอบและแก้ไข':'Clear cache','สถานะ':'Solved','หมายเหตุ':'-'},
+    ]
+  };
+  store.purchase = {
+    headers: ['รายการอุปกรณ์','รายละเอียด','จำนวน','หน่วย','สถานะ','หมายเหตุ'],
+    rows: [
+      {'รายการอุปกรณ์':'กล้อง IP','รายละเอียด':'2MP Dome Camera','จำนวน':'10','หน่วย':'ตัว','สถานะ':'รับสินค้า','หมายเหตุ':'-'},
+      {'รายการอุปกรณ์':'HDD 4TB','รายละเอียด':'WD Purple Surveillance','จำนวน':'5','หน่วย':'ลูก','สถานะ':'รออนุมัติ PR','หมายเหตุ':'ส่งใบเสนอราคาแล้ว'},
+      {'รายการอุปกรณ์':'Switch PoE','รายละเอียด':'8-Port PoE+','จำนวน':'3','หน่วย':'ชุด','สถานะ':'ออก PO','หมายเหตุ':'-'},
+      {'รายการอุปกรณ์':'NVR 16Ch','รายละเอียด':'Hikvision DS-7616NI','จำนวน':'2','หน่วย':'เครื่อง','สถานะ':'จัดทำ PR','หมายเหตุ':'-'},
+      {'รายการอุปกรณ์':'สายแลน Cat6','รายละเอียด':'ม้วน 305m','จำนวน':'4','หน่วย':'ม้วน','สถานะ':'รับสินค้า','หมายเหตุ':'-'},
+    ]
+  };
+  ['cctv','issue','its','purchase'].forEach(k => {
+    document.getElementById('card-' + k).classList.add('loaded');
+    document.getElementById('status-' + k).textContent = `✅ ตัวอย่าง (${store[k].rows.length} แถว)`;
+  });
+  document.getElementById('btnView').disabled = false;
+}
+
+// ===== DASHBOARD RENDER =====
+function showDashboard() {
+  document.getElementById('uploadScreen').style.display = 'none';
+  const ds = document.getElementById('dashScreen');
+  ds.style.display = 'flex';
+
+  const tabBar = document.getElementById('tabBar');
+  const panelContainer = document.getElementById('panelContainer');
+  tabBar.innerHTML = '';
+  panelContainer.innerHTML = '';
+
+  const tabs = [
+    { key: 'cctv', label: '📷 CCTV & HDD', render: renderCCTV },
+    { key: 'issue', label: '🔧 ติดตามปัญหา', render: renderIssue },
+    { key: 'its', label: '🎫 ITS Tickets Issue', render: renderITS },
+    { key: 'purchase', label: '🛒 การจัดซื้อ', render: renderPurchase },
+  ];
+
+  let firstActive = null;
+  tabs.forEach(t => {
+    if (!store[t.key]) return;
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.innerHTML = `${t.label} <span class="tab-badge">${store[t.key].rows.length}</span>`;
+    btn.onclick = () => activateTab(t.key);
+    btn.id = 'tab-' + t.key;
+    tabBar.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.id = 'panel-' + t.key;
+    panel.innerHTML = t.render(store[t.key]);
+    panelContainer.appendChild(panel);
+
+    if (!firstActive) firstActive = t.key;
+  });
+
+  if (firstActive) activateTab(firstActive);
+  initPagers();
+}
+
+function activateTab(key) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.getElementById('tab-' + key);
+  const panel = document.getElementById('panel-' + key);
+  if (btn) btn.classList.add('active');
+  if (panel) panel.classList.add('active');
+}
+
+function backToUpload() {
+  document.getElementById('dashScreen').style.display = 'none';
+  document.getElementById('uploadScreen').style.display = 'flex';
+}
+
+// ===== BADGE HELPERS =====
+function statusBadge(s) {
+  if (!s) return '';
+  const sl = s.toLowerCase();
+  // ITS
+  if (sl.includes('solved')) return `<span class="badge badge-green">${s}</span>`;
+  if (sl.includes('processing') || sl.includes('assigned')) return `<span class="badge badge-blue">${s}</span>`;
+  if (sl.includes('pending')) return `<span class="badge badge-yellow">${s}</span>`;
+  // Purchase
+  if (sl.includes('รับสินค้า')) return `<span class="badge badge-green">${s}</span>`;
+  if (sl.includes('ออก po') || sl === 'ออก po') return `<span class="badge badge-blue">${s}</span>`;
+  if (sl.includes('รออนุมัติ pr')) return `<span class="badge badge-yellow">${s}</span>`;
+  if (sl.includes('จัดทำ pr')) return `<span class="badge badge-purple">${s}</span>`;
+  // Issue
+  if (['เสร็จแล้ว'].some(x => sl.includes(x))) return `<span class="badge badge-green">${s}</span>`;
+  if (['รอดำเนินการ','รออนุมัติ'].some(x => sl.includes(x))) return `<span class="badge badge-red">${s}</span>`;
+  if (['กำลังดำเนินการ'].some(x => sl.includes(x))) return `<span class="badge badge-yellow">${s}</span>`;
+  return `<span class="badge badge-blue">${s}</span>`;
+}
+
+function buildBarChart(data, colors) {
+  const max = Math.max(...data.map(d => d.val), 1);
+  return data.map((d, i) => `
+    <div class="bar-item">
+      <div class="bar-label" title="${d.label}">${d.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(d.val/max*100).toFixed(1)}%;background:${colors[i % colors.length]}"></div></div>
+      <div class="bar-count">${d.val}</div>
+    </div>`).join('');
+}
+
+// ===== TABLE HELPER =====
+function buildTable(id, headers, rows, statusCol) {
+  const ths = headers.map(h => `<th>${h}</th>`).join('');
+  const trs = rows.map(r => {
+    const tds = headers.map(h => {
+      const val = r[h] || '';
+      const cell = h === statusCol ? statusBadge(val) : escHtml(val);
+      return `<td title="${escHtml(val)}">${cell}</td>`;
+    }).join('');
+    return `<tr>${tds}</tr>`;
+  }).join('');
+  return `<table class="data-table" id="${id}"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== PAGER + SEARCH =====
+const pagerState = {};
+function initPagers() {
+  document.querySelectorAll('[data-table]').forEach(wrapper => {
+    const tid = wrapper.dataset.table;
+    const table = document.getElementById(tid);
+    if (!table) return;
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    const perPage = parseInt(wrapper.dataset.perpage || 15);
+    pagerState[tid] = { rows, page: 1, perPage, filtered: rows };
+    renderPage(tid);
+  });
+}
+
+function renderPage(tid) {
+  const s = pagerState[tid];
+  if (!s) return;
+  const { filtered, page, perPage } = s;
+  const start = (page - 1) * perPage;
+  const end = start + perPage;
+  s.rows.forEach(r => r.style.display = 'none');
+  filtered.forEach((r, i) => r.style.display = (i >= start && i < end) ? '' : 'none');
+  const infoEl = document.getElementById('info-' + tid);
+  const prevEl = document.getElementById('prev-' + tid);
+  const nextEl = document.getElementById('next-' + tid);
+  if (infoEl) infoEl.textContent = `แสดง ${Math.min(start+1, filtered.length)}–${Math.min(end, filtered.length)} จาก ${filtered.length} แถว`;
+  if (prevEl) prevEl.disabled = page <= 1;
+  if (nextEl) nextEl.disabled = end >= filtered.length;
+}
+
+function changePage(tid, dir) {
+  const s = pagerState[tid];
+  if (!s) return;
+  s.page = Math.max(1, Math.min(s.page + dir, Math.ceil(s.filtered.length / s.perPage)));
+  renderPage(tid);
+}
+
+function searchTable(tid, query) {
+  const s = pagerState[tid];
+  if (!s) return;
+  const q = query.toLowerCase();
+  s.filtered = q ? s.rows.filter(r => r.textContent.toLowerCase().includes(q)) : s.rows;
+  s.page = 1;
+  renderPage(tid);
+}
+
+// ===== RENDERERS =====
+function renderCCTV(data) {
+  const { headers, rows } = data;
+
+  // ── Keys ──
+  const cctvKey  = headers.find(h => /CCTV.*ซ่อ|ชำรุด.*CCTV/i.test(h)) || 'CCTV ซ่อรุด';
+  const hddKey   = headers.find(h => /HDD.*ซ่อ|ชำรุด.*HDD/i.test(h))  || 'HDD ซ่อรุด';
+  const chkKey   = headers.find(h => h.includes('ตรวจสอบ')) || 'ตรวจสอบ';
+  const repKey   = headers.find(h => h.includes('พบปัญหา')) || 'พบปัญหาซ้ำ';
+  const pctKey   = headers.find(h => h.includes('%') || h.includes('เข้ามา')) || '';
+  const startKey = headers.find(h => h.includes('เริ่ม')) || '';
+  const endKey   = headers.find(h => h.includes('สิ้นสุด')) || '';
+  const nameKey  = headers[0] || 'อู่';
+
+  // ── Totals ──
+  const totalCCTV   = rows.reduce((a,r)=>a+(parseInt(r[cctvKey])||0),0);
+  const totalHDD    = rows.reduce((a,r)=>a+(parseInt(r[hddKey])||0),0);
+  const totalRows   = rows.length;
+  // "ตรวจสอบแล้ว" = rows where chkKey value is non-empty number OR contains 'แล้ว'
+  const checkedRows = rows.filter(r => {
+    const v = (r[chkKey]||'').trim();
+    return v && v !== '0' && v !== '-';
+  }).length;
+
+  // repeat issues: parse from "พบปัญหาซ้ำ" — may contain multiple comma-separated entries
+  const repeatList = [];
+  rows.forEach(r => {
+    const v = (r[repKey]||'').trim();
+    if (!v || v==='-') return;
+    const garage = r[nameKey]||'';
+    v.split(',').forEach(item => {
+      const t = item.trim();
+      if (!t) return;
+      // guess type from content
+      const type = t.toLowerCase().includes('hdd') ? 'HDD' : 'CCTV';
+      repeatList.push({ id: t.split(':')[0]?.trim()||t, desc: t.split(':')[1]?.trim()||t, type, garage });
+    });
+  });
+
+  // ── Dates & Duration ──
+  let startDate='-', endDate='-', totalDays='-', elapsedDays='-', isDone=false;
+  if (startKey && endKey) {
+    const allStarts = rows.map(r=>r[startKey]).filter(Boolean);
+    const allEnds   = rows.map(r=>r[endKey]).filter(Boolean);
+    if (allStarts.length) startDate = allStarts[0];
+    if (allEnds.length)   endDate   = allEnds[allEnds.length-1];
+
+    // parse dd/mm/yyyy (Buddhist or AD)
+    function parseThaiDate(s) {
+      if (!s||s==='-') return null;
+      const [d,m,y] = s.split('/').map(Number);
+      if (!d||!m||!y) return null;
+      const adYear = y > 2500 ? y - 543 : y;
+      return new Date(adYear, m-1, d);
+    }
+    const sd = parseThaiDate(startDate);
+    const ed = parseThaiDate(endDate);
+    const today = new Date();
+    if (sd && ed) {
+      totalDays = Math.round((ed-sd)/(1000*60*60*24));
+      elapsedDays = Math.min(Math.round((today-sd)/(1000*60*60*24)), totalDays);
+      isDone = today >= ed;
+    }
+  }
+
+  // ── % เข้ามา ──
+  const pctVals = pctKey ? rows.map(r=>parseFloat(r[pctKey])).filter(v=>!isNaN(v)) : [];
+  const avgPct  = pctVals.length ? (pctVals.reduce((a,v)=>a+v,0)/pctVals.length).toFixed(1) : null;
+
+  // ── Bar chart data ──
+  const cctvBar = rows.filter(r=>(parseInt(r[cctvKey])||0)>0)
+    .map(r=>({label:r[nameKey]||'-', val:parseInt(r[cctvKey])||0}))
+    .sort((a,b)=>b.val-a.val).slice(0,12);
+  const hddBar  = rows.filter(r=>(parseInt(r[hddKey])||0)>0)
+    .map(r=>({label:r[nameKey]||'-', val:parseInt(r[hddKey])||0}))
+    .sort((a,b)=>b.val-a.val).slice(0,12);
+
+  const colors = ['#00cfff','#0099cc','#006699','#58a6ff','#3fb950','#ffa657','#d2a8ff'];
+
+  // ── Render table rows ──
+  const tableRows = rows.map((r,i)=>{
+    const hasCCTV = (parseInt(r[cctvKey])||0) > 0;
+    const hasHDD  = (parseInt(r[hddKey])||0) > 0;
+    const checked = (r[chkKey]||'').trim();
+    const isChecked = checked && checked!=='-' && checked!=='0';
+    const rep = (r[repKey]||'').trim();
+    return `<tr>
+      <td style="color:var(--text-muted);font-family:'IBM Plex Mono',monospace">${i+1}</td>
+      <td style="font-weight:600;color:var(--text)">${escHtml(r[nameKey]||'-')}</td>
+      <td>${hasCCTV?`<span class="badge badge-blue">${parseInt(r[cctvKey])} คัน</span>`:'<span style="color:var(--text-muted)">—</span>'}</td>
+      <td>${hasHDD?`<span class="badge badge-yellow">${parseInt(r[hddKey])} คัน</span>`:'<span style="color:var(--text-muted)">—</span>'}</td>
+      <td>${isChecked?`<span class="badge badge-green">✓ แล้ว</span>`:`<span class="badge badge-red">ยังไม่</span>`}</td>
+      <td style="color:${rep&&rep!=='-'?'#ffa657':'var(--text-muted)'};">${rep&&rep!=='-'?escHtml(rep):'—'}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <!-- ① ระยะเวลาดำเนินงาน -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px">
+        🗓️ ระยะเวลาดำเนินงาน
+      </div>
+      ${isDone?`<span style="background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600">● เสร็จสิ้นแล้ว</span>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">วันเริ่มต้น</div><div style="font-size:17px;font-weight:700;color:var(--text)">${startDate}</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">วันสิ้นสุด</div><div style="font-size:17px;font-weight:700;color:var(--text)">${endDate}</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">ระยะเวลาทั้งหมด</div><div style="font-size:17px;font-weight:700;color:#00cfff">${totalDays !== '-' ? totalDays+' วัน' : '-'}</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">ดำเนินการมาแล้ว</div><div style="font-size:17px;font-weight:700;color:#3fb950">${elapsedDays !== '-' ? elapsedDays+' วัน' : '-'}</div></div>
+    </div>
+  </div>
+
+  <!-- ② Progress อู่ที่ตรวจสอบ -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:16px">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">ความคืบหน้าการตรวจสอบ</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">อู่ที่ตรวจสอบแล้ว / อู่ทั้งหมด</div>
+    <div style="font-size:36px;font-weight:800;color:#3fb950;line-height:1">${totalRows?Math.round(checkedRows/totalRows*100):0}%
+      <span style="font-size:15px;font-weight:500;color:var(--text-muted);margin-left:6px">(${checkedRows}/${totalRows} อู่)</span>
+    </div>
+    <div style="margin-top:14px;position:relative;height:22px;background:var(--card);border-radius:11px;overflow:hidden">
+      <div style="height:100%;width:${totalRows?Math.round(checkedRows/totalRows*100):0}%;background:linear-gradient(90deg,#00cfff,#3fb950);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0d1117;transition:width .8s cubic-bezier(.22,1,.36,1)">
+        ${checkedRows}/${totalRows} อู่
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px">
+      <span>0 อู่</span><span>ตรวจสอบแล้ว ${checkedRows} อู่</span><span>ทั้งหมด ${totalRows} อู่</span>
+    </div>
+  </div>
+
+  <!-- ③ Summary cards -->
+  <div class="stats-row" style="margin-bottom:16px">
+    <div class="stat-card" style="border-top:3px solid #58a6ff">
+      <div style="font-size:22px;margin-bottom:6px">🏢</div>
+      <div class="stat-value">${totalRows}</div>
+      <div class="stat-label">จำนวนอู่ทั้งหมด</div>
+      <div class="stat-sub">ตรวจสอบครบทุกอู่</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #00cfff">
+      <div style="font-size:22px;margin-bottom:6px">📷</div>
+      <div class="stat-value" style="color:#00cfff">${totalCCTV}</div>
+      <div class="stat-label">CCTV ชำรุดทั้งหมด</div>
+      <div class="stat-sub">จาก ${rows.filter(r=>(parseInt(r[cctvKey])||0)>0).length} อู่ที่มีปัญหา</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #ffa657">
+      <div style="font-size:22px;margin-bottom:6px">💾</div>
+      <div class="stat-value" style="color:#ffa657">${totalHDD}</div>
+      <div class="stat-label">HDD ชำรุดทั้งหมด</div>
+      <div class="stat-sub">จาก ${rows.filter(r=>(parseInt(r[hddKey])||0)>0).length} อู่ที่มีปัญหา</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #3fb950">
+      <div style="font-size:22px;margin-bottom:6px">✅</div>
+      <div class="stat-value" style="color:#3fb950">${checkedRows}</div>
+      <div class="stat-label">อู่ตรวจสอบแล้ว</div>
+      <div class="stat-sub">${totalRows?Math.round(checkedRows/totalRows*100):0}% ตรวจสอบครบ</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #ffa657">
+      <div style="font-size:22px;margin-bottom:6px">⚠️</div>
+      <div class="stat-value" style="color:#ffa657">${repeatList.length}</div>
+      <div class="stat-label">พบปัญหาซ้ำ (คัน)</div>
+      <div class="stat-sub">ต้องติดตามด่วน</div>
+    </div>
+  </div>
+
+  <!-- ④ Dual bar charts -->
+  <div class="charts-row" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>📷 CCTV ชำรุด (คัน) — ทุกอู่</h3>
+      ${cctvBar.length ? buildBarChart(cctvBar, ['#00cfff','#58a6ff','#0099cc','#006699','#79c0ff','#b0d8ff','#cce8ff']) : '<div style="color:var(--text-muted);font-size:13px;padding:12px 0">ไม่มีข้อมูล CCTV ชำรุด</div>'}
+    </div>
+    <div class="chart-card">
+      <h3>💾 HDD ชำรุด (คัน) — ทุกอู่</h3>
+      ${hddBar.length ? buildBarChart(hddBar, ['#ffa657','#f78166','#ff9500','#cc7700','#ffcc80','#ffe0a0','#fff0c0']) : '<div style="color:var(--text-muted);font-size:13px;padding:12px 0">ไม่มีข้อมูล HDD ชำรุด</div>'}
+    </div>
+  </div>
+
+  <!-- ⑤ Detail table -->
+  <div class="table-wrapper" style="margin-bottom:16px">
+    <div class="table-header">
+      <div class="table-title">📋 รายละเอียดรายอู่</div>
+      <input class="table-search" placeholder="ค้นหาอู่..." oninput="searchTable('t-cctv',this.value)">
+    </div>
+    <div style="overflow-x:auto" data-table="t-cctv" data-perpage="15">
+      <table class="data-table" id="t-cctv">
+        <thead><tr>
+          <th>#</th><th>อู่</th>
+          <th>CCTV ชำรุด</th><th>HDD ชำรุด</th>
+          <th>ตรวจสอบ</th><th>พบปัญหาซ้ำ</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>
+    <div class="table-pager">
+      <div class="pager-info" id="info-t-cctv"></div>
+      <div class="pager-btns">
+        <button class="pager-btn" id="prev-t-cctv" onclick="changePage('t-cctv',-1)">← ก่อนหน้า</button>
+        <button class="pager-btn" id="next-t-cctv" onclick="changePage('t-cctv',1)">ถัดไป →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ Repeat issue list -->
+  ${repeatList.length ? `
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">
+      🚨 รายการพบปัญหาซ้ำ — <span style="color:#ffa657">${repeatList.length} คัน</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${repeatList.map((item,i)=>`
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${item.type==='HDD'?'#ffa657':'#00cfff'};border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);width:24px">${i+1}.</div>
+        <div style="font-size:16px">${item.type==='HDD'?'💾':'📷'}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px">${escHtml(item.id)}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${escHtml(item.desc)} · อู่${escHtml(item.garage)}</div>
+        </div>
+        <span style="background:${item.type==='HDD'?'rgba(255,166,87,.15)':'rgba(0,207,255,.1)'};color:${item.type==='HDD'?'#ffa657':'#00cfff'};border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700">${item.type}</span>
+      </div>`).join('')}
+    </div>
+  </div>` : ''}`;
+}
+
+function renderIssue(data) {
+  const { headers, rows } = data;
+  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
+  const counts = {};
+  rows.forEach(r => { const s = r[statusKey] || 'ไม่ระบุ'; counts[s] = (counts[s]||0)+1; });
+  const colors = ['#3fb950','#ffa657','#f78166','#58a6ff','#d2a8ff'];
+  const barData = Object.entries(counts).map(([label,val])=>({label,val}));
+  const typeKey = headers.find(h => h.includes('ประเภท')) || '';
+  const typeCounts = {};
+  if (typeKey) rows.forEach(r => { const t = r[typeKey]||'ไม่ระบุ'; typeCounts[t]=(typeCounts[t]||0)+1; });
+  const typeBar = Object.entries(typeCounts).map(([label,val])=>({label,val}));
+  const done = rows.filter(r => (r[statusKey]||'').includes('เสร็จ')).length;
+  return `
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">ทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">รายการ</div></div>
+      <div class="stat-card"><div class="stat-label">เสร็จแล้ว</div><div class="stat-value" style="color:var(--accent2)">${done}</div><div class="stat-sub">รายการ</div></div>
+      <div class="stat-card"><div class="stat-label">คงเหลือ</div><div class="stat-value" style="color:var(--accent3)">${rows.length - done}</div><div class="stat-sub">รายการ</div></div>
+      <div class="stat-card"><div class="stat-label">% เสร็จ</div><div class="stat-value" style="color:var(--accent4)">${rows.length?Math.round(done/rows.length*100):0}%</div><div class="stat-sub"></div></div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card"><h3>สถานะ</h3>${buildBarChart(barData, colors)}</div>
+      ${typeBar.length ? `<div class="chart-card"><h3>ประเภทปัญหา</h3>${buildBarChart(typeBar, colors.slice().reverse())}</div>` : ''}
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="table-title">รายละเอียดการติดตามปัญหา</div>
+        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-issue',this.value)">
+      </div>
+      <div style="overflow-x:auto" data-table="t-issue" data-perpage="15">
+        ${buildTable('t-issue', headers, rows, statusKey)}
+      </div>
+      <div class="table-pager">
+        <div class="pager-info" id="info-t-issue"></div>
+        <div class="pager-btns">
+          <button class="pager-btn" id="prev-t-issue" onclick="changePage('t-issue',-1)">← ก่อนหน้า</button>
+          <button class="pager-btn" id="next-t-issue" onclick="changePage('t-issue',1)">ถัดไป →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderITS(data) {
+  const { headers, rows } = data;
+  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
+  const counts = {};
+  rows.forEach(r => { const s = r[statusKey]||'ไม่ระบุ'; counts[s]=(counts[s]||0)+1; });
+  const colors = ['#3fb950','#58a6ff','#ffa657','#d2a8ff','#f78166'];
+  const barData = Object.entries(counts).map(([label,val])=>({label,val}));
+  const typeKey = headers.find(h => h.includes('ประเภท')) || '';
+  const typeCounts = {};
+  if (typeKey) rows.forEach(r => { const t=r[typeKey]||'อื่นๆ'; typeCounts[t]=(typeCounts[t]||0)+1; });
+  const typeBar = Object.entries(typeCounts).map(([label,val])=>({label,val}));
+  const solved = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('solved')).length;
+  const processing = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('processing')).length;
+  const pending = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('pending')).length;
+  return `
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Tickets ทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">Ticket</div></div>
+      <div class="stat-card"><div class="stat-label">Solved</div><div class="stat-value" style="color:var(--accent2)">${solved}</div><div class="stat-sub">Ticket</div></div>
+      <div class="stat-card"><div class="stat-label">Processing (assigned)</div><div class="stat-value" style="color:var(--accent)">${processing}</div><div class="stat-sub">Ticket</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--accent5)">${pending}</div><div class="stat-sub">Ticket</div></div>
+      <div class="stat-card"><div class="stat-label">% Solved</div><div class="stat-value" style="color:var(--accent4)">${rows.length?Math.round(solved/rows.length*100):0}%</div><div class="stat-sub"></div></div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card"><h3>สถานะ Ticket</h3>${buildBarChart(barData, colors)}</div>
+      ${typeBar.length ? `<div class="chart-card"><h3>ประเภท</h3>${buildBarChart(typeBar, colors.slice().reverse())}</div>` : ''}
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="table-title">รายละเอียด ITS Tickets Issue</div>
+        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-its',this.value)">
+      </div>
+      <div style="overflow-x:auto" data-table="t-its" data-perpage="15">
+        ${buildTable('t-its', headers, rows, statusKey)}
+      </div>
+      <div class="table-pager">
+        <div class="pager-info" id="info-t-its"></div>
+        <div class="pager-btns">
+          <button class="pager-btn" id="prev-t-its" onclick="changePage('t-its',-1)">← ก่อนหน้า</button>
+          <button class="pager-btn" id="next-t-its" onclick="changePage('t-its',1)">ถัดไป →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPurchase(data) {
+  const { headers, rows } = data;
+  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
+  const qtyKey = headers.find(h => h.includes('จำนวน')) || '';
+  const STEPS = ['จัดทำ PR','รออนุมัติ PR','ออก PO','รับสินค้า'];
+  const stepColors = ['#d2a8ff','#ffa657','#58a6ff','#3fb950'];
+  const stepCounts = {};
+  STEPS.forEach(s => stepCounts[s] = 0);
+  rows.forEach(r => {
+    const s = r[statusKey] || '';
+    STEPS.forEach(step => { if (s.includes(step)) stepCounts[step]++; });
+  });
+  const barData = STEPS.map((label,i) => ({label, val: stepCounts[label]}));
+  const received = stepCounts['รับสินค้า'];
+  const totalQty = qtyKey ? rows.reduce((a,r)=>a+(parseFloat(r[qtyKey])||0),0) : 0;
+
+  const pipelineHtml = `
+    <div style="display:flex;gap:0;margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
+      ${STEPS.map((s,i) => {
+        const cnt = stepCounts[s];
+        const pct = rows.length ? Math.round(cnt/rows.length*100) : 0;
+        return `<div style="flex:1;background:var(--surface);padding:14px 12px;text-align:center;border-right:${i<3?'1px solid var(--border)':'none'}">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">${s}</div>
+          <div style="font-size:22px;font-weight:700;color:${stepColors[i]}">${cnt}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${pct}%</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  return `
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">รายการทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">รายการ</div></div>
+      <div class="stat-card"><div class="stat-label">รับสินค้าแล้ว</div><div class="stat-value" style="color:var(--accent2)">${received}</div><div class="stat-sub">รายการ</div></div>
+      <div class="stat-card"><div class="stat-label">คงค้าง</div><div class="stat-value" style="color:var(--accent3)">${rows.length-received}</div><div class="stat-sub">รายการ</div></div>
+      ${totalQty ? `<div class="stat-card"><div class="stat-label">จำนวนรวม</div><div class="stat-value" style="color:var(--accent)">${totalQty}</div><div class="stat-sub">หน่วย</div></div>` : ''}
+    </div>
+    ${pipelineHtml}
+    <div class="charts-row">
+      <div class="chart-card"><h3>สถานะการจัดซื้อ</h3>${buildBarChart(barData, stepColors)}</div>
+      <div class="chart-card"><h3>สัดส่วนความคืบหน้า</h3>
+        ${buildBarChart([{label:'รับสินค้าแล้ว',val:received},{label:'ยังไม่รับ',val:rows.length-received}],['#3fb950','#f78166'])}
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="table-title">รายละเอียดการจัดซื้อ</div>
+        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-purchase',this.value)">
+      </div>
+      <div style="overflow-x:auto" data-table="t-purchase" data-perpage="15">
+        ${buildTable('t-purchase', headers, rows, statusKey)}
+      </div>
+      <div class="table-pager">
+        <div class="pager-info" id="info-t-purchase"></div>
+        <div class="pager-btns">
+          <button class="pager-btn" id="prev-t-purchase" onclick="changePage('t-purchase',-1)">← ก่อนหน้า</button>
+          <button class="pager-btn" id="next-t-purchase" onclick="changePage('t-purchase',1)">ถัดไป →</button>
+        </div>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
