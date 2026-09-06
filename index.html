@@ -3,1209 +3,740 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard ความคืบหน้างาน</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>ดานัง · บานาฮิลล์ · ฮอยอัน — แผนฉบับปรับตามลิสต์ล่าสุด</title>
 <style>
-  :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1c2333;
-    --border: #30363d;
-    --text: #e6edf3;
-    --text-muted: #8b949e;
-    --accent: #58a6ff;
-    --accent2: #3fb950;
-    --accent3: #f78166;
-    --accent4: #d2a8ff;
-    --accent5: #ffa657;
-    --card: #21262d;
+  :root{
+    --bg:#FBF6EC;
+    --ink:#2B2118;
+    --ink-soft:#6B5A48;
+    --line:rgba(43,33,24,0.14);
+    --card:#FFFFFF;
+    --shadow: 0 1px 2px rgba(43,33,24,0.06), 0 8px 24px rgba(43,33,24,0.07);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Sarabun', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
   }
+  h1,h2,h3,.serif{ font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; }
+  .wrap{max-width:780px;margin:0 auto;padding:0 20px 64px;}
 
-  /* ===== HEADER ===== */
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  .hero{
+    background:
+      radial-gradient(1200px 400px at 15% -10%, rgba(232,163,61,0.35), transparent 60%),
+      linear-gradient(180deg,#1B2A3A 0%, #16212E 100%);
+    color:#F4ECDD;
+    padding:44px 20px 34px;
+    position:relative; overflow:hidden;
   }
-  .header-logo {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-  .header-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .header-sep { color: var(--border); margin: 0 4px; }
+  .hero::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(232,163,61,0.6), transparent); }
+  .hero-inner{max-width:780px;margin:0 auto;}
+  .hero-eyebrow{ font-size:0.82rem; color:#D9B36A; margin:0 0 6px; }
+  .hero h1{ font-size:2.05rem; margin:0 0 12px; font-weight:600; line-height:1.2; }
+  .hero p.lede{ margin:0 0 22px; color:#C9BEA9; max-width:58ch; font-size:0.96rem; }
+  .flight-strip{ display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.06);
+    border:1px solid rgba(232,163,61,0.35); border-radius:10px; padding:14px 16px; flex-wrap:wrap; }
+  .flight-leg{display:flex;flex-direction:column;gap:2px;}
+  .flight-leg .code{font-size:0.72rem;color:#B8AC94;}
+  .flight-leg .time{font-size:1.05rem; font-weight:600; color:#F4ECDD;}
+  .flight-arrow{color:#E8A33D; font-size:1.1rem; opacity:0.8;}
 
-  /* ===== UPLOAD SCREEN ===== */
-  #uploadScreen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  .upload-hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
-    gap: 40px;
-  }
-  .upload-heading {
-    text-align: center;
-  }
-  .upload-heading h1 {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-  .upload-heading p {
-    color: var(--text-muted);
-    font-size: 16px;
-  }
+  .card{ background:var(--card); border-radius:14px; box-shadow:var(--shadow); padding:20px 22px; margin:24px 0; }
+  .card h2{font-size:1.1rem;margin:0 0 4px;font-weight:600;}
+  .card .sub{color:var(--ink-soft); font-size:0.85rem; margin:0 0 14px;}
 
-  .upload-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    width: 100%;
-    max-width: 900px;
-  }
-  @media (max-width: 600px) {
-    .upload-grid { grid-template-columns: 1fr; }
-  }
+  .summary-grid{display:flex;flex-direction:column;gap:10px;}
+  .summary-row{display:flex; gap:10px; font-size:0.9rem; align-items:flex-start;}
+  .summary-row .ic{flex:0 0 auto; font-size:1.1rem;}
 
-  .upload-card {
-    background: var(--surface);
-    border: 1.5px dashed var(--border);
-    border-radius: 12px;
-    padding: 28px 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
+  /* proximity clusters */
+  .cluster{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
+  .cluster h3{margin:0 0 4px; font-size:1rem;}
+  .cluster .area{font-size:0.8rem; color:var(--ink-soft); margin-bottom:10px;}
+  .place-chain{display:flex; flex-direction:column; gap:0;}
+  .place-item{
+    display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line);
   }
-  .upload-card:hover, .upload-card.dragover {
-    border-color: var(--accent);
-    background: var(--surface2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(88,166,255,0.12);
-  }
-  .upload-card.loaded {
-    border-style: solid;
-    border-color: var(--accent2);
-  }
-  .upload-card.loaded::after {
-    content: '✓';
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    color: var(--accent2);
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .card-icon {
-    font-size: 28px;
-    margin-bottom: 12px;
-  }
-  .card-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-  .card-desc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-    margin-bottom: 12px;
-  }
-  .card-headers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 14px;
-  }
-  .card-headers span {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2px 7px;
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--text-muted);
-  }
-  .card-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--accent);
-    border-radius: 6px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .card-btn:hover { background: var(--surface2); }
-  .card-status {
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--accent2);
-    font-weight: 500;
-    min-height: 20px;
-  }
+  .place-item:first-child{border-top:none;}
+  .place-item .dot{flex:0 0 auto; width:8px;height:8px;border-radius:50%;background:#B8860B;margin-top:6px;}
+  .place-name{font-weight:600; font-size:0.92rem;}
+  .place-name a{color:var(--ink); text-decoration:none; border-bottom:1px dotted #B8860B;}
+  .place-meta{font-size:0.82rem; color:var(--ink-soft); margin-top:2px;}
+  .distance-link{ font-size:0.8rem; color:#8A5A22; background:#FBF0DA; border-radius:6px; padding:3px 8px; display:inline-block; margin-top:4px; }
 
-  .upload-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #0d1117;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 28px;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.15s;
-  }
-  .btn-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
-  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-  .btn-secondary {
-    background: transparent;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .btn-secondary:hover { background: var(--surface2); color: var(--text); }
+  .daynav{ position:sticky; top:0; z-index:5; background:var(--bg); padding:14px 0 10px;
+    border-bottom:1px solid var(--line); margin-bottom:22px; }
+  .daynav-inner{ max-width:780px;margin:0 auto;padding:0 20px; display:flex; gap:8px; overflow-x:auto; }
+  .daynav button{ flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink-soft);
+    padding:8px 14px; border-radius:20px; font-size:0.88rem; cursor:pointer; font-family:inherit;
+    transition:all .15s ease; white-space:nowrap; }
+  .daynav button.active{ background:var(--ink); color:#F4ECDD; border-color:var(--ink); }
 
-  /* hidden file inputs */
-  .file-input { display: none; }
+  .day{display:none;}
+  .day.active{display:block; animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+  .day-head{margin:4px 0 18px;}
+  .day-head h2{font-size:1.35rem; margin:0 0 4px; font-weight:600;}
+  .day-head p{margin:0; color:var(--ink-soft); font-size:0.92rem;}
 
-  /* ===== DASHBOARD SCREEN ===== */
-  #dashScreen { display: none; min-height: 100vh; flex-direction: column; }
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{ content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px;
+    background:linear-gradient(var(--accent), transparent 98%); opacity:0.35; }
 
-  .tab-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    padding: 0 24px;
-    gap: 0;
-    overflow-x: auto;
-  }
-  .tab-btn {
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: var(--text-muted);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 14px 18px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-  .tab-btn:hover:not(.active) { color: var(--text); }
-  .tab-btn .tab-badge {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 1px 7px;
-    font-size: 11px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--text-muted);
-  }
-  .tab-btn.active .tab-badge { background: rgba(88,166,255,0.15); color: var(--accent); }
+  details.stop{ position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px;
+    margin-bottom:12px; box-shadow:var(--shadow); overflow:hidden; }
+  details.stop::before{ content:""; position:absolute; left:-26px; top:20px; width:10px; height:10px;
+    border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--bg); }
+  details.stop summary{ list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+  details.stop summary::-webkit-details-marker{display:none;}
+  .stop-time{ flex:0 0 auto; font-size:0.82rem; font-weight:700; color:var(--accent); min-width:44px; }
+  .stop-icon{flex:0 0 auto; font-size:1.15rem;}
+  .stop-titleblock{flex:1 1 auto; min-width:0;}
+  .stop-name{font-weight:600; font-size:0.98rem;}
+  .stop-name a{ color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--accent); padding-bottom:1px; }
+  .stop-name a:hover{border-bottom-style:solid;}
+  .stop-name .ext-icon{font-size:0.72em; color:var(--accent); margin-left:2px;}
+  .stop-tag{font-size:0.78rem; color:var(--ink-soft);}
+  .chevron{ flex:0 0 auto; color:var(--ink-soft); transition:transform .18s ease; font-size:0.8rem; }
+  details[open] .chevron{transform:rotate(90deg);}
+  details[open] summary{border-bottom:1px solid var(--line);}
+  .stop-body{padding:6px 16px 16px;}
+  .stop-desc{margin:6px 0 12px; font-size:0.92rem; color:var(--ink);}
+  .meta-grid{ display:flex; flex-direction:column; gap:8px; background:var(--accent-soft); border-radius:8px;
+    padding:10px 12px; margin-bottom:10px; }
+  .meta-row{font-size:0.85rem; display:flex; gap:8px;}
+  .meta-row .k{flex:0 0 auto;}
+  .tip{ font-size:0.86rem; color:var(--ink-soft); border-left:2px solid var(--accent); padding-left:10px; }
+  .note{ font-size:0.8rem; color:#9A6B2E; background:#FBF0DA; border-radius:6px; padding:6px 10px;
+    margin-top:8px; display:inline-block; }
+  .backup{ font-size:0.85rem; color:#2B5F7A; background:#E1EBF0; border-radius:6px; padding:8px 10px; margin-top:8px; }
 
-  .dash-content { flex: 1; padding: 24px; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  .day[data-day="1"]{--accent:#1F6F63; --accent-soft:#E4F0EC;}
+  .day[data-day="2"]{--accent:#B8860B; --accent-soft:#FAF0DA;}
+  .day[data-day="3"]{--accent:#A8402D; --accent-soft:#F7E4DE;}
+  .day[data-day="4"]{--accent:#2B5F7A; --accent-soft:#E1EBF0;}
 
-  /* ===== STATS ROW ===== */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    font-weight: 500;
-  }
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-  .stat-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+  table.b-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+  table.b-table td{padding:7px 4px; border-top:1px solid var(--line); vertical-align:top;}
+  table.b-table td:last-child{text-align:right; white-space:nowrap; font-weight:600;}
+  table.b-table tr.total td{border-top:2px solid var(--ink); font-weight:700; padding-top:10px;}
 
-  /* ===== TABLE ===== */
-  .table-wrapper {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .table-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .table-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .table-search {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 13px;
-    color: var(--text);
-    font-family: 'Sarabun', sans-serif;
-    width: 220px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .table-search:focus { border-color: var(--accent); }
-  .data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  .data-table th {
-    background: var(--card);
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .data-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table tr:hover td { background: var(--surface2); }
-  .table-pager {
-    padding: 12px 18px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .pager-info { font-size: 13px; color: var(--text-muted); }
-  .pager-btns { display: flex; gap: 6px; }
-  .pager-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 5px;
-    padding: 5px 12px;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: 'Sarabun', sans-serif;
-    transition: background 0.12s;
-  }
-  .pager-btn:hover:not(:disabled) { background: var(--surface2); }
-  .pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .massage-grid{display:flex; flex-direction:column; gap:12px;}
+  .massage-item{border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
+  .massage-item b{display:block; font-size:0.94rem; margin-bottom:2px;}
+  .massage-item span{font-size:0.85rem; color:var(--ink-soft);}
 
-  /* ===== BADGE ===== */
-  .badge {
-    display: inline-block;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .badge-green { background: rgba(63,185,80,0.15); color: var(--accent2); }
-  .badge-red { background: rgba(247,129,102,0.15); color: var(--accent3); }
-  .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
-  .badge-yellow { background: rgba(255,166,87,0.15); color: var(--accent5); }
-  .badge-purple { background: rgba(210,168,255,0.15); color: var(--accent4); }
+  .assumptions{ margin-top:6px; font-size:0.83rem; color:var(--ink-soft); background:#F4ECDD; border-radius:10px;
+    padding:14px 16px; }
+  .assumptions b{color:var(--ink);}
+  .assumptions ul{margin:8px 0 0; padding-left:18px;}
+  .assumptions li{margin-bottom:4px;}
 
-  /* ===== CHARTS ROW ===== */
-  .charts-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  @media (max-width: 700px) { .charts-row { grid-template-columns: 1fr; } }
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
-  }
-  .chart-card h3 {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .bar-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 13px;
-  }
-  .bar-label { width: 130px; color: var(--text); flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar-track { flex: 1; background: var(--card); border-radius: 4px; height: 8px; }
-  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s cubic-bezier(.22,1,.36,1); }
-  .bar-count { width: 40px; text-align: right; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
-
-  /* ===== UPLOAD AGAIN BTN ===== */
-  .dash-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .dash-topbar h2 { font-size: 18px; font-weight: 700; color: var(--text); }
-  .btn-back {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    border-radius: 7px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s;
-  }
-  .btn-back:hover { background: var(--surface2); color: var(--text); }
-
-  /* ===== EMPTY ===== */
-  .empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    color: var(--text-muted);
-  }
-  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 15px; }
+  footer.disclaimer{ text-align:center; color:var(--ink-soft); font-size:0.78rem; margin-top:26px;
+    padding-top:16px; border-top:1px solid var(--line); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <span class="header-logo">ITS</span>
-  <span class="header-sep">/</span>
-  <span class="header-title">Dashboard ความคืบหน้างาน</span>
-</div>
-
-<!-- ===== UPLOAD SCREEN ===== -->
-<div id="uploadScreen">
-  <div class="upload-hero">
-    <div class="upload-heading">
-      <h1>📂 อัปโหลด CSV</h1>
-      <p>ลากไฟล์หรือคลิกเลือกไฟล์ CSV ในแต่ละหมวด แล้วกด "ดู Dashboard"</p>
-    </div>
-
-    <div class="upload-grid">
-      <!-- CCTV -->
-      <div class="upload-card" id="card-cctv"
-           ondragover="handleDragOver(event,'cctv')" ondragleave="handleDragLeave('cctv')" ondrop="handleDrop(event,'cctv')">
-        <div class="card-icon">📷</div>
-        <div class="card-title">CCTV & HDD</div>
-        <div class="card-desc">ข้อมูลการซ่อมและตรวจสอบกล้องวงจรปิดและฮาร์ดดิสก์</div>
-        <div class="card-headers">
-          <span>อู่</span><span>CCTV ซ่อรุด</span><span>HDD ซ่อรุด</span><span>ตรวจสอบ</span><span>พบปัญหาซ้ำ</span><span>% เข้ามา</span><span>วันเริ่มงาน</span><span>วันสิ้นสุด</span>
-        </div>
-        <button class="card-btn" onclick="document.getElementById('file-cctv').click()">📁 เลือกไฟล์ CSV</button>
-        <input class="file-input" type="file" id="file-cctv" accept=".csv" onchange="handleFile(event,'cctv')">
-        <div class="card-status" id="status-cctv"></div>
-      </div>
-
-      <!-- ติดตามปัญหา -->
-      <div class="upload-card" id="card-issue"
-           ondragover="handleDragOver(event,'issue')" ondragleave="handleDragLeave('issue')" ondrop="handleDrop(event,'issue')">
-        <div class="card-icon">🔧</div>
-        <div class="card-title">ติดตามปัญหา</div>
-        <div class="card-desc">ข้อมูลการแก้ไขปัญหาและสถานะความคืบหน้า</div>
-        <div class="card-headers">
-          <span>ทะเบียน</span><span>ประเภท</span><span>อู่</span><span>ปัญหา</span><span>สถานะ</span><span>วันที่แก้ไข</span>
-        </div>
-        <button class="card-btn" onclick="document.getElementById('file-issue').click()">📁 เลือกไฟล์ CSV</button>
-        <input class="file-input" type="file" id="file-issue" accept=".csv" onchange="handleFile(event,'issue')">
-        <div class="card-status" id="status-issue"></div>
-      </div>
-
-      <!-- ITS Tickets Issue -->
-      <div class="upload-card" id="card-its"
-           ondragover="handleDragOver(event,'its')" ondragleave="handleDragLeave('its')" ondrop="handleDrop(event,'its')">
-        <div class="card-icon">🎫</div>
-        <div class="card-title">ITS Tickets Issue</div>
-        <div class="card-desc">ข้อมูล Ticket การแจ้งปัญหาและการตรวจสอบแก้ไข</div>
-        <div class="card-headers">
-          <span>Tickets No.</span><span>ปัญหา</span><span>ทะเบียน</span><span>อู่</span><span>สถานะ</span>
-        </div>
-        <button class="card-btn" onclick="document.getElementById('file-its').click()">📁 เลือกไฟล์ CSV</button>
-        <input class="file-input" type="file" id="file-its" accept=".csv" onchange="handleFile(event,'its')">
-        <div class="card-status" id="status-its"></div>
-      </div>
-
-      <!-- การจัดซื้อ -->
-      <div class="upload-card" id="card-purchase"
-           ondragover="handleDragOver(event,'purchase')" ondragleave="handleDragLeave('purchase')" ondrop="handleDrop(event,'purchase')">
-        <div class="card-icon">🛒</div>
-        <div class="card-title">การจัดซื้อ</div>
-        <div class="card-desc">รายการอุปกรณ์และสถานะการจัดซื้อ</div>
-        <div class="card-headers">
-          <span>รายการอุปกรณ์</span><span>รายละเอียด</span><span>จำนวน</span><span>หน่วย</span><span>สถานะ: จัดทำ PR / รออนุมัติ PR / ออก PO / รับสินค้า</span>
-        </div>
-        <button class="card-btn" onclick="document.getElementById('file-purchase').click()">📁 เลือกไฟล์ CSV</button>
-        <input class="file-input" type="file" id="file-purchase" accept=".csv" onchange="handleFile(event,'purchase')">
-        <div class="card-status" id="status-purchase"></div>
-      </div>
-    </div>
-
-    <div class="upload-actions">
-      <button class="btn-primary" id="btnView" onclick="showDashboard()" disabled>📊 ดู Dashboard</button>
-      <button class="btn-secondary" onclick="loadDemo()">🧪 ทดลองด้วยข้อมูลตัวอย่าง</button>
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">4 วัน 3 คืน · ปรับตามลิสต์สถานที่และแผนล่าสุดที่ส่งมา</p>
+    <h1>ดานัง — บานาฮิลล์ — ฮอยอัน</h1>
+    <p class="lede">จัดสถานที่ทั้ง 18 แห่งที่ให้มาลงในตารางเวลาตามแผนที่วางไว้ พร้อมระยะทางระหว่างจุด ลิงก์แผนที่/รีวิว ร้านนวดเผื่อไว้ และแผนสำรองกรณีคนเยอะ</p>
+    <div class="flight-strip">
+      <div class="flight-leg"><span class="code">BKK</span><span class="time">19:50</span></div>
+      <span class="flight-arrow">→</span>
+      <div class="flight-leg"><span class="code">DAD</span><span class="time">21:30</span></div>
+      <span class="flight-arrow" style="margin-left:18px; opacity:0.4;">|</span>
+      <div class="flight-leg" style="margin-left:8px;"><span class="code">DAD (ขากลับ)</span><span class="time">23:30</span></div>
+      <span class="flight-arrow">→</span>
+      <div class="flight-leg"><span class="code">BKK</span><span class="time">01:10</span></div>
     </div>
   </div>
 </div>
 
-<!-- ===== DASHBOARD SCREEN ===== -->
-<div id="dashScreen">
-  <div class="tab-bar" id="tabBar"></div>
-  <div class="dash-content">
-    <div class="dash-topbar">
-      <h2 id="dashTitle">Dashboard</h2>
-      <button class="btn-back" onclick="backToUpload()">← อัปโหลดใหม่</button>
+<div class="wrap">
+
+  <!-- ============ TRIP SUMMARY ============ -->
+  <div class="card">
+    <h2>สรุปทริปสั้น ๆ</h2>
+    <p class="sub">ภาพรวมทั้ง 4 วัน แบบดูรวดเร็ว</p>
+    <div class="summary-grid">
+      <div class="summary-row"><span class="ic">🛬</span><span><b>วันที่ 1</b> — ถึงดานังดึก (21:30) เช็คอิน Tân Hoà Homestay ใกล้สนามบิน แล้วไปถ่ายรูปสะพานมังกร ต่อด้วย Son Tra Night Market เดินเล่น-กินมื้อดึก</span></div>
+      <div class="summary-row"><span class="ic">🌉</span><span><b>วันที่ 2</b> — ขึ้นบานาฮิลล์เต็มวัน ชมสะพานทองคำ หมู่บ้านฝรั่งเศส Fantasy Park ค้างคืนบนเขาที่ Mercure เพื่อเลี่ยงกระเช้าคิวยาว</span></div>
+      <div class="summary-row"><span class="ic">🏮</span><span><b>วันที่ 3</b> — เช้าถ่ายรูปบานาฮิลล์ก่อนคนเยอะ ลงเขาไปฮอยอัน เดินเมืองเก่า คาเฟ่ดาดฟ้า Faifo ล่องเรือโคมไฟ ตลาดกลางคืน ปิดท้ายมื้อเย็นริมน้ำที่ Thuận Ý</span></div>
+      <div class="summary-row"><span class="ic">✈️</span><span><b>วันที่ 4</b> — ล่องเรือกระจาดหมู่บ้านมะพร้าว กลับดานัง แวะ Linh Ứng + Sơn Trà Marina ถ่ายรูป กินซีฟู้ด ช้อปของฝากที่ GO! แล้วเข้าสนามบิน (บิน 23:30)</span></div>
     </div>
-    <div id="panelContainer"></div>
   </div>
+
+  <!-- ============ PROXIMITY GROUPING ============ -->
+  <div class="card">
+    <h2>จัดกลุ่มสถานที่ตามความใกล้กัน (จากลิสต์ 18 ที่ที่ให้มา)</h2>
+    <p class="sub">แบ่งเป็น 4 โซนตามพื้นที่จริง — ระยะทางเป็นเส้นตรงโดยประมาณ ใช้เวลาจริงต้องดูสภาพจราจร</p>
+
+    <div class="cluster">
+      <h3>🌆 โซน 1 — ดานัง ฝั่งแม่น้ำฮาน (Dragon Bridge / Bạch Đằng)</h3>
+      <div class="area">คืนที่ 1 และช่วงบ่ายวันที่ 4</div>
+      <div class="place-chain">
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Dragon+Bridge+Da+Nang" target="_blank">สะพานมังกร (Dragon Bridge)</a></div><div class="place-meta">จุดศูนย์กลางของโซนนี้ ทุกที่ด้านล่างอยู่ใกล้จากตรงนี้</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Son+Tra+Night+Market+Da+Nang" target="_blank">Son Tra Night Market</a> <span class="ext-icon">(#1 son tra ning market)</span></div><div class="place-meta">อยู่ที่เชิงสะพานมังกรฝั่งตะวันออกเลย</div><div class="distance-link">ห่างจากสะพานมังกร ~150–300 ม. เดิน 3–5 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Cong+Ca+Phe+96+Bach+Dang+Da+Nang" target="_blank">Cộng Cà Phê (สาขา Bạch Đằng)</a> <span class="ext-icon">(#2)</span></div><div class="place-meta">96-98 Bạch Đằng ริมแม่น้ำฝั่งตะวันตก</div><div class="distance-link">ห่างจากสะพานมังกร ~700 ม. เดิน 8–10 นาที หรือรถ 3 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Reply+1988+Cafe+20+Le+Hong+Phong+Da+Nang" target="_blank">Reply 1988 Cafe</a> <span class="ext-icon">(#5)</span></div><div class="place-meta">20 Lê Hồng Phong</div><div class="distance-link">ห่างจาก Cộng Cà Phê ~1.2 กม. รถ 5 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Pizza+4P's+74+Bach+Dang+Da+Nang" target="_blank">Pizza 4P's (สาขา Bạch Đằng)</a> <span class="ext-icon">(#9)</span></div><div class="place-meta">74 Bạch Đằng ริมแม่น้ำ</div><div class="distance-link">ห่างจาก Cộng Cà Phê ~250 ม. เดิน 3 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=GO!+Da+Nang+Supermarket" target="_blank">GO! Da Nang</a> <span class="ext-icon">(GO! ช้อปของฝาก)</span></div><div class="place-meta">ห้างใหญ่ ซื้อของฝากรอบสุดท้าย</div><div class="distance-link">ห่างจากย่านนี้ ~3 กม. รถ 10 นาที</div></div></div>
+      </div>
+    </div>
+
+    <div class="cluster">
+      <h3>🏖️ โซน 2 — My Khe Beach / Sơn Trà Peninsula</h3>
+      <div class="area">ช่วงเที่ยง-บ่ายวันที่ 4</div>
+      <div class="place-chain">
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Linh+Ung+Pagoda+Son+Tra+Da+Nang" target="_blank">วัด Linh Ứng (Sơn Trà)</a> <span class="ext-icon">(#10)</span></div><div class="place-meta">องค์เจ้าแม่กวนอิมสูง 67 ม. จุดชมวิวอ่าวดานัง</div><div class="distance-link">จุดเริ่มของโซนนี้</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name">Sơn Trà Marina (คาเฟ่ริมทะเลสไตล์ Santorini)</div><div class="place-meta">จุดถ่ายรูป+เครื่องดื่ม</div><div class="distance-link">ห่างจากวัด Linh Ứng ~4–5 กม. รถ 10–12 นาที (ลงจากเขา)</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name">Hải Sản Tươi Sống Bà Rô (ซีฟู้ด)</div><div class="place-meta">โซน Sơn Trà</div><div class="distance-link">ห่างจาก Sơn Trà Marina ~2 กม. รถ 5–7 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Cua+Ngo+Cafe+My+Khe+Da+Nang" target="_blank">Cửa Ngõ Café</a> <span class="ext-icon">(#3)</span></div><div class="place-meta">ติดหาด My Khe สไตล์บ้านเวียดนามเก่า</div><div class="distance-link">ห่างจากร้านซีฟู้ด ~2.5 กม. รถ 6–8 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Bep+Cuon+31-33+Tran+Bach+Dang+Da+Nang" target="_blank">Bếp Cuốn</a> <span class="ext-icon">(#7 bep coun 666)</span></div><div class="place-meta">31-33 Trần Bạch Đằng — ติด Michelin Selected</div><div class="distance-link">ห่างจาก Cửa Ngõ Café ~350 ม. เดิน 5 นาที</div></div></div>
+      </div>
+      <div class="note">หมายเหตุ: "Bep coun 666" ในลิสต์ ไม่พบเลขที่ 666 ตรงตัว ใช้ Bếp Cuốn สาขา 31-33 Trần Bạch Đằng แทน (ร้านเดียวที่ติด Michelin ในดานัง ชื่อใกล้เคียงที่สุด)</div>
+    </div>
+
+    <div class="cluster">
+      <h3>⛰️ โซน 3 — บานาฮิลล์ (Ba Na Hills)</h3>
+      <div class="area">วันที่ 2 เต็มวัน + เช้าวันที่ 3</div>
+      <div class="place-chain">
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Golden+Bridge+Ba+Na+Hills" target="_blank">สะพานทองคำ (Cầu Vàng)</a></div><div class="place-meta">ไฮไลต์หลัก มือหินยักษ์อุ้มสะพาน</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=French+Village+Ba+Na+Hills" target="_blank">French Village + Fantasy Park</a></div><div class="place-meta">หมู่บ้านฝรั่งเศส สวนสนุกในร่ม</div><div class="distance-link">เดินถึงกันได้ทั้งหมด ~5–15 นาที ในโซนบานาฮิลล์</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Mercure+Danang+French+Village+Bana+Hills" target="_blank">Mercure Danang French Village</a></div><div class="place-meta">ที่พักคืนที่ 2 อยู่ในหมู่บ้านฝรั่งเศสเลย</div></div></div>
+      </div>
+      <div style="height:14px;"></div>
+      <p class="area" style="margin-bottom:0;">ระยะจากดานังตัวเมืองถึงสถานีกระเช้า: ~24 กม. · 45–60 นาที</p>
+    </div>
+
+    <div class="cluster">
+      <h3>🏮 โซน 4 — ฮอยอันเมืองเก่า / An Hội</h3>
+      <div class="area">วันที่ 3 บ่าย-ค่ำ</div>
+      <div class="place-chain">
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Ancient+Town+Japanese+Covered+Bridge" target="_blank">Old Town Hội An + สะพานญี่ปุ่น</a> <span class="ext-icon">(#11)</span></div><div class="place-meta">แลนด์มาร์คหลักของเมืองเก่า</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=An+Thoi+Hoi+An+40+Nguyen+Phuc+Tan" target="_blank">An Thoi Hoi An</a> <span class="ext-icon">(#15 anthoi)</span></div><div class="place-meta">40 Nguyễn Phúc Tần — ร้านอาหารเวียดนาม</div><div class="distance-link">ห่างจากสะพานญี่ปุ่น ~250 ม. เดิน 3 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Faifo+Coffee+130+Tran+Phu+Hoi+An" target="_blank">Faifo Coffee</a> <span class="ext-icon">(#12 fatfo cafe)</span></div><div class="place-meta">130 Trần Phú — คาเฟ่ดาดฟ้า</div><div class="distance-link">ห่างจาก An Thoi Hoi An ~300 ม. เดิน 4 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name">Mót Hội An</div><div class="place-meta">150 Trần Phú — น้ำสมุนไพร</div><div class="distance-link">ติดกับ Faifo Coffee เดิน 1 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Night+Market+Nguyen+Hoang" target="_blank">Night Market Hội An</a> <span class="ext-icon">(#13)</span></div><div class="place-meta">ถนน Nguyễn Hoàng ฝั่ง An Hội</div><div class="distance-link">ห่างจาก Faifo Coffee ~500 ม. เดิน 6–7 นาที ข้ามสะพาน An Hội</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Nha+Hang+Thuan+Y+94+Bach+Dang+Hoi+An" target="_blank">Thuận Ý</a> <span class="ext-icon">(#18 THUAN Y)</span></div><div class="place-meta">94 Bạch Đằng — ร้านอาหารริมน้ำ คนท้องถิ่นเยอะ</div><div class="distance-link">ห่างจาก Night Market ~150 ม. เดิน 2 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Tiger+Tiger+Bar+An+Hoi+Hoi+An" target="_blank">Tiger Tiger Bar</a> <span class="ext-icon">(#14)</span></div><div class="place-meta">ฝั่ง An Hội ริมแม่น้ำ Hoài</div><div class="distance-link">ห่างจาก Thuận Ý ~300 ม. เดิน 4 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name">Moi (ร้านคนท้องถิ่นนิยม)</div><div class="place-meta">นอกโซนนักท่องเที่ยวเล็กน้อย</div><div class="distance-link">ห่างจากศูนย์กลาง An Hội ~600 ม.–1 กม. รถ 3–5 นาที</div></div></div>
+        <div class="place-item"><span class="dot"></span><div><div class="place-name">ล่องเรือโคมไฟ (แม่น้ำ Hoài)</div><div class="place-meta">ท่าเรือฝั่ง An Hội</div><div class="distance-link">อยู่ในย่านเดียวกับ Night Market เดิน 2–3 นาที</div></div></div>
+      </div>
+      <div class="note">หมายเหตุ: "Tan cafe" และ "Dapen" ในลิสต์ยังไม่พบชื่อสถานที่ที่ตรงกันชัดเจน — ถ้ามีที่อยู่คร่าว ๆ หรือชื่อเต็มเพิ่มเติมแจ้งมาได้เลย จะช่วยหาตำแหน่งให้แม่นขึ้น</div>
+    </div>
+  </div>
+
+  <div class="daynav">
+    <div class="daynav-inner">
+      <button class="active" data-target="1">วันที่ 1 · ถึงดานัง</button>
+      <button data-target="2">วันที่ 2 · บานาฮิลล์</button>
+      <button data-target="3">วันที่ 3 · ฮอยอัน</button>
+      <button data-target="4">วันที่ 4 · ขากลับ</button>
+    </div>
+  </div>
+
+  <!-- ============ DAY 1 ============ -->
+  <section class="day active" data-day="1">
+    <div class="day-head">
+      <h2>วันที่ 1 — ดานัง → Dragon Bridge → Son Tra Night Market</h2>
+      <p>ลงเครื่องดึก เช็คอินใกล้สนามบิน แล้วออกไปดูสะพานมังกรและกินมื้อดึกที่ตลาดกลางคืน</p>
+    </div>
+    <div class="timeline">
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">21:30</span><span class="stop-icon">🛬</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Danang+International+Airport" target="_blank">ถึงสนามบินดานัง</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ตม. + รับกระเป๋า + แลกเงิน/ซิม</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">ช่วงขาเข้าคิว ตม. มักไม่แน่นเท่าขาออก ใช้เวลาราว 30–40 นาทีตั้งแต่ลงเครื่องถึงออกจากสนามบิน</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>Grab จากสนามบินไปที่พัก ราว 30,000–50,000 VND (~45–70 บาท)</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">22:00</span><span class="stop-icon">🏨</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Tan+Hoa+Homestay+Da+Nang+Airport" target="_blank">Tân Hoà Homestay Da Nang Airport</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">เช็คอิน เก็บกระเป๋า</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">อยู่ห่างจากสนามบินเพียง 200–400 เมตร สะดวกมากสำหรับคืนแรก/คืนสุดท้าย แถวนี้ร้านอาหารมีน้อย ต้องนั่งรถออกไปกินข้างนอก</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">📍</span><span>4/52 Đặng Thùy Trâm, Đà Nẵng</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">22:30</span><span class="stop-icon">🌉</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Dragon+Bridge+Da+Nang" target="_blank">Dragon Bridge (สะพานมังกร)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ถ่ายรูปตอนกลางคืน</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">สะพานเหล็กรูปมังกรยาว 666 เมตร ไฟประดับสวยมากตอนกลางคืน คืนศุกร์-เสาร์-อาทิตย์ เวลา 21:00 น. มีโชว์พ่นไฟ-พ่นน้ำ แต่เครื่องลง 21:30 จึงไปถ่ายรูปตัวสะพานอย่างเดียวคืนนี้</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>จากที่พัก ~2.6 กม. · 10 นาที · Grab ราว 40,000 VND (~55 บาท)</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ชมฟรี</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">23:15</span><span class="stop-icon">🌙</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Son+Tra+Night+Market+Da+Nang" target="_blank">Son Tra Night Market</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อดึก + ของกิน + ของฝาก</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">ตลาดตั้งอยู่เชิงสะพานมังกรฝั่งตะวันออก มีเกือบ 200 แผงขายทั้งสตรีทฟู้ด เสื้อผ้า ของฝาก บรรยากาศคึกคักผสมทั้งคนท้องถิ่นและนักท่องเที่ยว เปิดตั้งแต่ราว 17:30 ถึงเกือบเที่ยงคืน เดินข้ามจากสะพานมังกรได้เลยไม่ต้องนั่งรถ</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚶</span><span>จากสะพานมังกร ~150–300 ม. เดิน 3–5 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>เข้าฟรี ค่าอาหาร/ของกินราว 20,000–60,000 VND ต่อจาน</span></div>
+            <div class="meta-row"><span class="k">🕙</span><span>เปิดราว 17:30–23:45 น.</span></div>
+          </div>
+          <div class="backup">🔁 แผนสำรอง: ถ้าตลาดปิดหรือคนแน่นเกิน ให้เดินกลับข้ามมาฝั่ง Bạch Đằng แทน มีคาเฟ่ริมแม่น้ำเปิดถึงเที่ยงคืนหลายร้าน เช่น Cộng Cà Phê (98-96 Bạch Đằng) เดินอีก ~700 ม.</div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ DAY 2 ============ -->
+  <section class="day" data-day="2">
+    <div class="day-head">
+      <h2>วันที่ 2 — ดานัง → บานาฮิลล์</h2>
+      <p>เช้าออกจากดานังไปขึ้นกระเช้า เที่ยวบานาฮิลล์เต็มวัน ค้างคืนบนเขา</p>
+    </div>
+    <div class="timeline">
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">07:15</span><span class="stop-icon">🍳</span>
+          <span class="stop-titleblock"><span class="stop-name">อาหารเช้าใกล้ที่พัก</span><br><span class="stop-tag">ไม่ต้องเลือกคาเฟ่พิเศษ เก็บเวลาไว้ขึ้นเขา</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">วันนี้ต้องขึ้นบานาฮิลล์ค่อนข้างเช้า กินอาหารเช้าง่าย ๆ ใกล้ที่พักพอ ไม่ต้องเสียเวลาเดินทางไปคาเฟ่ไกล</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 35,000–50,000 VND/คน (~50–70 บาท)</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">08:00</span><span class="stop-icon">🚕</span>
+          <span class="stop-titleblock"><span class="stop-name">ดานัง → สถานีกระเช้า <a href="https://www.google.com/maps/search/?api=1&query=Sun+World+Ba+Na+Hills+Cable+Car+Station" target="_blank">Sun World Ba Na Hills</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">~24 กม.</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>~24 กม. · 45–60 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 350,000–450,000 VND ต่อเที่ยว (~500–650 บาท)</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">09:00</span><span class="stop-icon">🚠</span>
+          <span class="stop-titleblock"><span class="stop-name">ขึ้นกระเช้า + <a href="https://www.google.com/maps/search/?api=1&query=Golden+Bridge+Ba+Na+Hills" target="_blank">Golden Bridge</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">รีบถ่ายรูปช่วงเช้าก่อนคนเยอะ</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">สะพานทองคำที่มีมือหินยักษ์อุ้มไว้ ไฮไลต์ที่ห้ามพลาด ควรรีบถ่ายรูปช่วงสาย ๆ เพราะคนจะเยอะขึ้นเรื่อย ๆ</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ตั๋วกระเช้า+เข้าชม ราว 750,000–900,000 VND/คน (~1,090–1,300 บาท)</span></div></div>
+          <div class="backup">🔁 แผนสำรอง: ถ้าจุดถ่ายรูปสะพานแน่นมาก ให้เดินลึกเข้าไปฝั่งสวนดอกไม้ (Le Jardin d'Amour) ก่อน แล้ววนกลับมาสะพานอีกรอบตอนสายกว่านั้นคนมักเบาลงเป็นช่วง ๆ</div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">10:30</span><span class="stop-icon">🏰</span>
+          <span class="stop-titleblock"><span class="stop-name">French Village + เดินเล่นบานาฮิลล์</span><br><span class="stop-tag">ถ่ายรูปสถาปัตยกรรม</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body"><p class="stop-desc">เดินชมหมู่บ้านฝรั่งเศส โบสถ์จำลอง และจุดถ่ายรูปต่าง ๆ บนบานาฮิลล์</p></div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">12:00</span><span class="stop-icon">🍽️</span>
+          <span class="stop-titleblock"><span class="stop-name">Buffet Lunch</span><br><span class="stop-tag">รวมในตั๋วกระเช้าส่วนใหญ่</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body"><p class="stop-desc">มื้อเที่ยงบุฟเฟ่ต์มักรวมอยู่ในตั๋วกระเช้าแล้ว กินให้เต็มที่เพราะบ่ายยังมีเที่ยวอีกหลายจุด</p></div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">13:00</span><span class="stop-icon">🎢</span>
+          <span class="stop-titleblock"><span class="stop-name">Fantasy Park + เดินเที่ยวต่อ</span><br><span class="stop-tag">สวนสนุกในร่ม</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body"><p class="stop-desc">เล่นเครื่องเล่นในร่ม เหมาะเวลาแดดแรงหรือฝนตกบนเขา</p></div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">16:00</span><span class="stop-icon">🏨</span>
+          <span class="stop-titleblock"><span class="stop-name">เช็คอิน <a href="https://www.google.com/maps/search/?api=1&query=Mercure+Danang+French+Village+Bana+Hills" target="_blank">Mercure Danang French Village</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">พักบนเขา 1 คืน</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">แขกที่พักที่นี่ได้ใช้กระเช้าเลนพิเศษ ทำให้เดินชมหมู่บ้านฝรั่งเศสตอนเช้า-ค่ำแบบไม่แน่น เป็นข้อดีหลักของการค้างคืนบนเขา ไม่ต้องลงเขาไปนอนดานังแล้ว</p>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary>
+          <span class="stop-time">19:00</span><span class="stop-icon">🍽️</span>
+          <span class="stop-titleblock"><span class="stop-name">มื้อเย็นบนบานาฮิลล์ + เดินถ่ายรูปกลางคืน</span></span>
+          <span class="chevron">▶</span>
+        </summary>
+        <div class="stop-body">
+          <p class="stop-desc">ทานมื้อเย็นในหมู่บ้านฝรั่งเศส (ร้าน Maison Du Roi เป็นตัวเลือกที่เดินได้จากโรงแรม) แล้วเดินถ่ายรูปหมู่บ้านฝรั่งเศสตอนกลางคืน บรรยากาศต่างจากกลางวันมาก</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ DAY 3 ============ -->
+  <section class="day" data-day="3">
+    <div class="day-head">
+      <h2>วันที่ 3 — บานาฮิลล์ → ฮอยอัน</h2>
+      <p>เช้าเงียบสงบบนเขา บ่ายเดินเมืองเก่า ค่ำคืนโคมไฟที่ฮอยอัน</p>
+    </div>
+    <div class="timeline">
+
+      <details class="stop">
+        <summary><span class="stop-time">08:00</span><span class="stop-icon">📸</span>
+          <span class="stop-titleblock"><span class="stop-name">เดินถ่ายรูปบานาฮิลล์รอบเช้า</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body"><p class="stop-desc">ช่วงก่อน 9 โมงเช้า แสงสวยและคนยังไม่เยอะ เหมาะที่สุดสำหรับถ่ายรูปหมู่บ้านฝรั่งเศสแบบไม่แน่น</p></div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">10:00</span><span class="stop-icon">🚠</span>
+          <span class="stop-titleblock"><span class="stop-name">เช็คเอาท์ + นั่งกระเช้าลง</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body"><p class="stop-desc">เช็คเอาท์ รับกระเป๋า นั่งกระเช้าลงจากเขาแล้วขึ้นรถต่อไปฮอยอัน</p></div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">11:00</span><span class="stop-icon">🚗</span>
+          <span class="stop-titleblock"><span class="stop-name">บานาฮิลล์ → ฮอยอัน</span><br><span class="stop-tag">~38 กม.</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>~38 กม. · 60–90 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 450,000–600,000 VND (~650–870 บาท)</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">12:30</span><span class="stop-icon">🏨</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Sweet+Memories+Villa+Hoi+An" target="_blank">Sweet Memories Villa</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">เช็คอิน/ฝากกระเป๋า</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">อยู่ในซอยเงียบฝั่ง An Hội เดินเข้าเมืองเก่าและตลาดกลางคืนได้ในไม่กี่นาที</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">📍</span><span>96/21 Nguyễn Phúc Tần, An Hội, Hội An</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">13:00</span><span class="stop-icon">🍜</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=An+Thoi+Hoi+An+40+Nguyen+Phuc+Tan" target="_blank">An Thoi Hoi An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อเที่ยง</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ร้านอาหารเวียดนามที่ 40 Nguyễn Phúc Tần เมนูเน้นอาหารพื้นถิ่นและซีฟู้ด รีวิวชมเรื่องพนักงานบริการดีและมีตัวเลือกสำหรับคนแพ้กลูเตนด้วย (คนละร้านกับ An Thoi ที่ดานังซึ่งเป็นร้าน Michelin Bib Gourmand)</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">🚶</span><span>จากที่พัก ~600 ม. เดิน 8 นาที</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">14:00</span><span class="stop-icon">⛩️</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Ancient+Town+Japanese+Covered+Bridge" target="_blank">Old Town Hội An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">สะพานญี่ปุ่น + บ้านโบราณ</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">แลนด์มาร์คหลักคือสะพานญี่ปุ่น (Chùa Cầu) อายุกว่า 400 ปี ตั๋วเข้าเมืองเก่าใช้เข้าชมบ้านโบราณ/พิพิธภัณฑ์ได้หลายจุด</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ตั๋วเข้าเมืองเก่า ราว 120,000 VND (~175 บาท)</span></div></div>
+          <div class="backup">🔁 แผนสำรอง: ถ้าสะพานญี่ปุ่นคนแน่นมาก เดินเลี่ยงไปฝั่งถนน Nguyễn Thái Học หรือ Trần Phú ก่อน แล้ววนกลับมาช่วงเย็นแดดร่มแทน</div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">16:00</span><span class="stop-icon">☕</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Faifo+Coffee+130+Tran+Phu+Hoi+An" target="_blank">Faifo Coffee</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ดาดฟ้าวิวเมืองเก่า</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">คาเฟ่ในตึกไม้เก่า จุดเด่นคือดาดฟ้าชั้น 3 มองเห็นหลังคาเมืองเก่าทั้งผืน ที่นั่งดาดฟ้ามีจำกัดควรไปก่อน 17:00 น.</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚶</span><span>จากสะพานญี่ปุ่น ~250 ม. เดิน 3 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 40,000–60,000 VND (~55–85 บาท)</span></div>
+          </div>
+          <div class="backup">🔁 แผนสำรอง: ถ้าที่นั่งดาดฟ้าเต็ม ชั้นล่างของร้านก็มองเห็นบรรยากาศเมืองเก่าได้เหมือนกัน หรือแวะ Mót Hội An ที่อยู่ติดกัน (150 Trần Phú) แทน</div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">17:00</span><span class="stop-icon">🍵</span>
+          <span class="stop-titleblock"><span class="stop-name">Mót Hội An</span><br><span class="stop-tag">น้ำสมุนไพร</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">แวะดื่มน้ำสมุนไพรเย็น ๆ พักก่อนไปต่อช่วงเย็น</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 16,000–30,000 VND</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">18:00</span><span class="stop-icon">🛶</span>
+          <span class="stop-titleblock"><span class="stop-name">ล่องเรือโคมไฟ Hội An</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">นั่งเรือชมแม่น้ำ Hoài พร้อมปล่อยโคมกระดาษลอยน้ำ ควรจองที่บูธทางการไม่ใช่คนเดินเร่ขาย เพื่อราคาที่เป็นธรรม ใช้เวลาราว 20 นาที</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>1–3 คน ~150,000–170,000 VND/ลำ · 4–5 คน ~200,000–220,000 VND/ลำ</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">18:30</span><span class="stop-icon">🏮</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Night+Market+Nguyen+Hoang" target="_blank">Night Market Hội An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ถนน Nguyễn Hoàng</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ตลาดโคมไฟสีสัน ของฝากงานฝีมือ ของกินสตรีทฟู้ด เดินจากท่าเรือได้เลย</p>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">20:00</span><span class="stop-icon">🍽️</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Nha+Hang+Thuan+Y+94+Bach+Dang+Hoi+An" target="_blank">Thuận Ý</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อเย็นริมน้ำ</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ร้านอาหารเวียดนามริมแม่น้ำที่ 94 Bạch Đằng เมนูเด่นคือบั๋นแบ๊วบก (bánh hoa hồng) และเก๋าเลา ลูกค้าส่วนใหญ่เป็นนักท่องเที่ยวต่างชาติเพราะติดอันดับรีวิวดีบน Tripadvisor แต่บริการคล่องแม้ร้านจะแน่น</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 70,000–200,000 VND/คน แล้วแต่เมนู</span></div></div>
+          <div class="backup">🔁 แผนสำรอง: ถ้า Thuận Ý รอคิวนาน ให้เดินไปฝั่งตรงข้ามถนนมี Hoi An Heart Restaurant (68 Bạch Đằng) เมนูอาหารพื้นถิ่นคล้ายกัน คนน้อยกว่า</div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">21:00</span><span class="stop-icon">🍹</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Tiger+Tiger+Bar+An+Hoi+Hoi+An" target="_blank">Tiger Tiger Bar</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">OPTIONAL — ถ้ายังไหว</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">บาร์ดาดฟ้าฝั่ง An Hội มองเห็นเรือโคมไฟล่องผ่านแม่น้ำ Happy hour ยาวถึงเที่ยงคืน ถ้าวันนี้เดินมาเยอะแล้วเหนื่อยตัดออกได้เลย ไม่เสียแผนหลัก</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ DAY 4 ============ -->
+  <section class="day" data-day="4">
+    <div class="day-head">
+      <h2>วันที่ 4 — ฮอยอัน → ดานัง → กลับกรุงเทพฯ</h2>
+      <p>เที่ยวบินดึก 23:30 จึงมีเวลาทั้งวันก่อนกลับสนามบิน</p>
+    </div>
+    <div class="timeline">
+
+      <details class="stop">
+        <summary><span class="stop-time">07:30</span><span class="stop-icon">🍳</span>
+          <span class="stop-titleblock"><span class="stop-name">Hai Cafe Courtyard BBQ & Restaurant</span><br><span class="stop-tag">อาหารเช้าใกล้ที่พัก</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body"><p class="stop-desc">ร้านอาหารใกล้ Sweet Memories Villa เหมาะเป็นมื้อเช้าก่อนล่องเรือกระจาด</p></div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">08:30</span><span class="stop-icon">🚤</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Coconut+Village+Cam+Thanh+Hoi+An" target="_blank">ล่องเรือกระจาดหมู่บ้านมะพร้าว Cẩm Thanh</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">Coconut Village / Thuận Tình</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">นั่งเรือกระจาดกลมลัดเลาะป่ามะพร้าว มีโชว์หมุนเรือและตกปู กิจกรรมสนุกและเป็นกันเอง</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>จากเมืองเก่า ~3.5 กม. · 10–15 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 100,000–150,000 VND/คน (~145–215 บาท)</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">09:00</span><span class="stop-icon">🧳</span>
+          <span class="stop-titleblock"><span class="stop-name">กลับที่พัก เก็บกระเป๋า เช็คเอาท์</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body"><p class="stop-desc">เก็บกระเป๋า เช็คเอาท์ ฝากกระเป๋าถ้าจำเป็น เตรียมขึ้นรถกลับดานัง</p></div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">10:00</span><span class="stop-icon">🚗</span>
+          <span class="stop-titleblock"><span class="stop-name">ฮอยอัน → ดานัง</span><br><span class="stop-tag">~24 กม.</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>~24 กม. · 40–45 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 350,000–400,000 VND (~500–580 บาท)</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">11:00</span><span class="stop-icon">☕</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Reply+1988+Cafe+20+Le+Hong+Phong+Da+Nang" target="_blank">Reply 1988 Cafe</a> <span class="ext-icon">↗</span></span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">คาเฟ่บรรยากาศดี ตกแต่งอบอุ่น สองชั้น มีมุมถ่ายรูปเยอะ เมนูแนะนำคือกาแฟมะพร้าวและชีสเค้กบาสก์</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 30,000–60,000 VND</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">11:30</span><span class="stop-icon">🙏</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Linh+Ung+Pagoda+Son+Tra+Da+Nang" target="_blank">Linh Ứng Temple (Sơn Trà)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">Lady Buddha + วิวทะเล</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ไฮไลต์คือองค์เจ้าแม่กวนอิมสูง 67 เมตร วิวทะเลและคาบสมุทรเซินตร่า เข้าฟรี ใช้เวลาประมาณ 1 ชั่วโมงกำลังดี</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">🚗</span><span>จาก Reply 1988 ~8 กม. รถ 15–20 นาที</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">12:40</span><span class="stop-icon">🩵</span>
+          <span class="stop-titleblock"><span class="stop-name">Sơn Trà Marina</span><br><span class="stop-tag">คาเฟ่/จุดถ่ายรูปสไตล์ Santorini</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">จุดถ่ายรูปริมทะเลสไตล์ Santorini เน้นถ่ายรูปพร้อมเครื่องดื่ม</p>
+          <div class="meta-grid"><div class="meta-row"><span class="k">🚗</span><span>จาก Linh Ứng ~4–5 กม. รถ 10–12 นาที ลงจากเขา</span></div></div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">14:00</span><span class="stop-icon">🦐</span>
+          <span class="stop-titleblock"><span class="stop-name">Hải Sản Tươi Sống Bà Rô</span><br><span class="stop-tag">มื้อเที่ยง/บ่ายซีฟู้ด</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ร้านซีฟู้ดโซน Sơn Trà เมนูแนะนำ กุ้ง ปู หอย ปลา อาหารทะเลสด</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">🚗</span><span>จาก Sơn Trà Marina ~2 กม. รถ 5–7 นาที</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 100,000–300,000 VND/คน แล้วแต่ของที่สั่ง</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">15:30</span><span class="stop-icon">🍜</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Bep+Cuon+31-33+Tran+Bach+Dang+Da+Nang" target="_blank">Bếp Cuốn Da Nang</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ร้านติด Michelin Selected</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">เด่นเรื่องอาหารเวียดนามแบบม้วนเอง (DIY rice paper wraps) และบั๋นแซว บรรยากาศเป็นกันเอง ราคาคุ้มค่ามาก อาจต้องรอคิวถ้าคนเยอะ</p>
+          <div class="meta-grid">
+            <div class="meta-row"><span class="k">📍</span><span>31-33 Trần Bạch Đằng, An Hải — ใกล้ My Khe Beach</span></div>
+            <div class="meta-row"><span class="k">💰</span><span>ราว 49,000–250,000 VND แล้วแต่เมนู</span></div>
+          </div>
+          <div class="backup">🔁 แผนสำรอง: คิวยาวเกิน 30 นาที ให้ข้ามไปกินที่ Cửa Ngõ Café แถวเดียวกันแทน (เมนูเบา ๆ) แล้วเก็บมื้อหลักไว้ที่ Pizza 4P's ตอนเย็น</div>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">16:45</span><span class="stop-icon">☕</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Cong+Ca+Phe+96+Bach+Dang+Da+Nang" target="_blank">Cộng Cà Phê (Bạch Đằng)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">คาเฟ่สุดท้ายของทริป ริมแม่น้ำฮาน</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body"><p class="stop-desc">นั่งพักริมแม่น้ำ Han River บรรยากาศเวียดนามย้อนยุค เด่นเรื่องกาแฟมะพร้าว</p></div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">17:45</span><span class="stop-icon">🛍️</span>
+          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=GO!+Da+Nang+Supermarket" target="_blank">GO! Da Nang</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ช้อปของฝากรอบสุดท้าย</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ห้างใหญ่ ราคาป้ายชัดเจน ไม่ต้องต่อรอง ครบทั้งของฝาก ขนม กาแฟ</p>
+        </div>
+      </details>
+
+      <details class="stop">
+        <summary><span class="stop-time">19:00</span><span class="stop-icon">✈️</span>
+          <span class="stop-titleblock"><span class="stop-name">GO! → สนามบินดานัง</span></span>
+          <span class="chevron">▶</span></summary>
+        <div class="stop-body">
+          <p class="stop-desc">ราว 15–25 นาทีแล้วแต่รถติด ถึงสนามบินราว 19:30–20:00 น. มีเวลาเหลือเยอะสำหรับเที่ยวบิน 23:30 น. เผื่อเวลาซื้อของ/รอคิวเช็คอินและ ตม. ขาออก</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ============ MASSAGE ============ -->
+  <div class="card">
+    <h2>💆 ร้านนวดเผื่อไว้ (ตามที่ขอเพิ่ม)</h2>
+    <p class="sub">คัดจากร้านที่รีวิวดีต่อเนื่องและปลอดภัยสำหรับนักท่องเที่ยว</p>
+    <div class="massage-grid">
+      <div class="massage-item"><b>ดานัง — Herbal Spa</b><span>ใช้วัตถุดิบธรรมชาติ/สมุนไพรทั้งหมด เน้นดีท็อกซ์และไหลเวียนโลหิต ได้รับความนิยมในกลุ่มนักท่องเที่ยวเกาหลี-ญี่ปุ่น ควรจองล่วงหน้า</span></div>
+      <div class="massage-item"><b>ดานัง — Charm Spa Grand</b><span>บรรยากาศหรูหรา มีทั้งนวดไทย นวดน้ำมันสไตล์เวียดนาม และแช่เท้าสมุนไพร รีวิวดีต่อเนื่องหลายพันรีวิว</span></div>
+      <div class="massage-item"><b>ดานัง — Queen Spa (ใกล้ My Khe)</b><span>เด่นเรื่อง Bamboo Massage และ Candle Spa สะดวกถ้าอยู่ย่านหาด My Khe ในวันที่ 4</span></div>
+      <div class="massage-item"><b>ฮอยอัน — Nau Spa & Massage</b><span>ราคาย่อมเยา อยู่ใกล้ใจกลางเมืองเก่า รีวิวชมเรื่องนวดฝ่าเท้า/reflexology</span></div>
+      <div class="massage-item"><b>ฮอยอัน — Art Spa (37 Nguyễn Phúc Tần)</b><span>อยู่ในย่าน An Hội ใกล้ที่พัก Sweet Memories Villa เดินถึงได้ คะแนนรีวิวสูงต่อเนื่อง</span></div>
+    </div>
+    <p class="tip" style="margin-top:14px;">แนะนำแทรกช่วงเย็นวันที่ 3 หลัง Old Town (ก่อนล่องเรือโคมไฟ) หรือช่วงบ่ายวันที่ 4 หลังเดินหาด My Khe — ทั้งสองช่วงมีเวลาว่างพอสำหรับนวด 60–90 นาที</p>
+  </div>
+
+  <!-- ============ BUDGET ============ -->
+  <div class="card">
+    <h2>สรุปงบประมาณค่าเดินทางโดยประมาณ</h2>
+    <p class="sub">ต่อคัน/เที่ยว ไม่ใช่ต่อคน — ควรเช็คราคาจริงในแอพ Grab ก่อนเดินทางเสมอ</p>
+    <table class="b-table">
+      <tr><td>สนามบิน → ที่พัก (คืนแรก)</td><td>~40,000 VND</td></tr>
+      <tr><td>ที่พัก → Dragon Bridge (ไป-กลับ)</td><td>~80,000 VND</td></tr>
+      <tr><td>ดานัง → บานาฮิลล์</td><td>~400,000 VND</td></tr>
+      <tr><td>ตั๋วกระเช้า + เข้าชม (ต่อคน)</td><td>~750,000–900,000 VND</td></tr>
+      <tr><td>บานาฮิลล์ → ฮอยอัน</td><td>~500,000 VND</td></tr>
+      <tr><td>เรือกระจาดหมู่บ้านมะพร้าว (ต่อคน)</td><td>~120,000 VND</td></tr>
+      <tr><td>เรือโคมไฟตลาดกลางคืน (ต่อคน)</td><td>~150,000 VND</td></tr>
+      <tr><td>ฮอยอัน → ดานัง</td><td>~380,000 VND</td></tr>
+      <tr><td>รถระยะสั้นในดานังวันสุดท้าย (Linh Ứng/Marina/ร้านต่างๆ)</td><td>~250,000 VND</td></tr>
+      <tr class="total"><td>รวมค่าเดินทาง (ไม่รวมค่าอาหาร/ที่พัก/นวด)</td><td>~2,670,000 VND (~3,870 บาท)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="assumptions">
+      <b>ข้อสันนิษฐานที่ใช้ในการจัดแผน</b> — บางชื่อในลิสต์สะกดคลาดเคลื่อนหรือขาดที่อยู่ชัดเจน จึงตีความตามข้อมูลที่ใกล้เคียงที่สุด รบกวนตรวจสอบอีกครั้งก่อนเดินทางจริง
+      <ul>
+        <li><b>Pho wong 535</b> — ไม่พบร้านที่ตรงชื่อนี้ในดานัง หากมีที่อยู่คร่าว ๆ เพิ่มเติมช่วยระบุตำแหน่งให้แม่นขึ้นได้</li>
+        <li><b>Bep coun 666 → Bếp Cuốn</b> — ใช้สาขา 31-33 Trần Bạch Đằng (ร้านเดียวที่ติด Michelin Selected ในดานัง) เพราะเลข 666 ไม่ตรงกับที่อยู่จริงของร้านใด</li>
+        <li><b>Dapen / Tan cafe</b> — ยังไม่พบสถานที่ที่ตรงกับชื่อนี้ชัดเจน จึงไม่ได้ใส่ไว้ในตาราง</li>
+        <li><b>Anthoi</b> — มีร้าน "An Thoi" อยู่ 2 แห่งคนละเมือง: An Thoi Hoi An (40 Nguyễn Phúc Tần) ที่ใช้ในแผนวันที่ 3 กับ An Thoi Da Nang (114 Bạch Đằng, ติด Michelin Bib Gourmand) — ถ้าตั้งใจจะไปร้านที่ดานังแทน แจ้งได้ จะสลับให้</li>
+        <li><b>THUAN Y</b> — คือร้าน Thuận Ý ที่ 94 Bạch Đằng ฮอยอัน ใช้เป็นมื้อเย็นวันที่ 3 ตามแผนเดิม</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="disclaimer">
+    ระยะทาง เวลาเดินทาง และราคาทั้งหมดเป็นการประมาณการจากข้อมูลทั่วไปและรีวิวที่มีอยู่ อาจคลาดเคลื่อนตามสภาพจราจรจริง ฤดูกาล และช่วงเวลาจอง
+  </footer>
+
 </div>
 
 <script>
-// ===== DATA STORE =====
-const store = { cctv: null, issue: null, its: null, purchase: null };
-
-// ===== CSV PARSER =====
-function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    const vals = splitCSVLine(lines[i]);
-    if (vals.every(v => !v.trim())) continue;
-    const row = {};
-    headers.forEach((h, idx) => row[h] = (vals[idx] || '').trim().replace(/^"|"$/g,''));
-    rows.push(row);
-  }
-  return { headers, rows };
-}
-
-function splitCSVLine(line) {
-  const result = []; let cur = ''; let inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') { inQ = !inQ; }
-    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
-    else { cur += c; }
-  }
-  result.push(cur);
-  return result;
-}
-
-// ===== FILE HANDLERS =====
-function handleFile(event, key) {
-  const file = event.target.files[0];
-  if (!file) return;
-  readFile(file, key);
-}
-function handleDragOver(e, key) {
-  e.preventDefault();
-  document.getElementById('card-' + key).classList.add('dragover');
-}
-function handleDragLeave(key) {
-  document.getElementById('card-' + key).classList.remove('dragover');
-}
-function handleDrop(e, key) {
-  e.preventDefault();
-  document.getElementById('card-' + key).classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) readFile(file, key);
-}
-function readFile(file, key) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const data = parseCSV(e.target.result);
-    store[key] = data;
-    const card = document.getElementById('card-' + key);
-    const status = document.getElementById('status-' + key);
-    card.classList.add('loaded');
-    status.textContent = `✅ ${file.name} (${data.rows.length} แถว)`;
-    checkEnableBtn();
-  };
-  reader.readAsText(file, 'UTF-8');
-}
-function checkEnableBtn() {
-  const any = Object.values(store).some(v => v !== null);
-  document.getElementById('btnView').disabled = !any;
-}
-
-// ===== DEMO DATA =====
-function loadDemo() {
-  store.cctv = {
-    headers: ['อู่', 'CCTV ซ่อรุด', 'HDD ซ่อรุด', 'ตรวจสอบ', 'พบปัญหาซ้ำ', '% เข้ามา', 'วันเริ่มงาน', 'วันสิ้นสุด'],
-    rows: [
-      {อู่:'แสมดำ',      'CCTV ซ่อรุด':'7','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'บึงกุ่ม',    'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7698:CCTV CH4 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'รังสิต-บางพูน','CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',              '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'ปากเกร็ด',   'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'สายไหม',     'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'4', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7663:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'กัลปพฤกษ์',  'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'ท่าอิฐ',     'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เลี้ยงเมืองนนท์','CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',           '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'ราษฎร์บูรณะ','CCTV ซ่อรุด':'7','HDD ซ่อรุด':'1','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'รามคำแหง2',  'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'1', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'คลิ้นชัน',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-6714:CCTV CH2 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'คลอง6',      'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'ปากน้ำ',     'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-7447:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'พุทธบูชา',   'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'พรานนก',     'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'รังสิต 200 ปี','CCTV ซ่อรุด':'5','HDD ซ่อรุด':'2','ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-8620:HDD ผิดปกติ','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'รามคำแหง74', 'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เกษะโกมล',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เตาปูน',     'CCTV ซ่อรุด':'1','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'มีนบุรี',    'CCTV ซ่อรุด':'3','HDD ซ่อรุด':'2', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'16-8427:HDD ผิดปกติ,16-6399:CCTV CH1 ไม่ติด','% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เคหะชนบท',   'CCTV ซ่อรุด':'2','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เคหะบางพลี', 'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-      {อู่:'เอกชัย',     'CCTV ซ่อรุด':'0','HDD ซ่อรุด':'0', 'ตรวจสอบ':'แล้ว','พบปัญหาซ้ำ':'',               '% เข้ามา':'100','วันเริ่มงาน':'06/04/2568','วันสิ้นสุด':'25/04/2568'},
-    ]
-  };
-  store.issue = {
-    headers: ['ทะเบียน','ประเภท','อู่','ปัญหา','วิธีการแก้ไข','สถานะ','ผู้แก้ไข','วันที่แก้ไข','หมายเหตุ'],
-    rows: [
-      {ทะเบียน:'บก-1234','ประเภท':'กล้อง','อู่':'อู่สุขุมวิท','ปัญหา':'กล้องไม่บันทึก','วิธีการแก้ไข':'เปลี่ยน HDD','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'สมชาย','วันที่แก้ไข':'01/05/2568','หมายเหตุ':'-'},
-      {ทะเบียน:'กก-5678','ประเภท':'HDD','อู่':'อู่รังสิต','ปัญหา':'HDD เสีย','วิธีการแก้ไข':'เปลี่ยนใหม่','สถานะ':'กำลังดำเนินการ','ผู้แก้ไข':'สมหญิง','วันที่แก้ไข':'-','หมายเหตุ':'รอชิ้นส่วน'},
-      {ทะเบียน:'ขข-9012','ประเภท':'กล้อง','อู่':'อู่บางนา','ปัญหา':'ภาพขาดหาย','วิธีการแก้ไข':'ตรวจสายสัญญาณ','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'วิชัย','วันที่แก้ไข':'15/05/2568','หมายเหตุ':'-'},
-      {ทะเบียน:'งง-3456','ประเภท':'HDD','อู่':'อู่ลาดพร้าว','ปัญหา':'HDD เต็ม','วิธีการแก้ไข':'ลบข้อมูลเก่า','สถานะ':'รอดำเนินการ','ผู้แก้ไข':'-','วันที่แก้ไข':'-','หมายเหตุ':'ต้องการอนุมัติ'},
-      {ทะเบียน:'จจ-7890','ประเภท':'กล้อง','อู่':'อู่พระราม 9','ปัญหา':'กล้องไม่ออนไลน์','วิธีการแก้ไข':'รีเซ็ตระบบ','สถานะ':'เสร็จแล้ว','ผู้แก้ไข':'ประยุทธ','วันที่แก้ไข':'20/05/2568','หมายเหตุ':'-'},
-    ]
-  };
-  store.its = {
-    headers: ['Tickets No.','ปัญหา','ทะเบียน','อู่','ประเภท','ตรวจสอบและแก้ไข','สถานะ','หมายเหตุ'],
-    rows: [
-      {'Tickets No.':'TK-001','ปัญหา':'กล้องดับ','ทะเบียน':'บก-1234','อู่':'อู่สุขุมวิท','ประเภท':'Hardware','ตรวจสอบและแก้ไข':'เปลี่ยนอุปกรณ์','สถานะ':'Solved','หมายเหตุ':'-'},
-      {'Tickets No.':'TK-002','ปัญหา':'Net ขัดข้อง','ทะเบียน':'กก-5678','อู่':'อู่รังสิต','ประเภท':'Network','ตรวจสอบและแก้ไข':'รีเซ็ต Router','สถานะ':'Processing (assigned)','หมายเหตุ':'เร่งด่วน'},
-      {'Tickets No.':'TK-003','ปัญหา':'Software crash','ทะเบียน':'ขข-9012','อู่':'อู่บางนา','ประเภท':'Software','ตรวจสอบและแก้ไข':'ติดตั้งใหม่','สถานะ':'Solved','หมายเหตุ':'-'},
-      {'Tickets No.':'TK-004','ปัญหา':'กล้องภาพมืด','ทะเบียน':'งง-3456','อู่':'อู่ลาดพร้าว','ประเภท':'Hardware','ตรวจสอบและแก้ไข':'ตรวจสอบเลนส์','สถานะ':'Pending','หมายเหตุ':'-'},
-      {'Tickets No.':'TK-005','ปัญหา':'ระบบช้า','ทะเบียน':'จจ-7890','อู่':'อู่พระราม 9','ประเภท':'Software','ตรวจสอบและแก้ไข':'Clear cache','สถานะ':'Solved','หมายเหตุ':'-'},
-    ]
-  };
-  store.purchase = {
-    headers: ['รายการอุปกรณ์','รายละเอียด','จำนวน','หน่วย','สถานะ','หมายเหตุ'],
-    rows: [
-      {'รายการอุปกรณ์':'กล้อง IP','รายละเอียด':'2MP Dome Camera','จำนวน':'10','หน่วย':'ตัว','สถานะ':'รับสินค้า','หมายเหตุ':'-'},
-      {'รายการอุปกรณ์':'HDD 4TB','รายละเอียด':'WD Purple Surveillance','จำนวน':'5','หน่วย':'ลูก','สถานะ':'รออนุมัติ PR','หมายเหตุ':'ส่งใบเสนอราคาแล้ว'},
-      {'รายการอุปกรณ์':'Switch PoE','รายละเอียด':'8-Port PoE+','จำนวน':'3','หน่วย':'ชุด','สถานะ':'ออก PO','หมายเหตุ':'-'},
-      {'รายการอุปกรณ์':'NVR 16Ch','รายละเอียด':'Hikvision DS-7616NI','จำนวน':'2','หน่วย':'เครื่อง','สถานะ':'จัดทำ PR','หมายเหตุ':'-'},
-      {'รายการอุปกรณ์':'สายแลน Cat6','รายละเอียด':'ม้วน 305m','จำนวน':'4','หน่วย':'ม้วน','สถานะ':'รับสินค้า','หมายเหตุ':'-'},
-    ]
-  };
-  ['cctv','issue','its','purchase'].forEach(k => {
-    document.getElementById('card-' + k).classList.add('loaded');
-    document.getElementById('status-' + k).textContent = `✅ ตัวอย่าง (${store[k].rows.length} แถว)`;
-  });
-  document.getElementById('btnView').disabled = false;
-}
-
-// ===== DASHBOARD RENDER =====
-function showDashboard() {
-  document.getElementById('uploadScreen').style.display = 'none';
-  const ds = document.getElementById('dashScreen');
-  ds.style.display = 'flex';
-
-  const tabBar = document.getElementById('tabBar');
-  const panelContainer = document.getElementById('panelContainer');
-  tabBar.innerHTML = '';
-  panelContainer.innerHTML = '';
-
-  const tabs = [
-    { key: 'cctv', label: '📷 CCTV & HDD', render: renderCCTV },
-    { key: 'issue', label: '🔧 ติดตามปัญหา', render: renderIssue },
-    { key: 'its', label: '🎫 ITS Tickets Issue', render: renderITS },
-    { key: 'purchase', label: '🛒 การจัดซื้อ', render: renderPurchase },
-  ];
-
-  let firstActive = null;
-  tabs.forEach(t => {
-    if (!store[t.key]) return;
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn';
-    btn.innerHTML = `${t.label} <span class="tab-badge">${store[t.key].rows.length}</span>`;
-    btn.onclick = () => activateTab(t.key);
-    btn.id = 'tab-' + t.key;
-    tabBar.appendChild(btn);
-
-    const panel = document.createElement('div');
-    panel.className = 'tab-panel';
-    panel.id = 'panel-' + t.key;
-    panel.innerHTML = t.render(store[t.key]);
-    panelContainer.appendChild(panel);
-
-    if (!firstActive) firstActive = t.key;
-  });
-
-  if (firstActive) activateTab(firstActive);
-  initPagers();
-}
-
-function activateTab(key) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  const btn = document.getElementById('tab-' + key);
-  const panel = document.getElementById('panel-' + key);
-  if (btn) btn.classList.add('active');
-  if (panel) panel.classList.add('active');
-}
-
-function backToUpload() {
-  document.getElementById('dashScreen').style.display = 'none';
-  document.getElementById('uploadScreen').style.display = 'flex';
-}
-
-// ===== BADGE HELPERS =====
-function statusBadge(s) {
-  if (!s) return '';
-  const sl = s.toLowerCase();
-  // ITS
-  if (sl.includes('solved')) return `<span class="badge badge-green">${s}</span>`;
-  if (sl.includes('processing') || sl.includes('assigned')) return `<span class="badge badge-blue">${s}</span>`;
-  if (sl.includes('pending')) return `<span class="badge badge-yellow">${s}</span>`;
-  // Purchase
-  if (sl.includes('รับสินค้า')) return `<span class="badge badge-green">${s}</span>`;
-  if (sl.includes('ออก po') || sl === 'ออก po') return `<span class="badge badge-blue">${s}</span>`;
-  if (sl.includes('รออนุมัติ pr')) return `<span class="badge badge-yellow">${s}</span>`;
-  if (sl.includes('จัดทำ pr')) return `<span class="badge badge-purple">${s}</span>`;
-  // Issue
-  if (['เสร็จแล้ว'].some(x => sl.includes(x))) return `<span class="badge badge-green">${s}</span>`;
-  if (['รอดำเนินการ','รออนุมัติ'].some(x => sl.includes(x))) return `<span class="badge badge-red">${s}</span>`;
-  if (['กำลังดำเนินการ'].some(x => sl.includes(x))) return `<span class="badge badge-yellow">${s}</span>`;
-  return `<span class="badge badge-blue">${s}</span>`;
-}
-
-function buildBarChart(data, colors) {
-  const max = Math.max(...data.map(d => d.val), 1);
-  return data.map((d, i) => `
-    <div class="bar-item">
-      <div class="bar-label" title="${d.label}">${d.label}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${(d.val/max*100).toFixed(1)}%;background:${colors[i % colors.length]}"></div></div>
-      <div class="bar-count">${d.val}</div>
-    </div>`).join('');
-}
-
-// ===== TABLE HELPER =====
-function buildTable(id, headers, rows, statusCol) {
-  const ths = headers.map(h => `<th>${h}</th>`).join('');
-  const trs = rows.map(r => {
-    const tds = headers.map(h => {
-      const val = r[h] || '';
-      const cell = h === statusCol ? statusBadge(val) : escHtml(val);
-      return `<td title="${escHtml(val)}">${cell}</td>`;
-    }).join('');
-    return `<tr>${tds}</tr>`;
-  }).join('');
-  return `<table class="data-table" id="${id}"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ===== PAGER + SEARCH =====
-const pagerState = {};
-function initPagers() {
-  document.querySelectorAll('[data-table]').forEach(wrapper => {
-    const tid = wrapper.dataset.table;
-    const table = document.getElementById(tid);
-    if (!table) return;
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-    const perPage = parseInt(wrapper.dataset.perpage || 15);
-    pagerState[tid] = { rows, page: 1, perPage, filtered: rows };
-    renderPage(tid);
-  });
-}
-
-function renderPage(tid) {
-  const s = pagerState[tid];
-  if (!s) return;
-  const { filtered, page, perPage } = s;
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
-  s.rows.forEach(r => r.style.display = 'none');
-  filtered.forEach((r, i) => r.style.display = (i >= start && i < end) ? '' : 'none');
-  const infoEl = document.getElementById('info-' + tid);
-  const prevEl = document.getElementById('prev-' + tid);
-  const nextEl = document.getElementById('next-' + tid);
-  if (infoEl) infoEl.textContent = `แสดง ${Math.min(start+1, filtered.length)}–${Math.min(end, filtered.length)} จาก ${filtered.length} แถว`;
-  if (prevEl) prevEl.disabled = page <= 1;
-  if (nextEl) nextEl.disabled = end >= filtered.length;
-}
-
-function changePage(tid, dir) {
-  const s = pagerState[tid];
-  if (!s) return;
-  s.page = Math.max(1, Math.min(s.page + dir, Math.ceil(s.filtered.length / s.perPage)));
-  renderPage(tid);
-}
-
-function searchTable(tid, query) {
-  const s = pagerState[tid];
-  if (!s) return;
-  const q = query.toLowerCase();
-  s.filtered = q ? s.rows.filter(r => r.textContent.toLowerCase().includes(q)) : s.rows;
-  s.page = 1;
-  renderPage(tid);
-}
-
-// ===== RENDERERS =====
-function renderCCTV(data) {
-  const { headers, rows } = data;
-
-  // ── Keys ──
-  const cctvKey  = headers.find(h => /CCTV.*ซ่อ|ชำรุด.*CCTV/i.test(h)) || 'CCTV ซ่อรุด';
-  const hddKey   = headers.find(h => /HDD.*ซ่อ|ชำรุด.*HDD/i.test(h))  || 'HDD ซ่อรุด';
-  const chkKey   = headers.find(h => h.includes('ตรวจสอบ')) || 'ตรวจสอบ';
-  const repKey   = headers.find(h => h.includes('พบปัญหา')) || 'พบปัญหาซ้ำ';
-  const pctKey   = headers.find(h => h.includes('%') || h.includes('เข้ามา')) || '';
-  const startKey = headers.find(h => h.includes('เริ่ม')) || '';
-  const endKey   = headers.find(h => h.includes('สิ้นสุด')) || '';
-  const nameKey  = headers[0] || 'อู่';
-
-  // ── Totals ──
-  const totalCCTV   = rows.reduce((a,r)=>a+(parseInt(r[cctvKey])||0),0);
-  const totalHDD    = rows.reduce((a,r)=>a+(parseInt(r[hddKey])||0),0);
-  const totalRows   = rows.length;
-  // "ตรวจสอบแล้ว" = rows where chkKey value is non-empty number OR contains 'แล้ว'
-  const checkedRows = rows.filter(r => {
-    const v = (r[chkKey]||'').trim();
-    return v && v !== '0' && v !== '-';
-  }).length;
-
-  // repeat issues: parse from "พบปัญหาซ้ำ" — may contain multiple comma-separated entries
-  const repeatList = [];
-  rows.forEach(r => {
-    const v = (r[repKey]||'').trim();
-    if (!v || v==='-') return;
-    const garage = r[nameKey]||'';
-    v.split(',').forEach(item => {
-      const t = item.trim();
-      if (!t) return;
-      // guess type from content
-      const type = t.toLowerCase().includes('hdd') ? 'HDD' : 'CCTV';
-      repeatList.push({ id: t.split(':')[0]?.trim()||t, desc: t.split(':')[1]?.trim()||t, type, garage });
+  const buttons = document.querySelectorAll('.daynav button');
+  const days = document.querySelectorAll('.day');
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      days.forEach(d=>d.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.day[data-day="'+btn.dataset.target+'"]').classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
     });
   });
-
-  // ── Dates & Duration ──
-  let startDate='-', endDate='-', totalDays='-', elapsedDays='-', isDone=false;
-  if (startKey && endKey) {
-    const allStarts = rows.map(r=>r[startKey]).filter(Boolean);
-    const allEnds   = rows.map(r=>r[endKey]).filter(Boolean);
-    if (allStarts.length) startDate = allStarts[0];
-    if (allEnds.length)   endDate   = allEnds[allEnds.length-1];
-
-    // parse dd/mm/yyyy (Buddhist or AD)
-    function parseThaiDate(s) {
-      if (!s||s==='-') return null;
-      const [d,m,y] = s.split('/').map(Number);
-      if (!d||!m||!y) return null;
-      const adYear = y > 2500 ? y - 543 : y;
-      return new Date(adYear, m-1, d);
-    }
-    const sd = parseThaiDate(startDate);
-    const ed = parseThaiDate(endDate);
-    const today = new Date();
-    if (sd && ed) {
-      totalDays = Math.round((ed-sd)/(1000*60*60*24));
-      elapsedDays = Math.min(Math.round((today-sd)/(1000*60*60*24)), totalDays);
-      isDone = today >= ed;
-    }
-  }
-
-  // ── % เข้ามา ──
-  const pctVals = pctKey ? rows.map(r=>parseFloat(r[pctKey])).filter(v=>!isNaN(v)) : [];
-  const avgPct  = pctVals.length ? (pctVals.reduce((a,v)=>a+v,0)/pctVals.length).toFixed(1) : null;
-
-  // ── Bar chart data ──
-  const cctvBar = rows.filter(r=>(parseInt(r[cctvKey])||0)>0)
-    .map(r=>({label:r[nameKey]||'-', val:parseInt(r[cctvKey])||0}))
-    .sort((a,b)=>b.val-a.val).slice(0,12);
-  const hddBar  = rows.filter(r=>(parseInt(r[hddKey])||0)>0)
-    .map(r=>({label:r[nameKey]||'-', val:parseInt(r[hddKey])||0}))
-    .sort((a,b)=>b.val-a.val).slice(0,12);
-
-  const colors = ['#00cfff','#0099cc','#006699','#58a6ff','#3fb950','#ffa657','#d2a8ff'];
-
-  // ── Render table rows ──
-  const tableRows = rows.map((r,i)=>{
-    const hasCCTV = (parseInt(r[cctvKey])||0) > 0;
-    const hasHDD  = (parseInt(r[hddKey])||0) > 0;
-    const checked = (r[chkKey]||'').trim();
-    const isChecked = checked && checked!=='-' && checked!=='0';
-    const rep = (r[repKey]||'').trim();
-    return `<tr>
-      <td style="color:var(--text-muted);font-family:'IBM Plex Mono',monospace">${i+1}</td>
-      <td style="font-weight:600;color:var(--text)">${escHtml(r[nameKey]||'-')}</td>
-      <td>${hasCCTV?`<span class="badge badge-blue">${parseInt(r[cctvKey])} คัน</span>`:'<span style="color:var(--text-muted)">—</span>'}</td>
-      <td>${hasHDD?`<span class="badge badge-yellow">${parseInt(r[hddKey])} คัน</span>`:'<span style="color:var(--text-muted)">—</span>'}</td>
-      <td>${isChecked?`<span class="badge badge-green">✓ แล้ว</span>`:`<span class="badge badge-red">ยังไม่</span>`}</td>
-      <td style="color:${rep&&rep!=='-'?'#ffa657':'var(--text-muted)'};">${rep&&rep!=='-'?escHtml(rep):'—'}</td>
-    </tr>`;
-  }).join('');
-
-  return `
-  <!-- ① ระยะเวลาดำเนินงาน -->
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div style="font-size:13px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px">
-        🗓️ ระยะเวลาดำเนินงาน
-      </div>
-      ${isDone?`<span style="background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600">● เสร็จสิ้นแล้ว</span>`:''}
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
-      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">วันเริ่มต้น</div><div style="font-size:17px;font-weight:700;color:var(--text)">${startDate}</div></div>
-      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">วันสิ้นสุด</div><div style="font-size:17px;font-weight:700;color:var(--text)">${endDate}</div></div>
-      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">ระยะเวลาทั้งหมด</div><div style="font-size:17px;font-weight:700;color:#00cfff">${totalDays !== '-' ? totalDays+' วัน' : '-'}</div></div>
-      <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">ดำเนินการมาแล้ว</div><div style="font-size:17px;font-weight:700;color:#3fb950">${elapsedDays !== '-' ? elapsedDays+' วัน' : '-'}</div></div>
-    </div>
-  </div>
-
-  <!-- ② Progress อู่ที่ตรวจสอบ -->
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:16px">
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">ความคืบหน้าการตรวจสอบ</div>
-    <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">อู่ที่ตรวจสอบแล้ว / อู่ทั้งหมด</div>
-    <div style="font-size:36px;font-weight:800;color:#3fb950;line-height:1">${totalRows?Math.round(checkedRows/totalRows*100):0}%
-      <span style="font-size:15px;font-weight:500;color:var(--text-muted);margin-left:6px">(${checkedRows}/${totalRows} อู่)</span>
-    </div>
-    <div style="margin-top:14px;position:relative;height:22px;background:var(--card);border-radius:11px;overflow:hidden">
-      <div style="height:100%;width:${totalRows?Math.round(checkedRows/totalRows*100):0}%;background:linear-gradient(90deg,#00cfff,#3fb950);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0d1117;transition:width .8s cubic-bezier(.22,1,.36,1)">
-        ${checkedRows}/${totalRows} อู่
-      </div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px">
-      <span>0 อู่</span><span>ตรวจสอบแล้ว ${checkedRows} อู่</span><span>ทั้งหมด ${totalRows} อู่</span>
-    </div>
-  </div>
-
-  <!-- ③ Summary cards -->
-  <div class="stats-row" style="margin-bottom:16px">
-    <div class="stat-card" style="border-top:3px solid #58a6ff">
-      <div style="font-size:22px;margin-bottom:6px">🏢</div>
-      <div class="stat-value">${totalRows}</div>
-      <div class="stat-label">จำนวนอู่ทั้งหมด</div>
-      <div class="stat-sub">ตรวจสอบครบทุกอู่</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid #00cfff">
-      <div style="font-size:22px;margin-bottom:6px">📷</div>
-      <div class="stat-value" style="color:#00cfff">${totalCCTV}</div>
-      <div class="stat-label">CCTV ชำรุดทั้งหมด</div>
-      <div class="stat-sub">จาก ${rows.filter(r=>(parseInt(r[cctvKey])||0)>0).length} อู่ที่มีปัญหา</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid #ffa657">
-      <div style="font-size:22px;margin-bottom:6px">💾</div>
-      <div class="stat-value" style="color:#ffa657">${totalHDD}</div>
-      <div class="stat-label">HDD ชำรุดทั้งหมด</div>
-      <div class="stat-sub">จาก ${rows.filter(r=>(parseInt(r[hddKey])||0)>0).length} อู่ที่มีปัญหา</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid #3fb950">
-      <div style="font-size:22px;margin-bottom:6px">✅</div>
-      <div class="stat-value" style="color:#3fb950">${checkedRows}</div>
-      <div class="stat-label">อู่ตรวจสอบแล้ว</div>
-      <div class="stat-sub">${totalRows?Math.round(checkedRows/totalRows*100):0}% ตรวจสอบครบ</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid #ffa657">
-      <div style="font-size:22px;margin-bottom:6px">⚠️</div>
-      <div class="stat-value" style="color:#ffa657">${repeatList.length}</div>
-      <div class="stat-label">พบปัญหาซ้ำ (คัน)</div>
-      <div class="stat-sub">ต้องติดตามด่วน</div>
-    </div>
-  </div>
-
-  <!-- ④ Dual bar charts -->
-  <div class="charts-row" style="margin-bottom:16px">
-    <div class="chart-card">
-      <h3>📷 CCTV ชำรุด (คัน) — ทุกอู่</h3>
-      ${cctvBar.length ? buildBarChart(cctvBar, ['#00cfff','#58a6ff','#0099cc','#006699','#79c0ff','#b0d8ff','#cce8ff']) : '<div style="color:var(--text-muted);font-size:13px;padding:12px 0">ไม่มีข้อมูล CCTV ชำรุด</div>'}
-    </div>
-    <div class="chart-card">
-      <h3>💾 HDD ชำรุด (คัน) — ทุกอู่</h3>
-      ${hddBar.length ? buildBarChart(hddBar, ['#ffa657','#f78166','#ff9500','#cc7700','#ffcc80','#ffe0a0','#fff0c0']) : '<div style="color:var(--text-muted);font-size:13px;padding:12px 0">ไม่มีข้อมูล HDD ชำรุด</div>'}
-    </div>
-  </div>
-
-  <!-- ⑤ Detail table -->
-  <div class="table-wrapper" style="margin-bottom:16px">
-    <div class="table-header">
-      <div class="table-title">📋 รายละเอียดรายอู่</div>
-      <input class="table-search" placeholder="ค้นหาอู่..." oninput="searchTable('t-cctv',this.value)">
-    </div>
-    <div style="overflow-x:auto" data-table="t-cctv" data-perpage="15">
-      <table class="data-table" id="t-cctv">
-        <thead><tr>
-          <th>#</th><th>อู่</th>
-          <th>CCTV ชำรุด</th><th>HDD ชำรุด</th>
-          <th>ตรวจสอบ</th><th>พบปัญหาซ้ำ</th>
-        </tr></thead>
-        <tbody>${tableRows}</tbody>
-      </table>
-    </div>
-    <div class="table-pager">
-      <div class="pager-info" id="info-t-cctv"></div>
-      <div class="pager-btns">
-        <button class="pager-btn" id="prev-t-cctv" onclick="changePage('t-cctv',-1)">← ก่อนหน้า</button>
-        <button class="pager-btn" id="next-t-cctv" onclick="changePage('t-cctv',1)">ถัดไป →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ⑥ Repeat issue list -->
-  ${repeatList.length ? `
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px">
-    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">
-      🚨 รายการพบปัญหาซ้ำ — <span style="color:#ffa657">${repeatList.length} คัน</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${repeatList.map((item,i)=>`
-      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${item.type==='HDD'?'#ffa657':'#00cfff'};border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px">
-        <div style="font-size:13px;font-weight:700;color:var(--text-muted);width:24px">${i+1}.</div>
-        <div style="font-size:16px">${item.type==='HDD'?'💾':'📷'}</div>
-        <div style="flex:1">
-          <div style="font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px">${escHtml(item.id)}</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${escHtml(item.desc)} · อู่${escHtml(item.garage)}</div>
-        </div>
-        <span style="background:${item.type==='HDD'?'rgba(255,166,87,.15)':'rgba(0,207,255,.1)'};color:${item.type==='HDD'?'#ffa657':'#00cfff'};border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700">${item.type}</span>
-      </div>`).join('')}
-    </div>
-  </div>` : ''}`;
-}
-
-function renderIssue(data) {
-  const { headers, rows } = data;
-  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
-  const counts = {};
-  rows.forEach(r => { const s = r[statusKey] || 'ไม่ระบุ'; counts[s] = (counts[s]||0)+1; });
-  const colors = ['#3fb950','#ffa657','#f78166','#58a6ff','#d2a8ff'];
-  const barData = Object.entries(counts).map(([label,val])=>({label,val}));
-  const typeKey = headers.find(h => h.includes('ประเภท')) || '';
-  const typeCounts = {};
-  if (typeKey) rows.forEach(r => { const t = r[typeKey]||'ไม่ระบุ'; typeCounts[t]=(typeCounts[t]||0)+1; });
-  const typeBar = Object.entries(typeCounts).map(([label,val])=>({label,val}));
-  const done = rows.filter(r => (r[statusKey]||'').includes('เสร็จ')).length;
-  return `
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">ทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">รายการ</div></div>
-      <div class="stat-card"><div class="stat-label">เสร็จแล้ว</div><div class="stat-value" style="color:var(--accent2)">${done}</div><div class="stat-sub">รายการ</div></div>
-      <div class="stat-card"><div class="stat-label">คงเหลือ</div><div class="stat-value" style="color:var(--accent3)">${rows.length - done}</div><div class="stat-sub">รายการ</div></div>
-      <div class="stat-card"><div class="stat-label">% เสร็จ</div><div class="stat-value" style="color:var(--accent4)">${rows.length?Math.round(done/rows.length*100):0}%</div><div class="stat-sub"></div></div>
-    </div>
-    <div class="charts-row">
-      <div class="chart-card"><h3>สถานะ</h3>${buildBarChart(barData, colors)}</div>
-      ${typeBar.length ? `<div class="chart-card"><h3>ประเภทปัญหา</h3>${buildBarChart(typeBar, colors.slice().reverse())}</div>` : ''}
-    </div>
-    <div class="table-wrapper">
-      <div class="table-header">
-        <div class="table-title">รายละเอียดการติดตามปัญหา</div>
-        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-issue',this.value)">
-      </div>
-      <div style="overflow-x:auto" data-table="t-issue" data-perpage="15">
-        ${buildTable('t-issue', headers, rows, statusKey)}
-      </div>
-      <div class="table-pager">
-        <div class="pager-info" id="info-t-issue"></div>
-        <div class="pager-btns">
-          <button class="pager-btn" id="prev-t-issue" onclick="changePage('t-issue',-1)">← ก่อนหน้า</button>
-          <button class="pager-btn" id="next-t-issue" onclick="changePage('t-issue',1)">ถัดไป →</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderITS(data) {
-  const { headers, rows } = data;
-  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
-  const counts = {};
-  rows.forEach(r => { const s = r[statusKey]||'ไม่ระบุ'; counts[s]=(counts[s]||0)+1; });
-  const colors = ['#3fb950','#58a6ff','#ffa657','#d2a8ff','#f78166'];
-  const barData = Object.entries(counts).map(([label,val])=>({label,val}));
-  const typeKey = headers.find(h => h.includes('ประเภท')) || '';
-  const typeCounts = {};
-  if (typeKey) rows.forEach(r => { const t=r[typeKey]||'อื่นๆ'; typeCounts[t]=(typeCounts[t]||0)+1; });
-  const typeBar = Object.entries(typeCounts).map(([label,val])=>({label,val}));
-  const solved = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('solved')).length;
-  const processing = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('processing')).length;
-  const pending = rows.filter(r => (r[statusKey]||'').toLowerCase().includes('pending')).length;
-  return `
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">Tickets ทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">Ticket</div></div>
-      <div class="stat-card"><div class="stat-label">Solved</div><div class="stat-value" style="color:var(--accent2)">${solved}</div><div class="stat-sub">Ticket</div></div>
-      <div class="stat-card"><div class="stat-label">Processing (assigned)</div><div class="stat-value" style="color:var(--accent)">${processing}</div><div class="stat-sub">Ticket</div></div>
-      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--accent5)">${pending}</div><div class="stat-sub">Ticket</div></div>
-      <div class="stat-card"><div class="stat-label">% Solved</div><div class="stat-value" style="color:var(--accent4)">${rows.length?Math.round(solved/rows.length*100):0}%</div><div class="stat-sub"></div></div>
-    </div>
-    <div class="charts-row">
-      <div class="chart-card"><h3>สถานะ Ticket</h3>${buildBarChart(barData, colors)}</div>
-      ${typeBar.length ? `<div class="chart-card"><h3>ประเภท</h3>${buildBarChart(typeBar, colors.slice().reverse())}</div>` : ''}
-    </div>
-    <div class="table-wrapper">
-      <div class="table-header">
-        <div class="table-title">รายละเอียด ITS Tickets Issue</div>
-        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-its',this.value)">
-      </div>
-      <div style="overflow-x:auto" data-table="t-its" data-perpage="15">
-        ${buildTable('t-its', headers, rows, statusKey)}
-      </div>
-      <div class="table-pager">
-        <div class="pager-info" id="info-t-its"></div>
-        <div class="pager-btns">
-          <button class="pager-btn" id="prev-t-its" onclick="changePage('t-its',-1)">← ก่อนหน้า</button>
-          <button class="pager-btn" id="next-t-its" onclick="changePage('t-its',1)">ถัดไป →</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderPurchase(data) {
-  const { headers, rows } = data;
-  const statusKey = headers.find(h => h.includes('สถานะ')) || 'สถานะ';
-  const qtyKey = headers.find(h => h.includes('จำนวน')) || '';
-  const STEPS = ['จัดทำ PR','รออนุมัติ PR','ออก PO','รับสินค้า'];
-  const stepColors = ['#d2a8ff','#ffa657','#58a6ff','#3fb950'];
-  const stepCounts = {};
-  STEPS.forEach(s => stepCounts[s] = 0);
-  rows.forEach(r => {
-    const s = r[statusKey] || '';
-    STEPS.forEach(step => { if (s.includes(step)) stepCounts[step]++; });
-  });
-  const barData = STEPS.map((label,i) => ({label, val: stepCounts[label]}));
-  const received = stepCounts['รับสินค้า'];
-  const totalQty = qtyKey ? rows.reduce((a,r)=>a+(parseFloat(r[qtyKey])||0),0) : 0;
-
-  const pipelineHtml = `
-    <div style="display:flex;gap:0;margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
-      ${STEPS.map((s,i) => {
-        const cnt = stepCounts[s];
-        const pct = rows.length ? Math.round(cnt/rows.length*100) : 0;
-        return `<div style="flex:1;background:var(--surface);padding:14px 12px;text-align:center;border-right:${i<3?'1px solid var(--border)':'none'}">
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">${s}</div>
-          <div style="font-size:22px;font-weight:700;color:${stepColors[i]}">${cnt}</div>
-          <div style="font-size:11px;color:var(--text-muted)">${pct}%</div>
-        </div>`;
-      }).join('')}
-    </div>`;
-
-  return `
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-label">รายการทั้งหมด</div><div class="stat-value">${rows.length}</div><div class="stat-sub">รายการ</div></div>
-      <div class="stat-card"><div class="stat-label">รับสินค้าแล้ว</div><div class="stat-value" style="color:var(--accent2)">${received}</div><div class="stat-sub">รายการ</div></div>
-      <div class="stat-card"><div class="stat-label">คงค้าง</div><div class="stat-value" style="color:var(--accent3)">${rows.length-received}</div><div class="stat-sub">รายการ</div></div>
-      ${totalQty ? `<div class="stat-card"><div class="stat-label">จำนวนรวม</div><div class="stat-value" style="color:var(--accent)">${totalQty}</div><div class="stat-sub">หน่วย</div></div>` : ''}
-    </div>
-    ${pipelineHtml}
-    <div class="charts-row">
-      <div class="chart-card"><h3>สถานะการจัดซื้อ</h3>${buildBarChart(barData, stepColors)}</div>
-      <div class="chart-card"><h3>สัดส่วนความคืบหน้า</h3>
-        ${buildBarChart([{label:'รับสินค้าแล้ว',val:received},{label:'ยังไม่รับ',val:rows.length-received}],['#3fb950','#f78166'])}
-      </div>
-    </div>
-    <div class="table-wrapper">
-      <div class="table-header">
-        <div class="table-title">รายละเอียดการจัดซื้อ</div>
-        <input class="table-search" placeholder="ค้นหา..." oninput="searchTable('t-purchase',this.value)">
-      </div>
-      <div style="overflow-x:auto" data-table="t-purchase" data-perpage="15">
-        ${buildTable('t-purchase', headers, rows, statusKey)}
-      </div>
-      <div class="table-pager">
-        <div class="pager-info" id="info-t-purchase"></div>
-        <div class="pager-btns">
-          <button class="pager-btn" id="prev-t-purchase" onclick="changePage('t-purchase',-1)">← ก่อนหน้า</button>
-          <button class="pager-btn" id="next-t-purchase" onclick="changePage('t-purchase',1)">ถัดไป →</button>
-        </div>
-      </div>
-    </div>`;
-}
 </script>
+
 </body>
 </html>
