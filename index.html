@@ -1,107 +1,147 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="utf-8">
+<html lang="th"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ติดตามสถานะซ่อมเครื่อง P3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#f4f6fb;--card:#fff;--tx:#1b2340;--mu:#6b7490;--bd:#e1e6f0;--pri:#2f5fd0;--ok:#2fa39a;--warn:#c9831f;
---Station:#7d8590;--ITS:#4a86d8;--Loxbit:#ee8a3c;--HR:#8a63c2;--ODOO:#2fa39a;--DOC:#2fa39a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--card:#1a2031;--tx:#e8ecf7;--mu:#97a0b8;--bd:#2b3350;--pri:#6c93f0}}
-:root[data-theme="dark"]{--bg:#10141f;--card:#1a2031;--tx:#e8ecf7;--mu:#97a0b8;--bd:#2b3350;--pri:#6c93f0}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;line-height:1.5}
-.wrap{max-width:1000px;margin:0 auto;padding:16px}
-h1{font-size:1.4rem;margin:8px 0 14px;color:var(--pri)}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
-.add{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-input,button{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:9px 12px}
-input[type=text]{flex:1;min-width:130px}
-button{cursor:pointer}
-button.p{background:var(--pri);border-color:var(--pri);color:#fff}
-button.sel{border-color:var(--pri);color:var(--pri);font-weight:700}
-button:disabled{opacity:.4;cursor:default}
-.sum{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
-.chip{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);border-radius:999px;padding:5px 12px;font-size:.85rem;cursor:pointer}
-.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
-.m{cursor:pointer}.m:hover{border-color:var(--pri)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tag{color:#fff;font-size:.75rem;padding:2px 10px;border-radius:8px;white-space:nowrap}
-.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin:10px 0 6px}
-.bar i{display:block;height:100%;background:var(--pri)}
-.mu{color:var(--mu);font-size:.85rem}
-.tl{margin:14px 0 0;padding:0;list-style:none}
-.tl>li{display:flex;gap:10px;padding:8px 0;border-left:2px solid var(--bd);margin-left:13px;padding-left:16px;position:relative}
-.n{position:absolute;left:-14px;top:6px;width:26px;height:26px;border-radius:50%;background:var(--bd);color:var(--mu);display:grid;place-items:center;font-size:.8rem;font-weight:700}
-.done .n{background:var(--ok);color:#fff}
-.cur .n{background:var(--pri);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--pri) 25%,transparent)}
-.cur{font-weight:700}.todo{color:var(--mu)}
-.files{font-weight:400;font-size:.85rem;margin-top:4px}
-.files a{color:var(--pri);display:block}
-.gate{color:var(--warn);font-weight:400;font-size:.85rem}
-.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
-.modal.show{display:flex}
-.modal .card{width:100%;max-width:580px;margin:auto}
-.empty{text-align:center;color:var(--mu);padding:30px}
-.note{background:color-mix(in srgb,var(--warn) 15%,transparent);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:.9rem}
-</style>
-</head>
-<body>
-<div class="wrap">
-<h1>ติดตามสถานะซ่อมเครื่อง P3</h1>
-<div id="note"></div>
-<div class="add">
-<input type="text" id="sn" placeholder="S/N">
-<input type="text" id="issue" placeholder="อาการ/ปัญหา">
-<input type="text" id="st" placeholder="อู่">
-<button class="p" onclick="addM()">+ เปิดเคสใหม่</button>
+:root{--bg:#f2f5fb;--card:#fff;--tx:#18223b;--mu:#667191;--bd:#e1e6f2;--pri:#2f5bea;--ok:#12a150;--no:#e5484d;--onp:#fff;--sh:0 1px 2px #1b2a5314,0 4px 14px #1b2a5310}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1322;--card:#171e35;--tx:#e9edf9;--mu:#9aa5c6;--bd:#2a3452;--pri:#7b9bff;--ok:#34d27b;--no:#ff7a7f;--onp:#0e1322;--sh:none}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:400 15px/1.55 "Noto Sans Thai","Sarabun",system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased}
+.w{max-width:900px;margin:auto;padding:16px}
+h1{font-size:20px;font-weight:700;margin:4px 0 14px;display:flex;align-items:center}
+button,.btn{font:inherit;font-weight:500;font-size:14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:9px 14px;cursor:pointer;box-shadow:var(--sh)}
+button:active,.btn:active{transform:scale(.98)}
+.p{background:var(--pri);color:var(--onp);border-color:var(--pri)}
+button:disabled,.lock{opacity:.45}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea{font:inherit;width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx)}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--pri) 45%,transparent);border-color:var(--pri)}
+.ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:color-mix(in srgb,var(--c,var(--pri)) 16%,transparent);font-size:17px;margin-right:9px;flex:none}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.sm{padding:4px 11px;font-size:13px;border-radius:99px;white-space:nowrap;box-shadow:none}
+.row2{display:grid;grid-template-columns:1fr 210px;gap:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.chip{border-radius:99px;padding:6px 13px;font-size:13.5px;box-shadow:none}
+.chip.on{background:var(--pri);color:var(--onp);border-color:var(--pri)}
+.cs{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--c);border-radius:16px;padding:12px 14px;margin:9px 0;cursor:pointer;box-shadow:var(--sh)}
+.rw{display:flex;align-items:flex-start}.bd2{flex:1;min-width:0}
+.cs b{font-size:16px;font-weight:600}.mu{color:var(--mu);font-size:13px}.stl{font-size:14px;margin-top:2px}
+.pg{height:6px;background:var(--bd);border-radius:9px;margin-top:10px;overflow:hidden}
+.pg i{display:block;height:100%;background:var(--ok);border-radius:9px}
+.tag{font-style:normal;font-size:12px;font-weight:600;color:#fff;background:var(--c);padding:2px 10px;border-radius:99px;white-space:nowrap}
+.wt{font-size:12px;font-weight:600;padding:1px 9px;border-radius:99px;margin-left:6px;white-space:nowrap}
+.wt.in{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}.wt.out{background:color-mix(in srgb,var(--no) 16%,transparent);color:var(--no)}
+.empty{text-align:center;color:var(--mu);padding:44px 0}
+#m{position:fixed;inset:0;background:#0a102080;display:none;align-items:center;justify-content:center;z-index:9}
+#m.on{display:flex}
+.sheet{background:var(--bg);width:min(680px,100%);max-height:94%;overflow:auto;border-radius:20px;padding:16px;margin:8px}
+.mh{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:700;margin-bottom:10px}
+.x{border:0;background:none;font-size:20px;box-shadow:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.grid label{font-size:13px;font-weight:500;color:var(--mu);position:relative}.grid .f{grid-column:1/-1}
+.grid input{margin-top:3px;color:var(--tx);font-weight:400}
+.st{display:flex;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--bd);background:var(--card);margin:7px 0;opacity:.62;border-left:5px solid var(--c)}
+.st.c{opacity:1;background:color-mix(in srgb,var(--c) 10%,var(--card));box-shadow:0 0 0 2px var(--c)}
+.st.d{opacity:.92}
+.num{min-width:26px;height:26px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-top:3px}
+.sb{flex:1;min-width:0}.sr{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.stt{display:flex;align-items:center;font-weight:600}
+.hint{margin:8px 0 4px;font-size:14px}.ex{margin:0;font-size:13px;color:var(--mu);background:var(--bg);padding:7px 10px;border-radius:10px}
+.fl{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:14px}
+.wq{display:flex;gap:8px;margin-top:10px}
+.wb{flex:1;padding:11px 8px;font-weight:600;box-shadow:none}
+.wb.in{color:var(--ok);border:2px solid var(--ok)}.wb.out{color:var(--no);border:2px solid var(--no)}
+.wb.in.on{background:var(--ok);color:var(--onp)}.wb.out.on{background:var(--no);color:var(--onp)}
+.nav{display:flex;gap:8px;justify-content:space-between;margin:12px 0;position:sticky;bottom:0;background:var(--bg);padding:8px 0}
+.nav button{flex:1;padding:12px}
+.acc{background:var(--card);border:2px dashed var(--ok);border-radius:14px;padding:12px;margin-top:10px}
+.cs.sel{box-shadow:0 0 0 2px var(--pri)}input.ck{width:20px;height:20px;padding:0;margin:6px 10px 0 0;accent-color:var(--pri);pointer-events:none;flex:none}
+#bb{position:fixed;left:0;right:0;bottom:0;z-index:8;display:none;padding:0 8px env(safe-area-inset-bottom)}
+.bbx{max-width:900px;margin:auto;background:var(--card);border:1px solid var(--bd);border-radius:18px 18px 0 0;padding:12px;box-shadow:0 -6px 24px #0003;display:flex;flex-direction:column;gap:8px}
+.br{display:flex;gap:8px}.br button{flex:1}.br select{flex:2}
+.cu{font-size:13px;color:var(--mu);margin:-8px 0 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}#lg{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;align-items:center;justify-content:center}
+.ft{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}.acc div{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:5px 0}
+.pills{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-bottom:10px}.pills div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;font-size:13.5px}.pills b{display:block;font-size:15px}
+.wc{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--c);border-radius:14px;padding:6px 14px 10px;margin:10px 0}.wc h3{margin:8px 0;color:var(--c);font-size:16px}.wc ol{margin:0;padding-left:22px}.wc li{margin:8px 0}.wc small{color:var(--mu)}
+.wc.ok{--c:var(--ok)}.wc.no{--c:var(--no)}.wc.tr{--c:var(--pri)}
+.cb{position:absolute;left:0;right:0;top:100%;z-index:20;max-height:220px;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;display:none;box-shadow:0 8px 24px #0003;color:var(--tx);font-size:14px;font-weight:400}
+.cb div{padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--bd)}.cb div:hover{background:var(--bg)}
+.si{font-size:13px;margin:-4px 0 6px;grid-column:1/-1}
+#t{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#1b2340;color:#fff;padding:10px 16px;border-radius:12px;display:none;z-index:99;max-width:90%}
+@media(max-width:520px){.row2,.grid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="w">
+<div class="top"><h1><span class="ic">🔧</span>ติดตามสถานะซ่อมเครื่อง P3</h1><button class="sm" onclick="openWar()">🛡️ เงื่อนไขประกัน</button></div>
+<div id="cu" class="cu"></div>
+<div id="wsrc" hidden><div class="pills"><div><b>⏱️ ประกัน 2 ปี</b>นับจากวันส่งมอบสินค้าเสร็จสิ้น</div><div><b>🆓 ซ่อมฟรี</b>ค่าแรง + ค่าอะไหล่ ในระยะประกัน</div><div><b>🚚 กทม.-ปริมณฑล</b>ไม่เสียค่าเดินทาง</div><div><b>📞 เครื่องเสีย</b>หยุดใช้ทันที แล้วโทรแจ้งบริษัทฯ</div></div>
+<div class="wc ok"><h3>✅ เงื่อนไขการรับประกัน</h3><ol>
+<li><b>ระยะเวลา 2 ปี</b> นับจากวันที่จัดส่งสินค้าเสร็จสิ้น (นับจากวันหลังสุด) เครื่องที่รับประกันดูจาก S/N แนบท้ายเอกสารรับประกัน</li>
+<li><b>คุ้มครองความเสียหายจากการผลิต</b> ความบกพร่องของชิ้นส่วนที่เกิดจากมาตรฐานการผลิต และความเสียหายจากการใช้งานตามสภาพปกติวิสัย</li>
+<li><b>ตรวจซ่อมและเปลี่ยนอะไหล่ฟรี</b> ในระยะประกันไม่คิดค่าแรงและค่าอะไหล่ ส่วนค่าพาหนะคิดตามเงื่อนไขด้านล่าง</li>
+<li><b>เครื่องเสียหรือใช้งานไม่ปกติ ให้หยุดใช้ แล้วโทรแจ้งบริษัทฯ ทันที</b> ถ้าไม่หยุดใช้ ถือว่าผิดเงื่อนไขการรับประกัน เพราะอาจทำให้เครื่องเสียมากขึ้นและ/หรือกระทบระบบอื่น</li></ol></div>
+<div class="wc no"><h3>🚫 กรณีที่ไม่ได้รับประกัน</h3><ol>
+<li><b>เสื่อมสภาพตามปกติ</b> หรือเสียหายจากภัยธรรมชาติ ฟ้าผ่า ไฟไหม้ ฯลฯ</li>
+<li><b>เหตุสุดวิสัย / อุบัติเหตุ</b> หรือมีผู้ตั้งใจทำให้เครื่องเสียหาย</li>
+<li><b>ใช้งานไม่ถูกต้อง</b></li>
+<li><b>ดัดแปลง เปลี่ยนสภาพ ต่อเติม ฯลฯ</b> ➜ การรับประกันสิ้นสุดทันที</li>
+<li><b>ความประมาทเลินเล่อของผู้ใช้</b> และ/หรือฝ่าฝืนคำแนะนำของบริษัท</li>
+<li><b>ไม่ศึกษาคู่มือ</b> หรือบำรุงรักษาไม่ถูกต้อง</li>
+<li><b>ถอด เปลี่ยน ซ่อมเอง และ/หรือไม่แจ้งซ่อม</b> เมื่อเครื่องเสีย ➜ ถือเป็นการสิ้นสุดการรับประกัน</li></ol></div>
+<div class="wc tr"><h3>🚚 อัตราค่าพาหนะ</h3><ol>
+<li><b>กรุงเทพฯ และปริมณฑล</b> (นนทบุรี, ปทุมธานี, สมุทรปราการ, สมุทรสงคราม, สมุทรสาคร, พระนครศรีอยุธยา) ➜ <b>ไม่เสียค่าเดินทาง</b>ในระยะประกัน</li>
+<li><b>ต่างจังหวัด</b> (นอกเหนือจากข้อ 1) ➜ คิดตามระยะทางต่อกิโลเมตรจากกรุงเทพฯ <b>10 บาท/กม.</b></li></ol>
+<small>* ค่าเดินทางไม่ต่ำกว่า <b>2,000 บาท/ครั้ง</b> สำหรับต่างจังหวัด · ค่าที่พักตามที่จ่ายจริง</small></div>
 </div>
-<div class="add" style="justify-content:flex-end"><button onclick="exportCSV()">⬇ Export CSV (Excel)</button></div>
-<div class="sum" id="sum"></div>
-<div class="grid" id="list"></div>
-</div>
-<div class="modal" id="modal" onclick="if(event.target===this)closeM()"><div class="card" id="detail"></div></div>
 
+<div class="bar"><button class="p" onclick="openNew()">➕ เปิดเคสใหม่</button><button onclick="expCSV()">⬇ Export CSV (Excel)</button></div>
+<div class="row2"><input id="q" placeholder="🔍 ค้นหา: S/N, อู่/สถานี, อาการ ฯลฯ" oninput="render()"><select id="sf" onchange="render()"></select></div>
+<div class="chips" id="ch"></div>
+<div id="ls"></div>
+</div>
+<div id="m" onclick="if(event.target==this)closeM()"><div class="sheet" id="sh"></div></div>
+<div id="t"></div>
 <script>
-const C=[["c1","อู่เปิดเคส (S/N, อาการ/ปัญหา, อู่)","Station"],["c2","ITS แจ้งส่งเครื่องเสียให้ Loxbit","ITS"],["c3","Loxbit ให้ขนส่งมารับเครื่อง","Loxbit"],["c4","Loxbit ประเมินและแจ้งราคาซ่อม","Loxbit"]];
-const W=[["w1","Loxbit ซ่อมและจัดส่งคืน","Loxbit"]];
-const O=[["o1","ITS ทำ Memo แจ้ง HR รับทราบค่าใช้จ่าย","ITS","memo"],["o2","HR ทำเอกสารรับสภาพหนี้","HR"],["o3","HR ส่งสำเนาเอกสารรับสภาพหนี้ให้ ITS","HR","copy"],["o4","ITS แจ้ง Loxbit อนุมัติซ่อม","ITS"],["o5","ITS เปิด PR","ITS"],["o6","อนุมัติ PR","ODOO"],["o7","เปิด PO","ODOO"],["o8","ขอใบแจ้งหนี้จาก Loxbit","ITS","inv"],["o9","ส่งเอกสารให้ฝ่าย ACC","เอกสาร",null,["inv","memo","copy"]]];
-const E=["e","ITS รับเครื่อง","ITS"];
+const API_URL="https://p3-repair-api.tawan-its.workers.dev";
+const S=(k,t,o,e,h,x={})=>({k,t,o,e,h,...x});
+const C=[S("c1","เปิดเคสแจ้งปัญหาเครื่อง P3","Station","🛠️","อู่/สถานีแจ้งอาการเสียของเครื่อง P3 มาที่ ITS"),
+S("c2","ITS แจ้งส่งเครื่องเสียให้ Loxbit","ITS","📧","ITS แจ้ง Loxbit ว่ามีเครื่องเสียที่ต้องส่งซ่อม"),
+S("c3","Loxbit ให้ขนส่งมารับเครื่อง","Loxbit","🚚","Loxbit จัดขนส่งไปรับเครื่องจากอู่"),
+S("c4","Loxbit ประเมินและแจ้งราคาซ่อม","Loxbit","💰","Loxbit ตรวจเครื่องและแจ้งราคา แล้วเลือกด้านล่างว่าเครื่องอยู่ในประกันหรือไม่")];
+const W=[S("w1","Loxbit ซ่อมและจัดส่งคืน","Loxbit","🔩","Loxbit ซ่อมเครื่องฟรีในระยะประกันและจัดส่งคืน")];
+const O=[S("o1","ITS ทำ Memo แจ้ง HR รับทราบค่าใช้จ่าย","ITS","📝","ทำ Memo แจ้ง HR ให้ทราบค่าใช้จ่าย ต้องแนบไฟล์ก่อนไปต่อ",{need:"memo"}),
+S("o2","HR ทำเอกสารรับสภาพหนี้","HR","📄","HR ทำเอกสารรับสภาพหนี้และให้ผู้เกี่ยวข้องลงนาม"),
+S("o3","HR ส่งสำเนาเอกสารรับสภาพหนี้ให้ ITS","HR","📨","HR ส่งสำเนาที่ลงนามแล้วให้ ITS ต้องแนบไฟล์ก่อนไปต่อ",{need:"copy"}),
+S("o4","ITS แจ้ง Loxbit อนุมัติซ่อม","ITS","✅","ITS ยืนยันกับ Loxbit ให้เริ่มซ่อมได้"),
+S("o5","ITS เปิด PR","ITS","🧾","เปิดใบขอซื้อ (PR) ในระบบ"),
+S("o6","อนุมัติ PR","ODOO","🖊️","ผู้มีอำนาจอนุมัติ PR ในระบบ ODOO"),
+S("o7","เปิด PO","ODOO","📑","เปิดใบสั่งซื้อ (PO) จาก PR ที่อนุมัติแล้ว"),
+S("o8","ขอใบแจ้งหนี้จาก Loxbit","ITS","💳","ขอใบแจ้งหนี้จาก Loxbit ต้องแนบไฟล์ก่อนไปต่อ",{need:"inv"}),
+S("o9","ส่งเอกสารให้ฝ่าย ACC","เอกสาร","📦","ส่ง 3 เอกสารให้ ACC: ใบแจ้งหนี้ + Memo + สำเนารับสภาพหนี้",{list:["inv","memo","copy"]})];
+const E=S("e","ITS รับเครื่อง","ITS","📥","ITS ตรวจสอบสภาพและทดสอบการใช้งานเครื่องที่ได้รับคืน");
 const DN={memo:"Memo แจ้งค่าใช้จ่าย",copy:"สำเนาเอกสารรับสภาพหนี้",inv:"ใบแจ้งหนี้"};
 const ALL=[...C,...W,...O,E];
+const OC={Station:"#8a8f98",ITS:"#4a86d8",Loxbit:"#ef8a2f",HR:"#8a5fb8",ODOO:"#2aa198","เอกสาร":"#2aa198"};
 const path=m=>[...C,...(m.type==="in"?W:m.type==="out"?O:[]),E];
-let db,user,assets,dl,col,data=[],filter="all",openId=null,me={name:"ผู้ใช้"};
-const colr=o=>`var(--${o==="เอกสาร"?"DOC":o})`;
-const fmt=t=>new Date(t).toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"});
+let store,data=[],F="all",cur=null,me={name:"ผู้ใช้"},syncT="";
+const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=t=>new Date(t).toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"});
 const get=id=>data.find(x=>x.id===id);
-const note=t=>document.getElementById("note").innerHTML=t?`<div class="note">${t}</div>`:"";
-const fail=e=>alert("ทำรายการไม่สำเร็จ (อาจไม่มีสิทธิ์แก้ไข): "+(e&&(e.message||e.code)||e));
+const isDone=m=>m.step>=path(m).length;
+let tt;function toast(s){const t=$("t");t.textContent=s;t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",3200)}
+const fail=e=>toast("⚠️ ทำรายการไม่สำเร็จ: "+(e&&(e.message||e.code)||e));
+function renderUser(){$("cu").innerHTML=API_URL?`☁️ ออนไลน์ · ${esc(me.name)} ${esc(syncT)} <button class="sm" onclick="store.reload()">🔄 รีเฟรช</button>`:`💾 โหมดเครื่องเดียว — ข้อมูลอยู่ในเบราว์เซอร์นี้เท่านั้น`}
 
-const FIREBASE_CONFIG=null; /* วาง config ของ Firebase ตรงนี้ เช่น {apiKey:"...",authDomain:"...",projectId:"...",storageBucket:"...",appId:"..."} ถ้าเป็น null จะทำงานแบบเครื่องเดียว */
-let store;
 function localStore(){
   const K="p3_cases_v2",rd=()=>{try{return JSON.parse(localStorage.getItem(K)||"[]")}catch(e){return[]}};
   let cb=()=>{};const wr=a=>{localStorage.setItem(K,JSON.stringify(a));cb(a)};
-  return{sub:f=>{cb=f;f(rd())},
+  return{sub:f=>{cb=f;f(rd())},reload(){cb(rd())},
    add:async o=>{const a=rd();a.push({...o,id:"c"+Date.now()});wr(a)},
    update:async(id,o)=>wr(rd().map(x=>x.id===id?{...x,...o}:x)),
    del:async id=>wr(rd().filter(x=>x.id!==id)),
    upload:f=>new Promise((ok,no)=>{if(f.size>1.5e6)return no({message:"โหมดเครื่องเดียวรองรับไฟล์ไม่เกิน 1.5MB"});const r=new FileReader();r.onload=()=>ok({url:r.result});r.onerror=no;r.readAsDataURL(f)})}
 }
-async function fbStore(){
-  const V="https://www.gstatic.com/firebasejs/10.12.2/";
-  const [{initializeApp},fs,st]=await Promise.all([import(V+"firebase-app.js"),import(V+"firebase-firestore.js"),import(V+"firebase-storage.js")]);
-  const app=initializeApp(FIREBASE_CONFIG),d=fs.getFirestore(app),sg=st.getStorage(app),c=fs.collection(d,"cases");
-  return{sub:f=>fs.onSnapshot(c,q=>f(q.docs.map(x=>({...x.data(),id:x.id}))),e=>note("โหลดข้อมูลไม่สำเร็จ: "+esc(e.message))),
-   add:o=>fs.addDoc(c,o),update:(id,o)=>fs.updateDoc(fs.doc(d,"cases",id),o),del:id=>fs.deleteDoc(fs.doc(d,"cases",id)),
-   upload:async f=>{const r=st.ref(sg,"docs/"+Date.now()+"_"+f.name);await st.uploadBytes(r,f);return{url:await st.getDownloadURL(r)}}}
-}
-const API_URL="https://p3-repair-api.tawan-its.workers.dev";
 function apiStore(){
   let tok=localStorage.getItem("p3_tok")||"",cb=()=>{};
   const ask=()=>{tok=prompt("รหัสผ่านเข้าระบบ")||"";localStorage.setItem("p3_tok",tok)};
@@ -111,9 +151,9 @@ function apiStore(){
     if(r.status===401){ask();r=await go()}
     if(!r.ok)throw{message:r.status===401?"รหัสผ่านไม่ถูกต้อง":"HTTP "+r.status};
     return r};
-  const load=async()=>{try{cb(await(await req("/cases")).json());note("")}catch(e){note("โหลดข้อมูลไม่สำเร็จ: "+esc(e.message))}};
+  const load=async()=>{try{cb(await(await req("/cases")).json());syncT="· ซิงก์ "+new Date().toTimeString().slice(0,5)}catch(e){syncT="· ⚠️ โหลดไม่สำเร็จ: "+e.message}renderUser()};
   const J={"Content-Type":"application/json"};
-  return{sub:f=>{cb=f;load();setInterval(()=>{if(!document.hidden)load()},8000)},
+  return{sub:f=>{cb=f;load();setInterval(()=>{if(!document.hidden)load()},8000)},reload:load,
    add:async o=>{await req("/cases",{method:"POST",headers:J,body:JSON.stringify(o)});await load()},
    update:async(id,o)=>{await req("/cases/"+id,{method:"PATCH",headers:J,body:JSON.stringify(o)});await load()},
    del:async id=>{await req("/cases/"+id,{method:"DELETE"});await load()},
@@ -121,103 +161,94 @@ function apiStore(){
      const blob=f.type.startsWith("image/")?await shrink(f):f;
      if(blob.size>6e6)throw{message:"ไฟล์ใหญ่เกิน 6MB — กรุณาบีบอัดไฟล์ก่อนแนบ"};
      const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(",")[1]);r.onerror=no;r.readAsDataURL(blob)});
-     const fid=crypto.randomUUID(),S=1500000,n=Math.max(1,Math.ceil(b64.length/S)),ty=blob.type||f.type||"application/octet-stream";
-     for(let i=0;i<n;i++)await req(`/upload?fid=${fid}&i=${i}&type=${encodeURIComponent(ty)}`,{method:"POST",headers:{"Content-Type":"text/plain"},body:b64.slice(i*S,(i+1)*S)});
+     const fid=crypto.randomUUID(),Z=1500000,n=Math.max(1,Math.ceil(b64.length/Z)),ty=blob.type||f.type||"application/octet-stream";
+     for(let i=0;i<n;i++)await req(`/upload?fid=${fid}&i=${i}&type=${encodeURIComponent(ty)}`,{method:"POST",headers:{"Content-Type":"text/plain"},body:b64.slice(i*Z,(i+1)*Z)});
      return{url:"d1:"+fid}},
    file:async k=>{const j=await(await req("/files/"+k)).json(),bin=atob(j.b64),u=new Uint8Array(bin.length);
      for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:j.type})}};
 }
 const shrink=f=>new Promise(ok=>{const im=new Image();im.onload=()=>{const s=Math.min(1,1800/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(b=>ok(b||f),"image/jpeg",.8)};im.onerror=()=>ok(f);im.src=URL.createObjectURL(f)});
 async function openFile(k){const w=window.open("","_blank");try{w.location=URL.createObjectURL(await store.file(k))}catch(e){if(w)w.close();fail(e)}}
-async function initStore(){
+function initStore(){
   let n=localStorage.getItem("p3_name");if(!n){n=prompt("ชื่อของคุณ (ใช้บันทึกผู้ทำรายการ)")||"ผู้ใช้";localStorage.setItem("p3_name",n)}
-  me={name:n};assets=true;dl=true;
-  try{store=API_URL?apiStore():FIREBASE_CONFIG?await fbStore():localStore()}catch(e){note("เชื่อมต่อ Firebase ไม่ได้: "+esc(e.message));store=localStore()}
-  if(!FIREBASE_CONFIG&&!API_URL)note("โหมดเครื่องเดียว: ข้อมูลอยู่ในเบราว์เซอร์นี้เท่านั้น — ตั้งค่า Firebase เพื่อใช้ร่วมกันหลายคน");
+  me={name:n};store=API_URL?apiStore():localStore();renderUser();
   store.sub(a=>{data=a.sort((x,y)=>y.created-x.created);render()});
 }
 
-async function addM(){
-  if(!store)return;
-  const g=i=>document.getElementById(i),sn=g("sn").value.trim();
-  if(!sn)return;
-  try{await store.add({name:sn,sn,issue:g("issue").value.trim(),station:g("st").value.trim(),type:"",step:0,created:Date.now(),log:{c1:{t:Date.now(),by:me.name}},docs:{}});
-    ["sn","issue","st"].forEach(i=>g(i).value="")}catch(e){fail(e)}
+async function addCase(){
+  const sn=$("ns").value.trim();if(!sn)return toast("กรอก S/N ก่อนนะ");
+  try{await store.add({name:sn,sn,issue:$("ni").value.trim(),station:$("nt").value.trim(),type:"",step:0,created:Date.now(),log:{c1:{t:Date.now(),by:me.name}},docs:{}});closeM();toast("✅ สร้างเคส "+sn+" แล้ว")}catch(e){fail(e)}
 }
 async function go(id,d){
   const m=get(id),p=path(m),ns=m.step+d;
   if(ns<0||ns>p.length)return;
   const log={...(m.log||{})};
-  if(d>0){log[ns<p.length?p[ns][0]:"done"]={t:Date.now(),by:me.name}}
-  else delete log[m.step<p.length?p[m.step][0]:"done"];
+  if(d>0)log[ns<p.length?p[ns].k:"done"]={t:Date.now(),by:me.name};else delete log[m.step<p.length?p[m.step].k:"done"];
   try{await store.update(id,{step:ns,log})}catch(e){fail(e)}
 }
-async function setType(id,t){try{await store.update(id,{type:t})}catch(e){fail(e)}}
+const setType=async(id,t)=>{try{await store.update(id,{type:t})}catch(e){fail(e)}};
+const ed=async(id,k,v)=>{try{await store.update(id,{[k]:v.trim()})}catch(e){fail(e)}};
 async function del(id){if(!confirm("ลบเคสนี้ออกจากรายการ?"))return;try{await store.del(id);closeM()}catch(e){fail(e)}}
 async function up(id,key,inp){
-  const f=inp.files[0];if(!f)return;
-  if(!assets){alert("ไม่มีสิทธิ์อัปโหลดไฟล์");return}
+  const f=inp.files[0];if(!f)return;toast("⏳ กำลังแนบไฟล์...");
   try{const r=await store.upload(f),m=get(id),docs={...(m.docs||{})};
     docs[key]=[...(docs[key]||[]),{url:r.url,name:f.name,by:me.name,t:Date.now()}];
-    await store.update(id,{docs})}catch(e){fail(e)}
+    await store.update(id,{docs});toast("📎 แนบไฟล์แล้ว")}catch(e){fail(e)}
   inp.value="";
 }
-function openM(id){openId=id;render();document.getElementById("modal").classList.add("show")}
-function closeM(){openId=null;document.getElementById("modal").classList.remove("show")}
-function setF(f){filter=f;render()}
-const isDone=m=>m.step>=path(m).length;
-const files=(m,k)=>(m.docs?.[k]||[]).map(f=>`<a href="${f.url.startsWith("d1:")?"#":esc(f.url)}" ${f.url.startsWith("d1:")?`onclick="openFile('${esc(f.url.slice(3))}');return false"`:'target="_blank" rel="noopener"'}>📎 ${esc(f.name)} <span class="mu">· ${esc(f.by)} ${fmt(f.t)}</span></a>`).join("");
+const files=(m,k)=>(m.docs?.[k]||[]).map(f=>`<div class="fl">📎 <a href="${f.url.startsWith("d1:")?"#":esc(f.url)}" ${f.url.startsWith("d1:")?`onclick="openFile('${esc(f.url.slice(3))}');return false"`:'target="_blank" rel="noopener"'}>${esc(f.name)}</a> <span class="mu">${esc(f.by)} · ${fmt(f.t)}</span></div>`).join("");
+const wTag=m=>m.type==="in"?'<span class="wt in">🛡️ ในประกัน</span>':m.type==="out"?'<span class="wt out">💸 นอกประกัน</span>':"";
 
+function showM(h){const y=$("sh").scrollTop;$("sh").innerHTML=h;$("sh").scrollTop=y;$("m").classList.add("on")}
+function closeM(){$("m").classList.remove("on");cur=null;render()}
+function setF(f){F=f;render()}
 function render(){
-  const chips=[["all","ทั้งหมด",data.length],["active","กำลังดำเนินการ",data.filter(m=>!isDone(m)).length],["done","เสร็จสิ้น",data.filter(isDone).length],["in","ในประกัน",data.filter(m=>m.type==="in").length],["out","นอกประกัน",data.filter(m=>m.type==="out").length]];
-  document.getElementById("sum").innerHTML=chips.map(c=>`<div class="chip ${filter===c[0]?"on":""}" onclick="setF('${c[0]}')">${c[1]} (${c[2]})</div>`).join("");
-  const list=data.filter(m=>filter==="all"||(filter==="active"?!isDone(m):filter==="done"?isDone(m):m.type===filter));
-  document.getElementById("list").innerHTML=list.length?list.map(m=>{
-    const p=path(m),done=isDone(m),s=p[Math.min(m.step,p.length-1)],pct=Math.round(Math.min(m.step,p.length)/p.length*100);
-    return `<div class="card m" onclick="openM('${m.id}')">
-      <div class="row"><b>${esc(m.sn||m.name)}</b>${done?`<span class="tag" style="background:var(--ok)">เสร็จสิ้น</span>`:`<span class="tag" style="background:${colr(s[2])}">${esc(s[2])}</span>`}</div>
-      <div class="mu">${esc(m.station||"-")} · ${m.type==="in"?"ในประกัน":m.type==="out"?"นอกประกัน":"รอประเมิน"}</div>
-      <div class="mu">${esc(m.issue||"")}</div>
-      <div class="bar"><i style="width:${pct}%"></i></div>
-      <div class="row mu"><span>${done?"ITS รับเครื่องแล้ว":esc(s[1])}</span><span>${pct}%</span></div></div>`}).join(""):`<div class="empty">ยังไม่มีเคส — เปิดเคสใหม่ด้านบน</div>`;
-
-  if(!openId)return;
-  const m=get(openId);if(!m){closeM();return}
-  const p=path(m),done=isDone(m),cur=p[m.step],atAssess=m.step===3;
-  const need=cur&&cur[3],blocked=(need&&!(m.docs?.[need]||[]).length)||(atAssess&&!m.type);
-  document.getElementById("detail").innerHTML=`
-    <div class="row"><b style="font-size:1.15rem">S/N ${esc(m.sn||m.name)}</b><button onclick="closeM()">✕</button></div>
-    <div class="mu">${esc(m.station||"-")} · ${esc(m.issue||"-")}</div>
-    <div class="mu">${done?"เสร็จสิ้นทุกขั้นตอน":`ขั้นที่ ${m.step+1} จาก ${p.length}`}</div>
-    ${atAssess?`<div class="acts"><span>ผลประเมิน:</span><button class="${m.type==="in"?"sel":""}" onclick="setType('${m.id}','in')">อาการเสียอยู่ในประกัน</button><button class="${m.type==="out"?"sel":""}" onclick="setType('${m.id}','out')">อาการเสียนอกประกัน</button></div>`:""}
-    <ul class="tl">${p.map((s,i)=>{
-      const cls=m.step>i?"done":m.step===i?"cur":"todo",lg=m.log?.[s[0]];
-      const ks=s[4]||(s[3]?[s[3]]:[]);
-      return `<li class="${cls}"><span class="n">${m.step>i?"✓":i+1}</span><div style="flex:1">
-        <div class="row"><span>${esc(s[1])}</span><span class="tag" style="background:${colr(s[2])}">${esc(s[2])}</span></div>
-        ${ks.map(k=>`<div class="files">${DN[k]}${files(m,k)||` <span class="mu">— ยังไม่มีไฟล์</span>`}</div>`).join("")}
-        ${cls==="cur"&&s[3]?`<div class="gate">⚠ ต้องแนบ${DN[s[3]]}ก่อนไปขั้นถัดไป</div>${assets?`<input type="file" accept=".pdf,image/*" onchange="up('${m.id}','${s[3]}',this)" style="margin-top:6px;width:100%">`:""}`:""}
-        ${lg?`<div class="mu">${fmt(lg.t)} · ${esc(lg.by)}</div>`:""}</div></li>`}).join("")}
-      ${!m.type&&!done?`<li class="todo"><span class="n">…</span><div class="mu">ขั้นตอนต่อไปจะแสดงหลังเลือกผลประเมิน</div></li>`:""}
-      ${done?`<li class="done"><span class="n">✓</span><div class="mu">ปิดงาน ${fmt(m.log?.done?.t||Date.now())} · ${esc(m.log?.done?.by||"")}</div></li>`:""}</ul>
-    <div class="acts">
-      <button onclick="go('${m.id}',-1)" ${m.step<=0?"disabled":""}>← ย้อนขั้นตอน</button>
-      <button class="p" onclick="go('${m.id}',1)" ${done||blocked?"disabled":""}>${m.step===p.length-1?"เสร็จสิ้น ✓":"ไปขั้นถัดไป →"}</button>
-      <button onclick="del('${m.id}')" style="margin-left:auto">ลบ</button></div>`;
+  const q=$("q").value.trim().toLowerCase(),sf=$("sf").value;
+  if(!$("sf").options.length)$("sf").innerHTML='<option value="">🔢 ทุกขั้นตอน</option>'+ALL.map(s=>`<option value="${s.k}">${s.e} ${s.t}</option>`).join("")+'<option value="done">🎉 เสร็จสิ้น</option>';
+  const cnt={all:data.length,run:data.filter(m=>!isDone(m)).length,done:data.filter(isDone).length,in:data.filter(m=>m.type==="in").length,out:data.filter(m=>m.type==="out").length};
+  $("ch").innerHTML=[["all","📋 ทั้งหมด"],["run","⏳ กำลังดำเนินการ"],["done","🎉 เสร็จ"],["in","🛡️ ในประกัน"],["out","💸 นอกประกัน"]].map(([k,l])=>`<button class="chip ${F===k?"on":""}" onclick="setF('${k}')">${l} (${cnt[k]})</button>`).join("");
+  const L=data.filter(m=>{const d=isDone(m),s=path(m)[Math.min(m.step,path(m).length-1)];
+    if(F==="run"&&d||F==="done"&&!d||(F==="in"||F==="out")&&m.type!==F)return false;
+    if(sf&&(sf==="done"?!d:d||s.k!==sf))return false;
+    return !q||[m.sn,m.name,m.station,m.issue,s.t].join(" ").toLowerCase().includes(q)});
+  $("ls").innerHTML=L.length?L.map(m=>{const p=path(m),d=isDone(m),s=p[Math.min(m.step,p.length-1)],pct=Math.round(Math.min(m.step,p.length)/p.length*100),c=d?"var(--ok)":OC[s.o];
+    return `<div class="cs" style="--c:${c}" onclick="openCase('${m.id}')"><div class="rw"><span class="ic" style="--c:${c}">${d?"🎉":s.e}</span><div class="bd2"><div class="top"><b>${esc(m.sn||m.name)}${wTag(m)}</b>${d?'<i class="tag" style="--c:var(--ok)">เสร็จสิ้น</i>':`<i class="tag" style="--c:${c}">${s.o}</i>`}</div>
+    <div class="mu">${esc(m.station||"-")}${m.issue?" · "+esc(m.issue):""}</div><div class="stl">${d?"🎉 ITS รับเครื่องแล้ว":`ขั้นที่ ${m.step+1}/${p.length} · ${s.t}`}</div><div class="pg"><i style="width:${pct}%"></i></div></div></div></div>`}).join(""):'<div class="empty">ยังไม่มีเคส — กด ➕ เปิดเคสใหม่</div>';
+  if(cur)detail();
 }
-
-async function exportCSV(){
+function openNew(){cur=null;showM(`<div class="mh"><b>➕ เปิดเคสใหม่</b><button class="x" onclick="closeM()">✕</button></div><div class="grid"><label class="f">เลขเครื่อง (S/N)<input id="ns" autocomplete="off"></label><label>อู่/สถานี<input id="nt"></label><label>อาการ/ปัญหา<input id="ni"></label></div><div class="nav"><button class="p" onclick="addCase()">✅ สร้างเคส</button></div>`);$("ns").focus()}
+function openWar(){cur=null;showM(`<div class="mh"><b>🛡️ เงื่อนไขการรับประกัน</b><button class="x" onclick="closeM()">✕</button></div>`+$("wsrc").innerHTML)}
+function openCase(id){cur=id;detail()}
+function detail(){
+  const m=get(cur);if(!m)return closeM();
+  const p=path(m),d=isDone(m),s0=p[m.step],atA=m.step===3,blocked=(s0&&s0.need&&!(m.docs?.[s0.need]||[]).length)||(atA&&!m.type);
+  let h=`<div class="mh"><b>${d?"🎉":"🔧"} ${esc(m.sn||m.name)}</b><button class="x" onclick="closeM()">✕</button></div>
+  <div class="grid"><label>อู่/สถานี<input value="${esc(m.station)}" onchange="ed('${m.id}','station',this.value)"></label><label>อาการ/ปัญหา<input value="${esc(m.issue)}" onchange="ed('${m.id}','issue',this.value)"></label></div>
+  <p class="mu" style="margin:0 0 6px">🗓️ เปิดเคส ${fmt(m.created)} ${wTag(m)}${d&&m.log?.done?` · 🏁 จบงาน ${fmt(m.log.done.t)}`:""}</p>`;
+  p.forEach((s,i)=>{const k=i<m.step?"d":i===m.step?"c":"t",lg=m.log?.[s.k],c=OC[s.o];
+    h+=`<div class="st ${k}" style="--c:${c}"><div class="num">${i<m.step?"✓":i+1}</div><div class="sb"><div class="sr"><span class="stt"><span class="ic">${s.e}</span>${s.t}</span><i class="tag">${s.o}</i></div>`;
+    if(k==="c")h+=`<p class="hint">💡 ${s.h}</p>`;
+    if(k==="c"&&s.need)h+=(files(m,s.need)||`<div class="fl">🔒 ยังไม่ได้แนบ "${DN[s.need]}"</div>`)+`<div class="fl"><label class="btn">📎 แนบไฟล์<input type="file" hidden accept=".pdf,image/*" onchange="up('${m.id}','${s.need}',this)"></label></div>`;
+    else if(s.need)h+=files(m,s.need);
+    if(s.list)h+=`<div class="acc">`+s.list.map(x=>`<div><span>${(m.docs?.[x]||[]).length?"✅":"❌"} <b>${DN[x]}</b></span></div>${files(m,x)}`).join("")+`</div>`;
+    if(k==="c"&&atA&&i===3)h+=`<div class="wq"><button class="wb in ${m.type==="in"?"on":""}" onclick="setType('${m.id}','in')">🛡️ อยู่ในประกัน</button><button class="wb out ${m.type==="out"?"on":""}" onclick="setType('${m.id}','out')">💸 นอกประกัน</button></div>`;
+    if(lg)h+=`<div class="mu">${fmt(lg.t)} · ${esc(lg.by)}</div>`;
+    h+=`</div></div>`});
+  if(!m.type&&!d)h+=`<div class="st t" style="--c:var(--mu)"><div class="num">…</div><div class="sb mu">ขั้นตอนต่อไปจะแสดงหลังเลือกผลประเมิน (ในประกัน / นอกประกัน)</div></div>`;
+  h+=`<div class="nav"><button onclick="go('${m.id}',-1)" ${m.step<=0?"disabled":""}>◀ ย้อนกลับ</button><button class="p ${blocked?"lock":""}" onclick="${blocked?`toast('🔒 ${atA&&!m.type?"เลือกผลประเมินก่อน":"ต้องแนบไฟล์ก่อนไปขั้นถัดไป"}')`:`go('${m.id}',1)`}" ${d?"disabled":""}>${m.step===p.length-1?"✅ จบงาน":"ถัดไป ▶"}</button></div>
+  <div class="ft"><button onclick="del('${m.id}')">🗑️ ลบเคสนี้</button><button onclick="openWar()">🛡️ เงื่อนไขประกัน</button></div>`;
+  showM(h);
+}
+function expCSV(){
   const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  const head=["S/N","อาการ/ปัญหา","อู่","ประเภท","สถานะ","ขั้นปัจจุบัน","วันที่เปิดเคส",...ALL.map(s=>"วันที่: "+s[1]),"วันที่ปิดงาน","ไฟล์แนบ"];
+  const head=["S/N","อาการ/ปัญหา","อู่","ประเภท","สถานะ","ขั้นปัจจุบัน","วันที่เปิดเคส",...ALL.map(s=>"วันที่: "+s.t),"วันที่ปิดงาน","ไฟล์แนบ"];
   const rows=data.map(m=>{const p=path(m),d=isDone(m);
-    return [m.sn||m.name,m.issue,m.station,m.type==="in"?"ในประกัน":m.type==="out"?"นอกประกัน":"รอประเมิน",d?"เสร็จสิ้น":"กำลังดำเนินการ",d?"ITS รับเครื่องแล้ว":p[m.step][1],fmt(m.created),
-      ...ALL.map(s=>m.log?.[s[0]]?fmt(m.log[s[0]].t):""),m.log?.done?fmt(m.log.done.t):"",
+    return [m.sn||m.name,m.issue,m.station,m.type==="in"?"ในประกัน":m.type==="out"?"นอกประกัน":"รอประเมิน",d?"เสร็จสิ้น":"กำลังดำเนินการ",d?"ITS รับเครื่องแล้ว":p[m.step].t,fmt(m.created),
+      ...ALL.map(s=>m.log?.[s.k]?fmt(m.log[s.k].t):""),m.log?.done?fmt(m.log.done.t):"",
       Object.entries(m.docs||{}).flatMap(([k,a])=>a.map(f=>DN[k]+": "+f.name)).join(" | ")]});
-  const csv="\ufeff"+[head,...rows].map(r=>r.map(q).join(",")).join("\r\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download=`p3-repair-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+[head,...rows].map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"}));
+  a.download=`p3-repair-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 render();initStore();
-</script>
-</body>
-</html>
+
+</script></body></html>
