@@ -94,7 +94,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(
 <small>* ค่าเดินทางไม่ต่ำกว่า <b>2,000 บาท/ครั้ง</b> สำหรับต่างจังหวัด · ค่าที่พักตามที่จ่ายจริง</small></div>
 </div>
 
-<div class="bar"><button class="p" onclick="openNew()">➕ เปิดเคสใหม่</button><button onclick="expCSV()">⬇ Export CSV (Excel)</button></div>
+<div class="bar"><button class="p" onclick="openNew()">➕ เปิดเคสใหม่</button><button onclick="openImp()">📥 Import</button><button onclick="expCSV()">⬇ Export CSV (Excel)</button></div>
 <div class="row2"><input id="q" placeholder="🔍 ค้นหา: S/N, อู่/สถานี, อาการ ฯลฯ" oninput="render()"><select id="sf" onchange="render()"></select></div>
 <div class="chips" id="ch"></div>
 <div id="ls"></div>
@@ -137,7 +137,7 @@ function localStore(){
   const K="p3_cases_v2",rd=()=>{try{return JSON.parse(localStorage.getItem(K)||"[]")}catch(e){return[]}};
   let cb=()=>{};const wr=a=>{localStorage.setItem(K,JSON.stringify(a));cb(a)};
   return{sub:f=>{cb=f;f(rd())},reload(){cb(rd())},
-   add:async o=>{const a=rd();a.push({...o,id:"c"+Date.now()});wr(a)},
+   add:async o=>{const a=rd();a.push({...o,id:"c"+Date.now()+Math.random().toString(36).slice(2,6)});wr(a)},
    update:async(id,o)=>wr(rd().map(x=>x.id===id?{...x,...o}:x)),
    del:async id=>wr(rd().filter(x=>x.id!==id)),
    upload:f=>new Promise((ok,no)=>{if(f.size>1.5e6)return no({message:"โหมดเครื่องเดียวรองรับไฟล์ไม่เกิน 1.5MB"});const r=new FileReader();r.onload=()=>ok({url:r.result});r.onerror=no;r.readAsDataURL(f)})}
@@ -154,7 +154,7 @@ function apiStore(){
   const load=async()=>{try{cb(await(await req("/cases")).json());syncT="· ซิงก์ "+new Date().toTimeString().slice(0,5)}catch(e){syncT="· ⚠️ โหลดไม่สำเร็จ: "+e.message}renderUser()};
   const J={"Content-Type":"application/json"};
   return{sub:f=>{cb=f;load();setInterval(()=>{if(!document.hidden)load()},8000)},reload:load,
-   add:async o=>{await req("/cases",{method:"POST",headers:J,body:JSON.stringify(o)});await load()},
+   add:async(o,q)=>{await req("/cases",{method:"POST",headers:J,body:JSON.stringify(o)});if(!q)await load()},
    update:async(id,o)=>{await req("/cases/"+id,{method:"PATCH",headers:J,body:JSON.stringify(o)});await load()},
    del:async id=>{await req("/cases/"+id,{method:"DELETE"});await load()},
    upload:async f=>{
@@ -248,6 +248,36 @@ function expCSV(){
       Object.entries(m.docs||{}).flatMap(([k,a])=>a.map(f=>DN[k]+": "+f.name)).join(" | ")]});
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+[head,...rows].map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"}));
   a.download=`p3-repair-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function parseCSV(t){t=t.replace(/^\uFEFF/,"");const sep=(t.split("\n")[0]||"").includes("\t")?"\t":",";const rows=[];let r=[],f="",q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=ch}
+ else if(ch=='"')q=true;else if(ch==sep){r.push(f);f=""}else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&t[i+1]=="\n")i++;r.push(f);f="";rows.push(r);r=[]}else f+=ch}
+ if(f||r.length){r.push(f);rows.push(r)}return rows.filter(x=>x.some(v=>v.trim()))}
+function openImp(){cur=null;showM(`<div class="mh"><b>📥 Import หลายเครื่อง</b><button class="x" onclick="closeM()">✕</button></div>
+<p class="hint">1) ดาวน์โหลดแพทเทิร์น → 2) กรอกใน Excel → 3) เลือกไฟล์ หรือวางข้อมูลด้านล่าง</p>
+<p class="ex">คอลัมน์: S/N, อู่/สถานี, อาการ/ปัญหา, ประกัน (ในประกัน / นอกประกัน / เว้นว่าง), ขั้นตอนปัจจุบัน (เลขลำดับขั้น เว้นว่าง = 1)</p>
+<div class="bar" style="margin-top:8px"><button onclick="tpl()">📄 ดาวน์โหลดแพทเทิร์น</button><label class="btn">📂 เลือกไฟล์ CSV / JSON<input type="file" hidden accept=".csv,.json,.txt" onchange="impFile(this)"></label></div>
+<textarea id="ta" rows="7" placeholder="หรือคัดลอกจาก Excel (รวมทุกคอลัมน์) มาวางที่นี่"></textarea>
+<div class="nav"><button class="p" onclick="impText($('ta').value)">✅ นำเข้า</button></div>`)}
+function tpl(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFFS/N,อู่/สถานี,อาการ/ปัญหา,ประกัน,ขั้นตอนปัจจุบัน\nP30425BR10529,วัดไร่ขิง,หน้าจอไม่ติด,,1\nP302256PJ1079,ปากเกร็ด,เปิดไม่ติด,นอกประกัน,5\n"],{type:"text/csv"}));a.download="แพทเทิร์น_นำเข้าเครื่อง_P3.csv";document.body.appendChild(a);a.click();a.remove()}
+function impFile(i){const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>impText(r.result);r.readAsText(f)}
+async function impText(t){
+  t=(t||"").trim();if(!t)return toast("ยังไม่มีข้อมูล");let rows;
+  if(t[0]=="["){try{rows=JSON.parse(t).map(c=>[c.sn||c.name,c.station,c.issue,c.type,c.step])}catch(e){return toast("JSON ไม่ถูกต้อง")}}
+  else{rows=parseCSV(t);if(rows[0]&&/s\/?n|เลขเครื่อง|ประกัน|อู่/i.test(rows[0].join()))rows.shift()}
+  rows=rows.filter(r=>String(r[0]||"").trim());if(!rows.length)return toast("ไม่พบข้อมูล");
+  if(!confirm(`นำเข้า ${rows.length} เครื่อง?`))return;
+  const have=new Set(data.map(m=>(m.sn||m.name||"").toLowerCase())),now=Date.now();let ok=0,dup=0,bad=0;toast("⏳ กำลังนำเข้า...");
+  for(const [i,r] of rows.entries()){
+    const sn=String(r[0]).trim(),tv=String(r[3]??"").trim(),type=/นอก|out/i.test(tv)?"out":/ใน|in/i.test(tv)?"in":"";
+    const m={name:sn,sn,station:String(r[2-1]??"").trim(),issue:String(r[2]??"").trim(),type,created:now-i,docs:{},log:{c1:{t:now,by:me.name}}};
+    const p=path(m);let st=Math.max(1,parseInt(r[4])||1)-1;if(!type)st=Math.min(st,3);st=Math.min(st,p.length);
+    m.step=st;for(let k=1;k<=st;k++)m.log[k<p.length?p[k].k:"done"]={t:now,by:me.name+" (นำเข้า)"};
+    if(have.has(sn.toLowerCase()))dup++;have.add(sn.toLowerCase());
+    try{await store.add(m,true);ok++}catch(e){bad++}
+  }
+  await store.reload();closeM();
+  toast(`✅ นำเข้า ${ok} เครื่อง`+(dup?` · ⚠️ S/N ซ้ำ ${dup}`:"")+(bad?` · ❌ ล้มเหลว ${bad}`:""));
 }
 render();initStore();
 
