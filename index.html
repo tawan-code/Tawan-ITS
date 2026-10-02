@@ -1,742 +1,197 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ดานัง · บานาฮิลล์ · ฮอยอัน — แผนฉบับปรับตามลิสต์ล่าสุด</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ติดตามสถานะซ่อมเครื่อง P3</title>
 <style>
-  :root{
-    --bg:#FBF6EC;
-    --ink:#2B2118;
-    --ink-soft:#6B5A48;
-    --line:rgba(43,33,24,0.14);
-    --card:#FFFFFF;
-    --shadow: 0 1px 2px rgba(43,33,24,0.06), 0 8px 24px rgba(43,33,24,0.07);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.serif{ font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; }
-  .wrap{max-width:780px;margin:0 auto;padding:0 20px 64px;}
-
-  .hero{
-    background:
-      radial-gradient(1200px 400px at 15% -10%, rgba(232,163,61,0.35), transparent 60%),
-      linear-gradient(180deg,#1B2A3A 0%, #16212E 100%);
-    color:#F4ECDD;
-    padding:44px 20px 34px;
-    position:relative; overflow:hidden;
-  }
-  .hero::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
-    background:linear-gradient(90deg, transparent, rgba(232,163,61,0.6), transparent); }
-  .hero-inner{max-width:780px;margin:0 auto;}
-  .hero-eyebrow{ font-size:0.82rem; color:#D9B36A; margin:0 0 6px; }
-  .hero h1{ font-size:2.05rem; margin:0 0 12px; font-weight:600; line-height:1.2; }
-  .hero p.lede{ margin:0 0 22px; color:#C9BEA9; max-width:58ch; font-size:0.96rem; }
-  .flight-strip{ display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.06);
-    border:1px solid rgba(232,163,61,0.35); border-radius:10px; padding:14px 16px; flex-wrap:wrap; }
-  .flight-leg{display:flex;flex-direction:column;gap:2px;}
-  .flight-leg .code{font-size:0.72rem;color:#B8AC94;}
-  .flight-leg .time{font-size:1.05rem; font-weight:600; color:#F4ECDD;}
-  .flight-arrow{color:#E8A33D; font-size:1.1rem; opacity:0.8;}
-
-  .card{ background:var(--card); border-radius:14px; box-shadow:var(--shadow); padding:20px 22px; margin:24px 0; }
-  .card h2{font-size:1.1rem;margin:0 0 4px;font-weight:600;}
-  .card .sub{color:var(--ink-soft); font-size:0.85rem; margin:0 0 14px;}
-
-  .summary-grid{display:flex;flex-direction:column;gap:10px;}
-  .summary-row{display:flex; gap:10px; font-size:0.9rem; align-items:flex-start;}
-  .summary-row .ic{flex:0 0 auto; font-size:1.1rem;}
-
-  /* proximity clusters */
-  .cluster{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
-  .cluster h3{margin:0 0 4px; font-size:1rem;}
-  .cluster .area{font-size:0.8rem; color:var(--ink-soft); margin-bottom:10px;}
-  .place-chain{display:flex; flex-direction:column; gap:0;}
-  .place-item{
-    display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line);
-  }
-  .place-item:first-child{border-top:none;}
-  .place-item .dot{flex:0 0 auto; width:8px;height:8px;border-radius:50%;background:#B8860B;margin-top:6px;}
-  .place-name{font-weight:600; font-size:0.92rem;}
-  .place-name a{color:var(--ink); text-decoration:none; border-bottom:1px dotted #B8860B;}
-  .place-meta{font-size:0.82rem; color:var(--ink-soft); margin-top:2px;}
-  .distance-link{ font-size:0.8rem; color:#8A5A22; background:#FBF0DA; border-radius:6px; padding:3px 8px; display:inline-block; margin-top:4px; }
-
-  .daynav{ position:sticky; top:0; z-index:5; background:var(--bg); padding:14px 0 10px;
-    border-bottom:1px solid var(--line); margin-bottom:22px; }
-  .daynav-inner{ max-width:780px;margin:0 auto;padding:0 20px; display:flex; gap:8px; overflow-x:auto; }
-  .daynav button{ flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink-soft);
-    padding:8px 14px; border-radius:20px; font-size:0.88rem; cursor:pointer; font-family:inherit;
-    transition:all .15s ease; white-space:nowrap; }
-  .daynav button.active{ background:var(--ink); color:#F4ECDD; border-color:var(--ink); }
-
-  .day{display:none;}
-  .day.active{display:block; animation:fadein .25s ease;}
-  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
-  .day-head{margin:4px 0 18px;}
-  .day-head h2{font-size:1.35rem; margin:0 0 4px; font-weight:600;}
-  .day-head p{margin:0; color:var(--ink-soft); font-size:0.92rem;}
-
-  .timeline{position:relative; padding-left:26px;}
-  .timeline::before{ content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px;
-    background:linear-gradient(var(--accent), transparent 98%); opacity:0.35; }
-
-  details.stop{ position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px;
-    margin-bottom:12px; box-shadow:var(--shadow); overflow:hidden; }
-  details.stop::before{ content:""; position:absolute; left:-26px; top:20px; width:10px; height:10px;
-    border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px var(--bg); }
-  details.stop summary{ list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center; gap:12px; }
-  details.stop summary::-webkit-details-marker{display:none;}
-  .stop-time{ flex:0 0 auto; font-size:0.82rem; font-weight:700; color:var(--accent); min-width:44px; }
-  .stop-icon{flex:0 0 auto; font-size:1.15rem;}
-  .stop-titleblock{flex:1 1 auto; min-width:0;}
-  .stop-name{font-weight:600; font-size:0.98rem;}
-  .stop-name a{ color:var(--ink); text-decoration:none; border-bottom:1px dotted var(--accent); padding-bottom:1px; }
-  .stop-name a:hover{border-bottom-style:solid;}
-  .stop-name .ext-icon{font-size:0.72em; color:var(--accent); margin-left:2px;}
-  .stop-tag{font-size:0.78rem; color:var(--ink-soft);}
-  .chevron{ flex:0 0 auto; color:var(--ink-soft); transition:transform .18s ease; font-size:0.8rem; }
-  details[open] .chevron{transform:rotate(90deg);}
-  details[open] summary{border-bottom:1px solid var(--line);}
-  .stop-body{padding:6px 16px 16px;}
-  .stop-desc{margin:6px 0 12px; font-size:0.92rem; color:var(--ink);}
-  .meta-grid{ display:flex; flex-direction:column; gap:8px; background:var(--accent-soft); border-radius:8px;
-    padding:10px 12px; margin-bottom:10px; }
-  .meta-row{font-size:0.85rem; display:flex; gap:8px;}
-  .meta-row .k{flex:0 0 auto;}
-  .tip{ font-size:0.86rem; color:var(--ink-soft); border-left:2px solid var(--accent); padding-left:10px; }
-  .note{ font-size:0.8rem; color:#9A6B2E; background:#FBF0DA; border-radius:6px; padding:6px 10px;
-    margin-top:8px; display:inline-block; }
-  .backup{ font-size:0.85rem; color:#2B5F7A; background:#E1EBF0; border-radius:6px; padding:8px 10px; margin-top:8px; }
-
-  .day[data-day="1"]{--accent:#1F6F63; --accent-soft:#E4F0EC;}
-  .day[data-day="2"]{--accent:#B8860B; --accent-soft:#FAF0DA;}
-  .day[data-day="3"]{--accent:#A8402D; --accent-soft:#F7E4DE;}
-  .day[data-day="4"]{--accent:#2B5F7A; --accent-soft:#E1EBF0;}
-
-  table.b-table{width:100%; border-collapse:collapse; font-size:0.88rem;}
-  table.b-table td{padding:7px 4px; border-top:1px solid var(--line); vertical-align:top;}
-  table.b-table td:last-child{text-align:right; white-space:nowrap; font-weight:600;}
-  table.b-table tr.total td{border-top:2px solid var(--ink); font-weight:700; padding-top:10px;}
-
-  .massage-grid{display:flex; flex-direction:column; gap:12px;}
-  .massage-item{border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
-  .massage-item b{display:block; font-size:0.94rem; margin-bottom:2px;}
-  .massage-item span{font-size:0.85rem; color:var(--ink-soft);}
-
-  .assumptions{ margin-top:6px; font-size:0.83rem; color:var(--ink-soft); background:#F4ECDD; border-radius:10px;
-    padding:14px 16px; }
-  .assumptions b{color:var(--ink);}
-  .assumptions ul{margin:8px 0 0; padding-left:18px;}
-  .assumptions li{margin-bottom:4px;}
-
-  footer.disclaimer{ text-align:center; color:var(--ink-soft); font-size:0.78rem; margin-top:26px;
-    padding-top:16px; border-top:1px solid var(--line); }
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f6fb;--card:#fff;--tx:#1b2340;--mu:#6b7490;--bd:#e1e6f0;--pri:#2f5fd0;
+--Station:#7d8590;--ITS:#4a86d8;--Loxbit:#ee8a3c;--HR:#8a63c2;--ODOO:#2fa39a;--DOC:#2fa39a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--card:#1a2031;--tx:#e8ecf7;--mu:#97a0b8;--bd:#2b3350;--pri:#6c93f0}}
+:root[data-theme="dark"]{--bg:#10141f;--card:#1a2031;--tx:#e8ecf7;--mu:#97a0b8;--bd:#2b3350;--pri:#6c93f0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:8px 0 14px;color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.add{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+input,select,button{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:9px 12px}
+input{flex:1;min-width:140px}
+button{cursor:pointer}
+button.p{background:var(--pri);border-color:var(--pri);color:#fff}
+button:disabled{opacity:.4;cursor:default}
+.sum{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}
+.chip{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);border-radius:999px;padding:5px 12px;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.m{cursor:pointer}
+.m:hover{border-color:var(--pri)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tag{color:#fff;font-size:.75rem;padding:2px 10px;border-radius:8px;white-space:nowrap}
+.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;background:var(--pri)}
+.mu{color:var(--mu);font-size:.85rem}
+.tl{margin:14px 0 0;padding:0;list-style:none}
+.tl li{display:flex;gap:10px;padding:8px 0;border-left:2px solid var(--bd);margin-left:13px;padding-left:16px;position:relative}
+.tl .n{position:absolute;left:-14px;top:6px;width:26px;height:26px;border-radius:50%;background:var(--bd);color:var(--mu);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.tl li.done .n{background:var(--ODOO);color:#fff}
+.tl li.cur .n{background:var(--pri);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--pri) 25%,transparent)}
+.tl li.cur{font-weight:700}
+.tl li.todo{color:var(--mu)}
+.tl ul{margin:2px 0 0;padding-left:18px;font-weight:400;font-size:.85rem}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:16px}
+.modal.show{display:flex}
+.modal .card{width:100%;max-width:560px;margin:auto}
+.empty{text-align:center;color:var(--mu);padding:30px}
 </style>
 </head>
 <body>
-
-<div class="hero">
-  <div class="hero-inner">
-    <p class="hero-eyebrow">4 วัน 3 คืน · ปรับตามลิสต์สถานที่และแผนล่าสุดที่ส่งมา</p>
-    <h1>ดานัง — บานาฮิลล์ — ฮอยอัน</h1>
-    <p class="lede">จัดสถานที่ทั้ง 18 แห่งที่ให้มาลงในตารางเวลาตามแผนที่วางไว้ พร้อมระยะทางระหว่างจุด ลิงก์แผนที่/รีวิว ร้านนวดเผื่อไว้ และแผนสำรองกรณีคนเยอะ</p>
-    <div class="flight-strip">
-      <div class="flight-leg"><span class="code">BKK</span><span class="time">19:50</span></div>
-      <span class="flight-arrow">→</span>
-      <div class="flight-leg"><span class="code">DAD</span><span class="time">21:30</span></div>
-      <span class="flight-arrow" style="margin-left:18px; opacity:0.4;">|</span>
-      <div class="flight-leg" style="margin-left:8px;"><span class="code">DAD (ขากลับ)</span><span class="time">23:30</span></div>
-      <span class="flight-arrow">→</span>
-      <div class="flight-leg"><span class="code">BKK</span><span class="time">01:10</span></div>
-    </div>
-  </div>
-</div>
-
 <div class="wrap">
-
-  <!-- ============ TRIP SUMMARY ============ -->
-  <div class="card">
-    <h2>สรุปทริปสั้น ๆ</h2>
-    <p class="sub">ภาพรวมทั้ง 4 วัน แบบดูรวดเร็ว</p>
-    <div class="summary-grid">
-      <div class="summary-row"><span class="ic">🛬</span><span><b>วันที่ 1</b> — ถึงดานังดึก (21:30) เช็คอิน Tân Hoà Homestay ใกล้สนามบิน แล้วไปถ่ายรูปสะพานมังกร ต่อด้วย Son Tra Night Market เดินเล่น-กินมื้อดึก</span></div>
-      <div class="summary-row"><span class="ic">🌉</span><span><b>วันที่ 2</b> — ขึ้นบานาฮิลล์เต็มวัน ชมสะพานทองคำ หมู่บ้านฝรั่งเศส Fantasy Park ค้างคืนบนเขาที่ Mercure เพื่อเลี่ยงกระเช้าคิวยาว</span></div>
-      <div class="summary-row"><span class="ic">🏮</span><span><b>วันที่ 3</b> — เช้าถ่ายรูปบานาฮิลล์ก่อนคนเยอะ ลงเขาไปฮอยอัน เดินเมืองเก่า คาเฟ่ดาดฟ้า Faifo ล่องเรือโคมไฟ ตลาดกลางคืน ปิดท้ายมื้อเย็นริมน้ำที่ Thuận Ý</span></div>
-      <div class="summary-row"><span class="ic">✈️</span><span><b>วันที่ 4</b> — ล่องเรือกระจาดหมู่บ้านมะพร้าว กลับดานัง แวะ Linh Ứng + Sơn Trà Marina ถ่ายรูป กินซีฟู้ด ช้อปของฝากที่ GO! แล้วเข้าสนามบิน (บิน 23:30)</span></div>
-    </div>
-  </div>
-
-  <!-- ============ PROXIMITY GROUPING ============ -->
-  <div class="card">
-    <h2>จัดกลุ่มสถานที่ตามความใกล้กัน (จากลิสต์ 18 ที่ที่ให้มา)</h2>
-    <p class="sub">แบ่งเป็น 4 โซนตามพื้นที่จริง — ระยะทางเป็นเส้นตรงโดยประมาณ ใช้เวลาจริงต้องดูสภาพจราจร</p>
-
-    <div class="cluster">
-      <h3>🌆 โซน 1 — ดานัง ฝั่งแม่น้ำฮาน (Dragon Bridge / Bạch Đằng)</h3>
-      <div class="area">คืนที่ 1 และช่วงบ่ายวันที่ 4</div>
-      <div class="place-chain">
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Dragon+Bridge+Da+Nang" target="_blank">สะพานมังกร (Dragon Bridge)</a></div><div class="place-meta">จุดศูนย์กลางของโซนนี้ ทุกที่ด้านล่างอยู่ใกล้จากตรงนี้</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Son+Tra+Night+Market+Da+Nang" target="_blank">Son Tra Night Market</a> <span class="ext-icon">(#1 son tra ning market)</span></div><div class="place-meta">อยู่ที่เชิงสะพานมังกรฝั่งตะวันออกเลย</div><div class="distance-link">ห่างจากสะพานมังกร ~150–300 ม. เดิน 3–5 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Cong+Ca+Phe+96+Bach+Dang+Da+Nang" target="_blank">Cộng Cà Phê (สาขา Bạch Đằng)</a> <span class="ext-icon">(#2)</span></div><div class="place-meta">96-98 Bạch Đằng ริมแม่น้ำฝั่งตะวันตก</div><div class="distance-link">ห่างจากสะพานมังกร ~700 ม. เดิน 8–10 นาที หรือรถ 3 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Reply+1988+Cafe+20+Le+Hong+Phong+Da+Nang" target="_blank">Reply 1988 Cafe</a> <span class="ext-icon">(#5)</span></div><div class="place-meta">20 Lê Hồng Phong</div><div class="distance-link">ห่างจาก Cộng Cà Phê ~1.2 กม. รถ 5 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Pizza+4P's+74+Bach+Dang+Da+Nang" target="_blank">Pizza 4P's (สาขา Bạch Đằng)</a> <span class="ext-icon">(#9)</span></div><div class="place-meta">74 Bạch Đằng ริมแม่น้ำ</div><div class="distance-link">ห่างจาก Cộng Cà Phê ~250 ม. เดิน 3 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=GO!+Da+Nang+Supermarket" target="_blank">GO! Da Nang</a> <span class="ext-icon">(GO! ช้อปของฝาก)</span></div><div class="place-meta">ห้างใหญ่ ซื้อของฝากรอบสุดท้าย</div><div class="distance-link">ห่างจากย่านนี้ ~3 กม. รถ 10 นาที</div></div></div>
-      </div>
-    </div>
-
-    <div class="cluster">
-      <h3>🏖️ โซน 2 — My Khe Beach / Sơn Trà Peninsula</h3>
-      <div class="area">ช่วงเที่ยง-บ่ายวันที่ 4</div>
-      <div class="place-chain">
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Linh+Ung+Pagoda+Son+Tra+Da+Nang" target="_blank">วัด Linh Ứng (Sơn Trà)</a> <span class="ext-icon">(#10)</span></div><div class="place-meta">องค์เจ้าแม่กวนอิมสูง 67 ม. จุดชมวิวอ่าวดานัง</div><div class="distance-link">จุดเริ่มของโซนนี้</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name">Sơn Trà Marina (คาเฟ่ริมทะเลสไตล์ Santorini)</div><div class="place-meta">จุดถ่ายรูป+เครื่องดื่ม</div><div class="distance-link">ห่างจากวัด Linh Ứng ~4–5 กม. รถ 10–12 นาที (ลงจากเขา)</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name">Hải Sản Tươi Sống Bà Rô (ซีฟู้ด)</div><div class="place-meta">โซน Sơn Trà</div><div class="distance-link">ห่างจาก Sơn Trà Marina ~2 กม. รถ 5–7 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Cua+Ngo+Cafe+My+Khe+Da+Nang" target="_blank">Cửa Ngõ Café</a> <span class="ext-icon">(#3)</span></div><div class="place-meta">ติดหาด My Khe สไตล์บ้านเวียดนามเก่า</div><div class="distance-link">ห่างจากร้านซีฟู้ด ~2.5 กม. รถ 6–8 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Bep+Cuon+31-33+Tran+Bach+Dang+Da+Nang" target="_blank">Bếp Cuốn</a> <span class="ext-icon">(#7 bep coun 666)</span></div><div class="place-meta">31-33 Trần Bạch Đằng — ติด Michelin Selected</div><div class="distance-link">ห่างจาก Cửa Ngõ Café ~350 ม. เดิน 5 นาที</div></div></div>
-      </div>
-      <div class="note">หมายเหตุ: "Bep coun 666" ในลิสต์ ไม่พบเลขที่ 666 ตรงตัว ใช้ Bếp Cuốn สาขา 31-33 Trần Bạch Đằng แทน (ร้านเดียวที่ติด Michelin ในดานัง ชื่อใกล้เคียงที่สุด)</div>
-    </div>
-
-    <div class="cluster">
-      <h3>⛰️ โซน 3 — บานาฮิลล์ (Ba Na Hills)</h3>
-      <div class="area">วันที่ 2 เต็มวัน + เช้าวันที่ 3</div>
-      <div class="place-chain">
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Golden+Bridge+Ba+Na+Hills" target="_blank">สะพานทองคำ (Cầu Vàng)</a></div><div class="place-meta">ไฮไลต์หลัก มือหินยักษ์อุ้มสะพาน</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=French+Village+Ba+Na+Hills" target="_blank">French Village + Fantasy Park</a></div><div class="place-meta">หมู่บ้านฝรั่งเศส สวนสนุกในร่ม</div><div class="distance-link">เดินถึงกันได้ทั้งหมด ~5–15 นาที ในโซนบานาฮิลล์</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Mercure+Danang+French+Village+Bana+Hills" target="_blank">Mercure Danang French Village</a></div><div class="place-meta">ที่พักคืนที่ 2 อยู่ในหมู่บ้านฝรั่งเศสเลย</div></div></div>
-      </div>
-      <div style="height:14px;"></div>
-      <p class="area" style="margin-bottom:0;">ระยะจากดานังตัวเมืองถึงสถานีกระเช้า: ~24 กม. · 45–60 นาที</p>
-    </div>
-
-    <div class="cluster">
-      <h3>🏮 โซน 4 — ฮอยอันเมืองเก่า / An Hội</h3>
-      <div class="area">วันที่ 3 บ่าย-ค่ำ</div>
-      <div class="place-chain">
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Ancient+Town+Japanese+Covered+Bridge" target="_blank">Old Town Hội An + สะพานญี่ปุ่น</a> <span class="ext-icon">(#11)</span></div><div class="place-meta">แลนด์มาร์คหลักของเมืองเก่า</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=An+Thoi+Hoi+An+40+Nguyen+Phuc+Tan" target="_blank">An Thoi Hoi An</a> <span class="ext-icon">(#15 anthoi)</span></div><div class="place-meta">40 Nguyễn Phúc Tần — ร้านอาหารเวียดนาม</div><div class="distance-link">ห่างจากสะพานญี่ปุ่น ~250 ม. เดิน 3 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Faifo+Coffee+130+Tran+Phu+Hoi+An" target="_blank">Faifo Coffee</a> <span class="ext-icon">(#12 fatfo cafe)</span></div><div class="place-meta">130 Trần Phú — คาเฟ่ดาดฟ้า</div><div class="distance-link">ห่างจาก An Thoi Hoi An ~300 ม. เดิน 4 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name">Mót Hội An</div><div class="place-meta">150 Trần Phú — น้ำสมุนไพร</div><div class="distance-link">ติดกับ Faifo Coffee เดิน 1 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Night+Market+Nguyen+Hoang" target="_blank">Night Market Hội An</a> <span class="ext-icon">(#13)</span></div><div class="place-meta">ถนน Nguyễn Hoàng ฝั่ง An Hội</div><div class="distance-link">ห่างจาก Faifo Coffee ~500 ม. เดิน 6–7 นาที ข้ามสะพาน An Hội</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Nha+Hang+Thuan+Y+94+Bach+Dang+Hoi+An" target="_blank">Thuận Ý</a> <span class="ext-icon">(#18 THUAN Y)</span></div><div class="place-meta">94 Bạch Đằng — ร้านอาหารริมน้ำ คนท้องถิ่นเยอะ</div><div class="distance-link">ห่างจาก Night Market ~150 ม. เดิน 2 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name"><a href="https://www.google.com/maps/search/?api=1&query=Tiger+Tiger+Bar+An+Hoi+Hoi+An" target="_blank">Tiger Tiger Bar</a> <span class="ext-icon">(#14)</span></div><div class="place-meta">ฝั่ง An Hội ริมแม่น้ำ Hoài</div><div class="distance-link">ห่างจาก Thuận Ý ~300 ม. เดิน 4 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name">Moi (ร้านคนท้องถิ่นนิยม)</div><div class="place-meta">นอกโซนนักท่องเที่ยวเล็กน้อย</div><div class="distance-link">ห่างจากศูนย์กลาง An Hội ~600 ม.–1 กม. รถ 3–5 นาที</div></div></div>
-        <div class="place-item"><span class="dot"></span><div><div class="place-name">ล่องเรือโคมไฟ (แม่น้ำ Hoài)</div><div class="place-meta">ท่าเรือฝั่ง An Hội</div><div class="distance-link">อยู่ในย่านเดียวกับ Night Market เดิน 2–3 นาที</div></div></div>
-      </div>
-      <div class="note">หมายเหตุ: "Tan cafe" และ "Dapen" ในลิสต์ยังไม่พบชื่อสถานที่ที่ตรงกันชัดเจน — ถ้ามีที่อยู่คร่าว ๆ หรือชื่อเต็มเพิ่มเติมแจ้งมาได้เลย จะช่วยหาตำแหน่งให้แม่นขึ้น</div>
-    </div>
-  </div>
-
-  <div class="daynav">
-    <div class="daynav-inner">
-      <button class="active" data-target="1">วันที่ 1 · ถึงดานัง</button>
-      <button data-target="2">วันที่ 2 · บานาฮิลล์</button>
-      <button data-target="3">วันที่ 3 · ฮอยอัน</button>
-      <button data-target="4">วันที่ 4 · ขากลับ</button>
-    </div>
-  </div>
-
-  <!-- ============ DAY 1 ============ -->
-  <section class="day active" data-day="1">
-    <div class="day-head">
-      <h2>วันที่ 1 — ดานัง → Dragon Bridge → Son Tra Night Market</h2>
-      <p>ลงเครื่องดึก เช็คอินใกล้สนามบิน แล้วออกไปดูสะพานมังกรและกินมื้อดึกที่ตลาดกลางคืน</p>
-    </div>
-    <div class="timeline">
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">21:30</span><span class="stop-icon">🛬</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Danang+International+Airport" target="_blank">ถึงสนามบินดานัง</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ตม. + รับกระเป๋า + แลกเงิน/ซิม</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">ช่วงขาเข้าคิว ตม. มักไม่แน่นเท่าขาออก ใช้เวลาราว 30–40 นาทีตั้งแต่ลงเครื่องถึงออกจากสนามบิน</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>Grab จากสนามบินไปที่พัก ราว 30,000–50,000 VND (~45–70 บาท)</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">22:00</span><span class="stop-icon">🏨</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Tan+Hoa+Homestay+Da+Nang+Airport" target="_blank">Tân Hoà Homestay Da Nang Airport</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">เช็คอิน เก็บกระเป๋า</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">อยู่ห่างจากสนามบินเพียง 200–400 เมตร สะดวกมากสำหรับคืนแรก/คืนสุดท้าย แถวนี้ร้านอาหารมีน้อย ต้องนั่งรถออกไปกินข้างนอก</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">📍</span><span>4/52 Đặng Thùy Trâm, Đà Nẵng</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">22:30</span><span class="stop-icon">🌉</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Dragon+Bridge+Da+Nang" target="_blank">Dragon Bridge (สะพานมังกร)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ถ่ายรูปตอนกลางคืน</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">สะพานเหล็กรูปมังกรยาว 666 เมตร ไฟประดับสวยมากตอนกลางคืน คืนศุกร์-เสาร์-อาทิตย์ เวลา 21:00 น. มีโชว์พ่นไฟ-พ่นน้ำ แต่เครื่องลง 21:30 จึงไปถ่ายรูปตัวสะพานอย่างเดียวคืนนี้</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>จากที่พัก ~2.6 กม. · 10 นาที · Grab ราว 40,000 VND (~55 บาท)</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ชมฟรี</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">23:15</span><span class="stop-icon">🌙</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Son+Tra+Night+Market+Da+Nang" target="_blank">Son Tra Night Market</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อดึก + ของกิน + ของฝาก</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">ตลาดตั้งอยู่เชิงสะพานมังกรฝั่งตะวันออก มีเกือบ 200 แผงขายทั้งสตรีทฟู้ด เสื้อผ้า ของฝาก บรรยากาศคึกคักผสมทั้งคนท้องถิ่นและนักท่องเที่ยว เปิดตั้งแต่ราว 17:30 ถึงเกือบเที่ยงคืน เดินข้ามจากสะพานมังกรได้เลยไม่ต้องนั่งรถ</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚶</span><span>จากสะพานมังกร ~150–300 ม. เดิน 3–5 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>เข้าฟรี ค่าอาหาร/ของกินราว 20,000–60,000 VND ต่อจาน</span></div>
-            <div class="meta-row"><span class="k">🕙</span><span>เปิดราว 17:30–23:45 น.</span></div>
-          </div>
-          <div class="backup">🔁 แผนสำรอง: ถ้าตลาดปิดหรือคนแน่นเกิน ให้เดินกลับข้ามมาฝั่ง Bạch Đằng แทน มีคาเฟ่ริมแม่น้ำเปิดถึงเที่ยงคืนหลายร้าน เช่น Cộng Cà Phê (98-96 Bạch Đằng) เดินอีก ~700 ม.</div>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ============ DAY 2 ============ -->
-  <section class="day" data-day="2">
-    <div class="day-head">
-      <h2>วันที่ 2 — ดานัง → บานาฮิลล์</h2>
-      <p>เช้าออกจากดานังไปขึ้นกระเช้า เที่ยวบานาฮิลล์เต็มวัน ค้างคืนบนเขา</p>
-    </div>
-    <div class="timeline">
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">07:15</span><span class="stop-icon">🍳</span>
-          <span class="stop-titleblock"><span class="stop-name">อาหารเช้าใกล้ที่พัก</span><br><span class="stop-tag">ไม่ต้องเลือกคาเฟ่พิเศษ เก็บเวลาไว้ขึ้นเขา</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">วันนี้ต้องขึ้นบานาฮิลล์ค่อนข้างเช้า กินอาหารเช้าง่าย ๆ ใกล้ที่พักพอ ไม่ต้องเสียเวลาเดินทางไปคาเฟ่ไกล</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 35,000–50,000 VND/คน (~50–70 บาท)</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">08:00</span><span class="stop-icon">🚕</span>
-          <span class="stop-titleblock"><span class="stop-name">ดานัง → สถานีกระเช้า <a href="https://www.google.com/maps/search/?api=1&query=Sun+World+Ba+Na+Hills+Cable+Car+Station" target="_blank">Sun World Ba Na Hills</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">~24 กม.</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>~24 กม. · 45–60 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 350,000–450,000 VND ต่อเที่ยว (~500–650 บาท)</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">09:00</span><span class="stop-icon">🚠</span>
-          <span class="stop-titleblock"><span class="stop-name">ขึ้นกระเช้า + <a href="https://www.google.com/maps/search/?api=1&query=Golden+Bridge+Ba+Na+Hills" target="_blank">Golden Bridge</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">รีบถ่ายรูปช่วงเช้าก่อนคนเยอะ</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">สะพานทองคำที่มีมือหินยักษ์อุ้มไว้ ไฮไลต์ที่ห้ามพลาด ควรรีบถ่ายรูปช่วงสาย ๆ เพราะคนจะเยอะขึ้นเรื่อย ๆ</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ตั๋วกระเช้า+เข้าชม ราว 750,000–900,000 VND/คน (~1,090–1,300 บาท)</span></div></div>
-          <div class="backup">🔁 แผนสำรอง: ถ้าจุดถ่ายรูปสะพานแน่นมาก ให้เดินลึกเข้าไปฝั่งสวนดอกไม้ (Le Jardin d'Amour) ก่อน แล้ววนกลับมาสะพานอีกรอบตอนสายกว่านั้นคนมักเบาลงเป็นช่วง ๆ</div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">10:30</span><span class="stop-icon">🏰</span>
-          <span class="stop-titleblock"><span class="stop-name">French Village + เดินเล่นบานาฮิลล์</span><br><span class="stop-tag">ถ่ายรูปสถาปัตยกรรม</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body"><p class="stop-desc">เดินชมหมู่บ้านฝรั่งเศส โบสถ์จำลอง และจุดถ่ายรูปต่าง ๆ บนบานาฮิลล์</p></div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">12:00</span><span class="stop-icon">🍽️</span>
-          <span class="stop-titleblock"><span class="stop-name">Buffet Lunch</span><br><span class="stop-tag">รวมในตั๋วกระเช้าส่วนใหญ่</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body"><p class="stop-desc">มื้อเที่ยงบุฟเฟ่ต์มักรวมอยู่ในตั๋วกระเช้าแล้ว กินให้เต็มที่เพราะบ่ายยังมีเที่ยวอีกหลายจุด</p></div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">13:00</span><span class="stop-icon">🎢</span>
-          <span class="stop-titleblock"><span class="stop-name">Fantasy Park + เดินเที่ยวต่อ</span><br><span class="stop-tag">สวนสนุกในร่ม</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body"><p class="stop-desc">เล่นเครื่องเล่นในร่ม เหมาะเวลาแดดแรงหรือฝนตกบนเขา</p></div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">16:00</span><span class="stop-icon">🏨</span>
-          <span class="stop-titleblock"><span class="stop-name">เช็คอิน <a href="https://www.google.com/maps/search/?api=1&query=Mercure+Danang+French+Village+Bana+Hills" target="_blank">Mercure Danang French Village</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">พักบนเขา 1 คืน</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">แขกที่พักที่นี่ได้ใช้กระเช้าเลนพิเศษ ทำให้เดินชมหมู่บ้านฝรั่งเศสตอนเช้า-ค่ำแบบไม่แน่น เป็นข้อดีหลักของการค้างคืนบนเขา ไม่ต้องลงเขาไปนอนดานังแล้ว</p>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary>
-          <span class="stop-time">19:00</span><span class="stop-icon">🍽️</span>
-          <span class="stop-titleblock"><span class="stop-name">มื้อเย็นบนบานาฮิลล์ + เดินถ่ายรูปกลางคืน</span></span>
-          <span class="chevron">▶</span>
-        </summary>
-        <div class="stop-body">
-          <p class="stop-desc">ทานมื้อเย็นในหมู่บ้านฝรั่งเศส (ร้าน Maison Du Roi เป็นตัวเลือกที่เดินได้จากโรงแรม) แล้วเดินถ่ายรูปหมู่บ้านฝรั่งเศสตอนกลางคืน บรรยากาศต่างจากกลางวันมาก</p>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ============ DAY 3 ============ -->
-  <section class="day" data-day="3">
-    <div class="day-head">
-      <h2>วันที่ 3 — บานาฮิลล์ → ฮอยอัน</h2>
-      <p>เช้าเงียบสงบบนเขา บ่ายเดินเมืองเก่า ค่ำคืนโคมไฟที่ฮอยอัน</p>
-    </div>
-    <div class="timeline">
-
-      <details class="stop">
-        <summary><span class="stop-time">08:00</span><span class="stop-icon">📸</span>
-          <span class="stop-titleblock"><span class="stop-name">เดินถ่ายรูปบานาฮิลล์รอบเช้า</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body"><p class="stop-desc">ช่วงก่อน 9 โมงเช้า แสงสวยและคนยังไม่เยอะ เหมาะที่สุดสำหรับถ่ายรูปหมู่บ้านฝรั่งเศสแบบไม่แน่น</p></div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">10:00</span><span class="stop-icon">🚠</span>
-          <span class="stop-titleblock"><span class="stop-name">เช็คเอาท์ + นั่งกระเช้าลง</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body"><p class="stop-desc">เช็คเอาท์ รับกระเป๋า นั่งกระเช้าลงจากเขาแล้วขึ้นรถต่อไปฮอยอัน</p></div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">11:00</span><span class="stop-icon">🚗</span>
-          <span class="stop-titleblock"><span class="stop-name">บานาฮิลล์ → ฮอยอัน</span><br><span class="stop-tag">~38 กม.</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>~38 กม. · 60–90 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 450,000–600,000 VND (~650–870 บาท)</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">12:30</span><span class="stop-icon">🏨</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Sweet+Memories+Villa+Hoi+An" target="_blank">Sweet Memories Villa</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">เช็คอิน/ฝากกระเป๋า</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">อยู่ในซอยเงียบฝั่ง An Hội เดินเข้าเมืองเก่าและตลาดกลางคืนได้ในไม่กี่นาที</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">📍</span><span>96/21 Nguyễn Phúc Tần, An Hội, Hội An</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">13:00</span><span class="stop-icon">🍜</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=An+Thoi+Hoi+An+40+Nguyen+Phuc+Tan" target="_blank">An Thoi Hoi An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อเที่ยง</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ร้านอาหารเวียดนามที่ 40 Nguyễn Phúc Tần เมนูเน้นอาหารพื้นถิ่นและซีฟู้ด รีวิวชมเรื่องพนักงานบริการดีและมีตัวเลือกสำหรับคนแพ้กลูเตนด้วย (คนละร้านกับ An Thoi ที่ดานังซึ่งเป็นร้าน Michelin Bib Gourmand)</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">🚶</span><span>จากที่พัก ~600 ม. เดิน 8 นาที</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">14:00</span><span class="stop-icon">⛩️</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Ancient+Town+Japanese+Covered+Bridge" target="_blank">Old Town Hội An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">สะพานญี่ปุ่น + บ้านโบราณ</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">แลนด์มาร์คหลักคือสะพานญี่ปุ่น (Chùa Cầu) อายุกว่า 400 ปี ตั๋วเข้าเมืองเก่าใช้เข้าชมบ้านโบราณ/พิพิธภัณฑ์ได้หลายจุด</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ตั๋วเข้าเมืองเก่า ราว 120,000 VND (~175 บาท)</span></div></div>
-          <div class="backup">🔁 แผนสำรอง: ถ้าสะพานญี่ปุ่นคนแน่นมาก เดินเลี่ยงไปฝั่งถนน Nguyễn Thái Học หรือ Trần Phú ก่อน แล้ววนกลับมาช่วงเย็นแดดร่มแทน</div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">16:00</span><span class="stop-icon">☕</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Faifo+Coffee+130+Tran+Phu+Hoi+An" target="_blank">Faifo Coffee</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ดาดฟ้าวิวเมืองเก่า</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">คาเฟ่ในตึกไม้เก่า จุดเด่นคือดาดฟ้าชั้น 3 มองเห็นหลังคาเมืองเก่าทั้งผืน ที่นั่งดาดฟ้ามีจำกัดควรไปก่อน 17:00 น.</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚶</span><span>จากสะพานญี่ปุ่น ~250 ม. เดิน 3 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 40,000–60,000 VND (~55–85 บาท)</span></div>
-          </div>
-          <div class="backup">🔁 แผนสำรอง: ถ้าที่นั่งดาดฟ้าเต็ม ชั้นล่างของร้านก็มองเห็นบรรยากาศเมืองเก่าได้เหมือนกัน หรือแวะ Mót Hội An ที่อยู่ติดกัน (150 Trần Phú) แทน</div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">17:00</span><span class="stop-icon">🍵</span>
-          <span class="stop-titleblock"><span class="stop-name">Mót Hội An</span><br><span class="stop-tag">น้ำสมุนไพร</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">แวะดื่มน้ำสมุนไพรเย็น ๆ พักก่อนไปต่อช่วงเย็น</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 16,000–30,000 VND</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">18:00</span><span class="stop-icon">🛶</span>
-          <span class="stop-titleblock"><span class="stop-name">ล่องเรือโคมไฟ Hội An</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">นั่งเรือชมแม่น้ำ Hoài พร้อมปล่อยโคมกระดาษลอยน้ำ ควรจองที่บูธทางการไม่ใช่คนเดินเร่ขาย เพื่อราคาที่เป็นธรรม ใช้เวลาราว 20 นาที</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>1–3 คน ~150,000–170,000 VND/ลำ · 4–5 คน ~200,000–220,000 VND/ลำ</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">18:30</span><span class="stop-icon">🏮</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Hoi+An+Night+Market+Nguyen+Hoang" target="_blank">Night Market Hội An</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ถนน Nguyễn Hoàng</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ตลาดโคมไฟสีสัน ของฝากงานฝีมือ ของกินสตรีทฟู้ด เดินจากท่าเรือได้เลย</p>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">20:00</span><span class="stop-icon">🍽️</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Nha+Hang+Thuan+Y+94+Bach+Dang+Hoi+An" target="_blank">Thuận Ý</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">มื้อเย็นริมน้ำ</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ร้านอาหารเวียดนามริมแม่น้ำที่ 94 Bạch Đằng เมนูเด่นคือบั๋นแบ๊วบก (bánh hoa hồng) และเก๋าเลา ลูกค้าส่วนใหญ่เป็นนักท่องเที่ยวต่างชาติเพราะติดอันดับรีวิวดีบน Tripadvisor แต่บริการคล่องแม้ร้านจะแน่น</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 70,000–200,000 VND/คน แล้วแต่เมนู</span></div></div>
-          <div class="backup">🔁 แผนสำรอง: ถ้า Thuận Ý รอคิวนาน ให้เดินไปฝั่งตรงข้ามถนนมี Hoi An Heart Restaurant (68 Bạch Đằng) เมนูอาหารพื้นถิ่นคล้ายกัน คนน้อยกว่า</div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">21:00</span><span class="stop-icon">🍹</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Tiger+Tiger+Bar+An+Hoi+Hoi+An" target="_blank">Tiger Tiger Bar</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">OPTIONAL — ถ้ายังไหว</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">บาร์ดาดฟ้าฝั่ง An Hội มองเห็นเรือโคมไฟล่องผ่านแม่น้ำ Happy hour ยาวถึงเที่ยงคืน ถ้าวันนี้เดินมาเยอะแล้วเหนื่อยตัดออกได้เลย ไม่เสียแผนหลัก</p>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ============ DAY 4 ============ -->
-  <section class="day" data-day="4">
-    <div class="day-head">
-      <h2>วันที่ 4 — ฮอยอัน → ดานัง → กลับกรุงเทพฯ</h2>
-      <p>เที่ยวบินดึก 23:30 จึงมีเวลาทั้งวันก่อนกลับสนามบิน</p>
-    </div>
-    <div class="timeline">
-
-      <details class="stop">
-        <summary><span class="stop-time">07:30</span><span class="stop-icon">🍳</span>
-          <span class="stop-titleblock"><span class="stop-name">Hai Cafe Courtyard BBQ & Restaurant</span><br><span class="stop-tag">อาหารเช้าใกล้ที่พัก</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body"><p class="stop-desc">ร้านอาหารใกล้ Sweet Memories Villa เหมาะเป็นมื้อเช้าก่อนล่องเรือกระจาด</p></div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">08:30</span><span class="stop-icon">🚤</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Coconut+Village+Cam+Thanh+Hoi+An" target="_blank">ล่องเรือกระจาดหมู่บ้านมะพร้าว Cẩm Thanh</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">Coconut Village / Thuận Tình</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">นั่งเรือกระจาดกลมลัดเลาะป่ามะพร้าว มีโชว์หมุนเรือและตกปู กิจกรรมสนุกและเป็นกันเอง</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>จากเมืองเก่า ~3.5 กม. · 10–15 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 100,000–150,000 VND/คน (~145–215 บาท)</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">09:00</span><span class="stop-icon">🧳</span>
-          <span class="stop-titleblock"><span class="stop-name">กลับที่พัก เก็บกระเป๋า เช็คเอาท์</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body"><p class="stop-desc">เก็บกระเป๋า เช็คเอาท์ ฝากกระเป๋าถ้าจำเป็น เตรียมขึ้นรถกลับดานัง</p></div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">10:00</span><span class="stop-icon">🚗</span>
-          <span class="stop-titleblock"><span class="stop-name">ฮอยอัน → ดานัง</span><br><span class="stop-tag">~24 กม.</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>~24 กม. · 40–45 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 350,000–400,000 VND (~500–580 บาท)</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">11:00</span><span class="stop-icon">☕</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Reply+1988+Cafe+20+Le+Hong+Phong+Da+Nang" target="_blank">Reply 1988 Cafe</a> <span class="ext-icon">↗</span></span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">คาเฟ่บรรยากาศดี ตกแต่งอบอุ่น สองชั้น มีมุมถ่ายรูปเยอะ เมนูแนะนำคือกาแฟมะพร้าวและชีสเค้กบาสก์</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">💰</span><span>ราว 30,000–60,000 VND</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">11:30</span><span class="stop-icon">🙏</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Linh+Ung+Pagoda+Son+Tra+Da+Nang" target="_blank">Linh Ứng Temple (Sơn Trà)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">Lady Buddha + วิวทะเล</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ไฮไลต์คือองค์เจ้าแม่กวนอิมสูง 67 เมตร วิวทะเลและคาบสมุทรเซินตร่า เข้าฟรี ใช้เวลาประมาณ 1 ชั่วโมงกำลังดี</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">🚗</span><span>จาก Reply 1988 ~8 กม. รถ 15–20 นาที</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">12:40</span><span class="stop-icon">🩵</span>
-          <span class="stop-titleblock"><span class="stop-name">Sơn Trà Marina</span><br><span class="stop-tag">คาเฟ่/จุดถ่ายรูปสไตล์ Santorini</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">จุดถ่ายรูปริมทะเลสไตล์ Santorini เน้นถ่ายรูปพร้อมเครื่องดื่ม</p>
-          <div class="meta-grid"><div class="meta-row"><span class="k">🚗</span><span>จาก Linh Ứng ~4–5 กม. รถ 10–12 นาที ลงจากเขา</span></div></div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">14:00</span><span class="stop-icon">🦐</span>
-          <span class="stop-titleblock"><span class="stop-name">Hải Sản Tươi Sống Bà Rô</span><br><span class="stop-tag">มื้อเที่ยง/บ่ายซีฟู้ด</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ร้านซีฟู้ดโซน Sơn Trà เมนูแนะนำ กุ้ง ปู หอย ปลา อาหารทะเลสด</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">🚗</span><span>จาก Sơn Trà Marina ~2 กม. รถ 5–7 นาที</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 100,000–300,000 VND/คน แล้วแต่ของที่สั่ง</span></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">15:30</span><span class="stop-icon">🍜</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Bep+Cuon+31-33+Tran+Bach+Dang+Da+Nang" target="_blank">Bếp Cuốn Da Nang</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ร้านติด Michelin Selected</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">เด่นเรื่องอาหารเวียดนามแบบม้วนเอง (DIY rice paper wraps) และบั๋นแซว บรรยากาศเป็นกันเอง ราคาคุ้มค่ามาก อาจต้องรอคิวถ้าคนเยอะ</p>
-          <div class="meta-grid">
-            <div class="meta-row"><span class="k">📍</span><span>31-33 Trần Bạch Đằng, An Hải — ใกล้ My Khe Beach</span></div>
-            <div class="meta-row"><span class="k">💰</span><span>ราว 49,000–250,000 VND แล้วแต่เมนู</span></div>
-          </div>
-          <div class="backup">🔁 แผนสำรอง: คิวยาวเกิน 30 นาที ให้ข้ามไปกินที่ Cửa Ngõ Café แถวเดียวกันแทน (เมนูเบา ๆ) แล้วเก็บมื้อหลักไว้ที่ Pizza 4P's ตอนเย็น</div>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">16:45</span><span class="stop-icon">☕</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=Cong+Ca+Phe+96+Bach+Dang+Da+Nang" target="_blank">Cộng Cà Phê (Bạch Đằng)</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">คาเฟ่สุดท้ายของทริป ริมแม่น้ำฮาน</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body"><p class="stop-desc">นั่งพักริมแม่น้ำ Han River บรรยากาศเวียดนามย้อนยุค เด่นเรื่องกาแฟมะพร้าว</p></div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">17:45</span><span class="stop-icon">🛍️</span>
-          <span class="stop-titleblock"><span class="stop-name"><a href="https://www.google.com/maps/search/?api=1&query=GO!+Da+Nang+Supermarket" target="_blank">GO! Da Nang</a> <span class="ext-icon">↗</span></span><br><span class="stop-tag">ช้อปของฝากรอบสุดท้าย</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ห้างใหญ่ ราคาป้ายชัดเจน ไม่ต้องต่อรอง ครบทั้งของฝาก ขนม กาแฟ</p>
-        </div>
-      </details>
-
-      <details class="stop">
-        <summary><span class="stop-time">19:00</span><span class="stop-icon">✈️</span>
-          <span class="stop-titleblock"><span class="stop-name">GO! → สนามบินดานัง</span></span>
-          <span class="chevron">▶</span></summary>
-        <div class="stop-body">
-          <p class="stop-desc">ราว 15–25 นาทีแล้วแต่รถติด ถึงสนามบินราว 19:30–20:00 น. มีเวลาเหลือเยอะสำหรับเที่ยวบิน 23:30 น. เผื่อเวลาซื้อของ/รอคิวเช็คอินและ ตม. ขาออก</p>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ============ MASSAGE ============ -->
-  <div class="card">
-    <h2>💆 ร้านนวดเผื่อไว้ (ตามที่ขอเพิ่ม)</h2>
-    <p class="sub">คัดจากร้านที่รีวิวดีต่อเนื่องและปลอดภัยสำหรับนักท่องเที่ยว</p>
-    <div class="massage-grid">
-      <div class="massage-item"><b>ดานัง — Herbal Spa</b><span>ใช้วัตถุดิบธรรมชาติ/สมุนไพรทั้งหมด เน้นดีท็อกซ์และไหลเวียนโลหิต ได้รับความนิยมในกลุ่มนักท่องเที่ยวเกาหลี-ญี่ปุ่น ควรจองล่วงหน้า</span></div>
-      <div class="massage-item"><b>ดานัง — Charm Spa Grand</b><span>บรรยากาศหรูหรา มีทั้งนวดไทย นวดน้ำมันสไตล์เวียดนาม และแช่เท้าสมุนไพร รีวิวดีต่อเนื่องหลายพันรีวิว</span></div>
-      <div class="massage-item"><b>ดานัง — Queen Spa (ใกล้ My Khe)</b><span>เด่นเรื่อง Bamboo Massage และ Candle Spa สะดวกถ้าอยู่ย่านหาด My Khe ในวันที่ 4</span></div>
-      <div class="massage-item"><b>ฮอยอัน — Nau Spa & Massage</b><span>ราคาย่อมเยา อยู่ใกล้ใจกลางเมืองเก่า รีวิวชมเรื่องนวดฝ่าเท้า/reflexology</span></div>
-      <div class="massage-item"><b>ฮอยอัน — Art Spa (37 Nguyễn Phúc Tần)</b><span>อยู่ในย่าน An Hội ใกล้ที่พัก Sweet Memories Villa เดินถึงได้ คะแนนรีวิวสูงต่อเนื่อง</span></div>
-    </div>
-    <p class="tip" style="margin-top:14px;">แนะนำแทรกช่วงเย็นวันที่ 3 หลัง Old Town (ก่อนล่องเรือโคมไฟ) หรือช่วงบ่ายวันที่ 4 หลังเดินหาด My Khe — ทั้งสองช่วงมีเวลาว่างพอสำหรับนวด 60–90 นาที</p>
-  </div>
-
-  <!-- ============ BUDGET ============ -->
-  <div class="card">
-    <h2>สรุปงบประมาณค่าเดินทางโดยประมาณ</h2>
-    <p class="sub">ต่อคัน/เที่ยว ไม่ใช่ต่อคน — ควรเช็คราคาจริงในแอพ Grab ก่อนเดินทางเสมอ</p>
-    <table class="b-table">
-      <tr><td>สนามบิน → ที่พัก (คืนแรก)</td><td>~40,000 VND</td></tr>
-      <tr><td>ที่พัก → Dragon Bridge (ไป-กลับ)</td><td>~80,000 VND</td></tr>
-      <tr><td>ดานัง → บานาฮิลล์</td><td>~400,000 VND</td></tr>
-      <tr><td>ตั๋วกระเช้า + เข้าชม (ต่อคน)</td><td>~750,000–900,000 VND</td></tr>
-      <tr><td>บานาฮิลล์ → ฮอยอัน</td><td>~500,000 VND</td></tr>
-      <tr><td>เรือกระจาดหมู่บ้านมะพร้าว (ต่อคน)</td><td>~120,000 VND</td></tr>
-      <tr><td>เรือโคมไฟตลาดกลางคืน (ต่อคน)</td><td>~150,000 VND</td></tr>
-      <tr><td>ฮอยอัน → ดานัง</td><td>~380,000 VND</td></tr>
-      <tr><td>รถระยะสั้นในดานังวันสุดท้าย (Linh Ứng/Marina/ร้านต่างๆ)</td><td>~250,000 VND</td></tr>
-      <tr class="total"><td>รวมค่าเดินทาง (ไม่รวมค่าอาหาร/ที่พัก/นวด)</td><td>~2,670,000 VND (~3,870 บาท)</td></tr>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="assumptions">
-      <b>ข้อสันนิษฐานที่ใช้ในการจัดแผน</b> — บางชื่อในลิสต์สะกดคลาดเคลื่อนหรือขาดที่อยู่ชัดเจน จึงตีความตามข้อมูลที่ใกล้เคียงที่สุด รบกวนตรวจสอบอีกครั้งก่อนเดินทางจริง
-      <ul>
-        <li><b>Pho wong 535</b> — ไม่พบร้านที่ตรงชื่อนี้ในดานัง หากมีที่อยู่คร่าว ๆ เพิ่มเติมช่วยระบุตำแหน่งให้แม่นขึ้นได้</li>
-        <li><b>Bep coun 666 → Bếp Cuốn</b> — ใช้สาขา 31-33 Trần Bạch Đằng (ร้านเดียวที่ติด Michelin Selected ในดานัง) เพราะเลข 666 ไม่ตรงกับที่อยู่จริงของร้านใด</li>
-        <li><b>Dapen / Tan cafe</b> — ยังไม่พบสถานที่ที่ตรงกับชื่อนี้ชัดเจน จึงไม่ได้ใส่ไว้ในตาราง</li>
-        <li><b>Anthoi</b> — มีร้าน "An Thoi" อยู่ 2 แห่งคนละเมือง: An Thoi Hoi An (40 Nguyễn Phúc Tần) ที่ใช้ในแผนวันที่ 3 กับ An Thoi Da Nang (114 Bạch Đằng, ติด Michelin Bib Gourmand) — ถ้าตั้งใจจะไปร้านที่ดานังแทน แจ้งได้ จะสลับให้</li>
-        <li><b>THUAN Y</b> — คือร้าน Thuận Ý ที่ 94 Bạch Đằng ฮอยอัน ใช้เป็นมื้อเย็นวันที่ 3 ตามแผนเดิม</li>
-      </ul>
-    </div>
-  </div>
-
-  <footer class="disclaimer">
-    ระยะทาง เวลาเดินทาง และราคาทั้งหมดเป็นการประมาณการจากข้อมูลทั่วไปและรีวิวที่มีอยู่ อาจคลาดเคลื่อนตามสภาพจราจรจริง ฤดูกาล และช่วงเวลาจอง
-  </footer>
-
+<h1>ติดตามสถานะซ่อมเครื่อง P3</h1>
+<div class="add">
+<input id="mid" placeholder="รหัส/ชื่อเครื่อง เช่น P3-001">
+<input id="mst" placeholder="อู่/สถานี (Station)">
+<button class="p" onclick="addM()">+ เปิดเคสใหม่</button>
 </div>
+<div class="add" style="justify-content:flex-end">
+<button onclick="exportCSV()">⬇ Export CSV (Excel)</button>
+<button onclick="exportJSON()">⬇ Export JSON (สำรองข้อมูล)</button>
+<button onclick="document.getElementById('imp').click()">⬆ Import JSON</button>
+<input type="file" id="imp" accept=".json,application/json" hidden onchange="importJSON(event)">
+</div>
+<div class="sum" id="sum"></div>
+<div class="grid" id="list"></div>
+</div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeM()"><div class="card" id="detail"></div></div>
 
 <script>
-  const buttons = document.querySelectorAll('.daynav button');
-  const days = document.querySelectorAll('.day');
-  buttons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      buttons.forEach(b=>b.classList.remove('active'));
-      days.forEach(d=>d.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelector('.day[data-day="'+btn.dataset.target+'"]').classList.add('active');
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
-  });
-</script>
+const STEPS=[
+["อู่เปิดเคสแจ้งปัญหาเครื่อง P3","Station"],
+["ฝ่าย ITS แจ้งส่งเครื่องเสียให้ Loxbit","ITS"],
+["Loxbit ให้ขนส่งมารับเครื่อง","Loxbit"],
+["Loxbit ประเมินและแจ้งราคาซ่อม","Loxbit"],
+["ITS จัดทำ Memo แจ้ง HR รับทราบค่าใช้จ่าย","ITS"],
+["HR จัดทำเอกสารรับสภาพหนี้","HR"],
+["HR ส่งสำเนาเอกสารรับสภาพหนี้ให้ ฝ่าย ITS","HR"],
+["ITS แจ้ง Loxbit อนุมัติซ่อม","ITS"],
+["ITS เปิด PR","ITS"],
+["อนุมัติ PR","ODOO"],
+["เปิด PO","ODOO"],
+["ขอใบแจ้งหนี้จาก Loxbit","ITS"],
+["ส่งเอกสารให้ฝ่าย ACC","เอกสาร",["ใบแจ้งหนี้","Memo แจ้งค่าใช้จ่าย","สำเนาเอกสารรับสภาพหนี้"]]
+];
+const N=STEPS.length, KEY="p3_repair_v1";
+let data=[], filter="all", openId=null;
+try{data=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){data=[]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+const col=o=>`var(--${o==="เอกสาร"?"DOC":o})`;
+const fmt=t=>new Date(t).toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"});
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+function addM(){
+  const id=document.getElementById("mid").value.trim();
+  if(!id)return;
+  const st=document.getElementById("mst").value.trim();
+  data.unshift({id:Date.now(),name:id,station:st,step:1,log:[{s:1,t:Date.now()}]});
+  document.getElementById("mid").value="";document.getElementById("mst").value="";
+  save();render();
+}
+function move(id,d){
+  const m=data.find(x=>x.id===id);
+  const ns=m.step+d;
+  if(ns<1||ns>N+1)return;
+  if(d>0)m.log.push({s:ns,t:Date.now()});
+  else m.log=m.log.filter(l=>l.s<m.step);
+  m.step=ns;save();render();
+}
+function del(id){
+  if(!confirm("ลบเครื่องนี้ออกจากรายการ?"))return;
+  data=data.filter(x=>x.id!==id);closeM();save();render();
+}
+function openM(id){openId=id;render();document.getElementById("modal").classList.add("show")}
+function closeM(){openId=null;document.getElementById("modal").classList.remove("show")}
+
+function render(){
+  // summary chips
+  const counts={};data.forEach(m=>counts[m.step]=(counts[m.step]||0)+1);
+  let h=`<div class="chip ${filter==="all"?"on":""}" onclick="setF('all')">ทั้งหมด (${data.length})</div>`;
+  h+=`<div class="chip ${filter==="active"?"on":""}" onclick="setF('active')">กำลังดำเนินการ (${data.filter(m=>m.step<=N).length})</div>`;
+  h+=`<div class="chip ${filter==="done"?"on":""}" onclick="setF('done')">เสร็จสิ้น (${counts[N+1]||0})</div>`;
+  for(let i=1;i<=N;i++)if(counts[i])h+=`<div class="chip ${filter==i?"on":""}" onclick="setF(${i})">ขั้น ${i} (${counts[i]})</div>`;
+  document.getElementById("sum").innerHTML=h;
+
+  const list=data.filter(m=>filter==="all"||(filter==="active"?m.step<=N:filter==="done"?m.step>N:m.step==filter));
+  document.getElementById("list").innerHTML=list.length?list.map(m=>{
+    const done=m.step>N, s=STEPS[Math.min(m.step,N)-1];
+    const pct=Math.round((Math.min(m.step-1,N))/N*100);
+    return `<div class="card m" onclick="openM(${m.id})">
+      <div class="row"><b>${esc(m.name)}</b>${done?`<span class="tag" style="background:var(--ODOO)">เสร็จสิ้น</span>`:`<span class="tag" style="background:${col(s[1])}">${s[1]}</span>`}</div>
+      <div class="mu">${esc(m.station||"-")}</div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="row mu"><span>${done?"ส่งเอกสารให้ ACC แล้ว":`ขั้น ${m.step}/${N}: ${s[0]}`}</span><span>${pct}%</span></div>
+    </div>`}).join(""):`<div class="empty">ยังไม่มีเครื่องในรายการ — เพิ่มเคสใหม่ด้านบน</div>`;
+
+  // detail
+  if(openId){
+    const m=data.find(x=>x.id===openId);
+    if(!m){closeM();return}
+    const done=m.step>N;
+    document.getElementById("detail").innerHTML=`
+      <div class="row"><b style="font-size:1.15rem">${esc(m.name)}</b><button onclick="closeM()">✕</button></div>
+      <div class="mu">${esc(m.station||"-")} · ${done?"เสร็จสิ้นทุกขั้นตอน":`อยู่ขั้นที่ ${m.step} จาก ${N}`}</div>
+      <ul class="tl">${STEPS.map((s,i)=>{
+        const n=i+1,cls=m.step>n?"done":m.step===n?"cur":"todo",lg=m.log.find(l=>l.s===n);
+        return `<li class="${cls}"><span class="n">${m.step>n?"✓":n}</span><div style="flex:1">
+          <div class="row"><span>${s[0]}</span><span class="tag" style="background:${col(s[1])}">${s[1]}</span></div>
+          ${s[2]?`<ul>${s[2].map(x=>`<li style="border:0;padding:0;margin:0;display:list-item">${x}</li>`).join("")}</ul>`:""}
+          ${lg?`<div class="mu">${fmt(lg.t)}</div>`:""}</div></li>`}).join("")}</ul>
+      <div class="acts">
+        <button onclick="move(${m.id},-1)" ${m.step<=1?"disabled":""}>← ย้อนขั้นตอน</button>
+        <button class="p" onclick="move(${m.id},1)" ${done?"disabled":""}>${m.step===N?"เสร็จสิ้น ✓":"ไปขั้นถัดไป →"}</button>
+        <button onclick="del(${m.id})" style="margin-left:auto">ลบ</button>
+      </div>`;
+  }
+}
+
+function dl(name,text,type){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([text],{type}));
+  a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+const stamp=()=>new Date().toISOString().slice(0,10);
+function exportJSON(){dl(`p3-repair-${stamp()}.json`,JSON.stringify(data,null,2),"application/json")}
+function exportCSV(){
+  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const head=["รหัสเครื่อง","Station","สถานะ","ขั้นปัจจุบัน","ชื่อขั้นตอนปัจจุบัน","ฝ่ายที่รับผิดชอบ","วันที่เปิดเคส",
+    ...STEPS.map((s,i)=>`วันที่ขั้น ${i+1}: ${s[0]}`)];
+  const rows=data.map(m=>{
+    const done=m.step>N,s=STEPS[Math.min(m.step,N)-1];
+    return [m.name,m.station,done?"เสร็จสิ้น":"กำลังดำเนินการ",done?N:m.step,done?"ส่งเอกสารให้ ACC แล้ว":s[0],done?"-":s[1],
+      fmt(m.id),...STEPS.map((_,i)=>{const l=m.log.find(x=>x.s===i+1);return l?fmt(l.t):""})];
+  });
+  const csv=[head,...rows].map(r=>r.map(q).join(",")).join("\r\n");
+  dl(`p3-repair-${stamp()}.csv`,"\ufeff"+csv,"text/csv;charset=utf-8");
+}
+function importJSON(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const arr=JSON.parse(r.result);
+      if(!Array.isArray(arr))throw 0;
+      if(!confirm(`นำเข้า ${arr.length} รายการ? ข้อมูลปัจจุบันจะถูกแทนที่`))return;
+      data=arr;save();render();
+    }catch(x){alert("ไฟล์ JSON ไม่ถูกต้อง")}
+    e.target.value="";
+  };
+  r.readAsText(f);
+}
+function setF(f){filter=f;render()}
+render();
+</script>
 </body>
 </html>
