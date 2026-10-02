@@ -101,11 +101,39 @@ async function fbStore(){
    add:o=>fs.addDoc(c,o),update:(id,o)=>fs.updateDoc(fs.doc(d,"cases",id),o),del:id=>fs.deleteDoc(fs.doc(d,"cases",id)),
    upload:async f=>{const r=st.ref(sg,"docs/"+Date.now()+"_"+f.name);await st.uploadBytes(r,f);return{url:await st.getDownloadURL(r)}}}
 }
+const API_URL=""; const API_URL="https://p3-repair-api.tawan-its.workers.dev";
+function apiStore(){
+  let tok=localStorage.getItem("p3_tok")||"",cb=()=>{};
+  const ask=()=>{tok=prompt("รหัสผ่านเข้าระบบ")||"";localStorage.setItem("p3_tok",tok)};
+  const req=async(p,o={})=>{
+    const go=()=>fetch(API_URL+p,{...o,headers:{Authorization:"Bearer "+tok,...(o.headers||{})}});
+    let r=await go();
+    if(r.status===401){ask();r=await go()}
+    if(!r.ok)throw{message:r.status===401?"รหัสผ่านไม่ถูกต้อง":"HTTP "+r.status};
+    return r};
+  const load=async()=>{try{cb(await(await req("/cases")).json());note("")}catch(e){note("โหลดข้อมูลไม่สำเร็จ: "+esc(e.message))}};
+  const J={"Content-Type":"application/json"};
+  return{sub:f=>{cb=f;load();setInterval(()=>{if(!document.hidden)load()},8000)},
+   add:async o=>{await req("/cases",{method:"POST",headers:J,body:JSON.stringify(o)});await load()},
+   update:async(id,o)=>{await req("/cases/"+id,{method:"PATCH",headers:J,body:JSON.stringify(o)});await load()},
+   del:async id=>{await req("/cases/"+id,{method:"DELETE"});await load()},
+   upload:async f=>{
+     const blob=f.type.startsWith("image/")?await shrink(f):f;
+     if(blob.size>6e6)throw{message:"ไฟล์ใหญ่เกิน 6MB — กรุณาบีบอัดไฟล์ก่อนแนบ"};
+     const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(",")[1]);r.onerror=no;r.readAsDataURL(blob)});
+     const fid=crypto.randomUUID(),S=1500000,n=Math.max(1,Math.ceil(b64.length/S)),ty=blob.type||f.type||"application/octet-stream";
+     for(let i=0;i<n;i++)await req(`/upload?fid=${fid}&i=${i}&type=${encodeURIComponent(ty)}`,{method:"POST",headers:{"Content-Type":"text/plain"},body:b64.slice(i*S,(i+1)*S)});
+     return{url:"d1:"+fid}},
+   file:async k=>{const j=await(await req("/files/"+k)).json(),bin=atob(j.b64),u=new Uint8Array(bin.length);
+     for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:j.type})}};
+}
+const shrink=f=>new Promise(ok=>{const im=new Image();im.onload=()=>{const s=Math.min(1,1800/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(b=>ok(b||f),"image/jpeg",.8)};im.onerror=()=>ok(f);im.src=URL.createObjectURL(f)});
+async function openFile(k){const w=window.open("","_blank");try{w.location=URL.createObjectURL(await store.file(k))}catch(e){if(w)w.close();fail(e)}}
 async function initStore(){
   let n=localStorage.getItem("p3_name");if(!n){n=prompt("ชื่อของคุณ (ใช้บันทึกผู้ทำรายการ)")||"ผู้ใช้";localStorage.setItem("p3_name",n)}
   me={name:n};assets=true;dl=true;
-  try{store=FIREBASE_CONFIG?await fbStore():localStore()}catch(e){note("เชื่อมต่อ Firebase ไม่ได้: "+esc(e.message));store=localStore()}
-  if(!FIREBASE_CONFIG)note("โหมดเครื่องเดียว: ข้อมูลอยู่ในเบราว์เซอร์นี้เท่านั้น — ตั้งค่า Firebase เพื่อใช้ร่วมกันหลายคน");
+  try{store=API_URL?apiStore():FIREBASE_CONFIG?await fbStore():localStore()}catch(e){note("เชื่อมต่อ Firebase ไม่ได้: "+esc(e.message));store=localStore()}
+  if(!FIREBASE_CONFIG&&!API_URL)note("โหมดเครื่องเดียว: ข้อมูลอยู่ในเบราว์เซอร์นี้เท่านั้น — ตั้งค่า Firebase เพื่อใช้ร่วมกันหลายคน");
   store.sub(a=>{data=a.sort((x,y)=>y.created-x.created);render()});
 }
 
@@ -138,7 +166,7 @@ function openM(id){openId=id;render();document.getElementById("modal").classList
 function closeM(){openId=null;document.getElementById("modal").classList.remove("show")}
 function setF(f){filter=f;render()}
 const isDone=m=>m.step>=path(m).length;
-const files=(m,k)=>(m.docs?.[k]||[]).map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener">📎 ${esc(f.name)} <span class="mu">· ${esc(f.by)} ${fmt(f.t)}</span></a>`).join("");
+const files=(m,k)=>(m.docs?.[k]||[]).map(f=>`<a href="${f.url.startsWith("d1:")?"#":esc(f.url)}" ${f.url.startsWith("d1:")?`onclick="openFile('${esc(f.url.slice(3))}');return false"`:'target="_blank" rel="noopener"'}>📎 ${esc(f.name)} <span class="mu">· ${esc(f.by)} ${fmt(f.t)}</span></a>`).join("");
 
 function render(){
   const chips=[["all","ทั้งหมด",data.length],["active","กำลังดำเนินการ",data.filter(m=>!isDone(m)).length],["done","เสร็จสิ้น",data.filter(isDone).length],["in","ในประกัน",data.filter(m=>m.type==="in").length],["out","นอกประกัน",data.filter(m=>m.type==="out").length]];
