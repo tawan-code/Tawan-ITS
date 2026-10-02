@@ -101,7 +101,7 @@ async function fbStore(){
    add:o=>fs.addDoc(c,o),update:(id,o)=>fs.updateDoc(fs.doc(d,"cases",id),o),del:id=>fs.deleteDoc(fs.doc(d,"cases",id)),
    upload:async f=>{const r=st.ref(sg,"docs/"+Date.now()+"_"+f.name);await st.uploadBytes(r,f);return{url:await st.getDownloadURL(r)}}}
 }
-const API_URL=""; const API_URL="https://p3-repair-api.tawan-its.workers.dev";
+const API_URL="https://p3-repair-api.tawan-its.workers.dev";
 function apiStore(){
   let tok=localStorage.getItem("p3_tok")||"",cb=()=>{};
   const ask=()=>{tok=prompt("รหัสผ่านเข้าระบบ")||"";localStorage.setItem("p3_tok",tok)};
